@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 const JwtVerifyError = require('../errors/JwtVerifyError');
-
 const db = require('../db/user');
 const OutboundRequestFailedError = require('../errors/OutboundRequestFailedError');
 const DbNotFoundError = require('../errors/DbNotFoundError');
