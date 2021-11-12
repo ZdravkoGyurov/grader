@@ -10,10 +10,12 @@ const startApplication = async () => {
 
   app.use(express.json());
   app.use(requestId);
-  morgan.token('requestId', req => { return req.id })
+  morgan.token('requestId', req => {
+    return req.id;
+  });
   app.use(morgan(requestLoggerFormat()));
   app.use(cookieParser());
-  
+
   app.use('/', router);
 
   app.listen(config.app.port, config.app.host, () => {
@@ -36,6 +38,6 @@ const requestLoggerFormat = () => {
     userAgent: ':user-agent'
   };
   return JSON.stringify(morganFormat);
-}
+};
 
 startApplication();

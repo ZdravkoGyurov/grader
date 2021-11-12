@@ -1,10 +1,10 @@
-const { StatusCodes } = require("http-status-codes");
-const logger = require("../logger");
-const DbConflictError = require("./DbConflictError");
-const DbError = require("./DbError");
-const DbNotFoundError = require("./DbNotFoundError");
-const JwtVerifyError = require("./JwtVerifyError");
-const OutboundRequestFailedError = require("./OutboundRequestFailedError");
+const { StatusCodes } = require('http-status-codes');
+const logger = require('../logger');
+const DbConflictError = require('./DbConflictError');
+const DbError = require('./DbError');
+const DbNotFoundError = require('./DbNotFoundError');
+const JwtVerifyError = require('./JwtVerifyError');
+const OutboundRequestFailedError = require('./OutboundRequestFailedError');
 
 class ApiError extends Error {
   constructor(req, message, code = StatusCodes.INTERNAL_SERVER_ERROR) {
@@ -38,6 +38,6 @@ const apiError = (req, error) => {
   }
 
   return new ApiError(req, error.message);
-}
+};
 
 module.exports = { ApiError, apiError };

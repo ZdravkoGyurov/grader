@@ -1,18 +1,18 @@
-const { Router } = require("express");
+const { Router } = require('express');
 const { StatusCodes } = require('http-status-codes');
-const authService = require('../../services/auth')
+const authService = require('../../services/auth');
 const config = require('../../config');
 const { ApiError, apiError } = require('../../errors/ApiError');
-const logger = require("../../logger");
+const logger = require('../../logger');
 
-const authRouter = Router();
+const authRouter = new Router();
 
 authRouter.get('/login/oauth/github', async (req, res) => {
   const githubOauthUrl = 'https://github.com/login/oauth/authorize';
   const redirectUri = `http://${config.app.host}:${config.app.port}/login/oauth/github/callback`;
   const oauthUrlParams = `?client_id=${config.github.clientId}&scope=${config.github.requiredScope}&redirect_uri=${redirectUri}`;
   res.redirect(githubOauthUrl + oauthUrlParams);
-})
+});
 
 authRouter.get('/login/oauth/github/callback', async (req, res) => {
   const code = req.query.code;
@@ -33,12 +33,16 @@ authRouter.get('/login/oauth/github/callback', async (req, res) => {
   });
 
   res.send(user);
-})
+});
 
-authRouter.get("/userInfo", async (req, res) => {
+authRouter.get('/userInfo', async (req, res) => {
   const accessToken = req.cookies[config.auth.accessTokenCookieName];
   if (!accessToken) {
-    const err = new ApiError(req, 'missing access token', StatusCodes.UNAUTHORIZED);
+    const err = new ApiError(
+      req,
+      'missing access token',
+      StatusCodes.UNAUTHORIZED
+    );
     return res.send(err).status(StatusCodes.UNAUTHORIZED);
   }
 
@@ -46,50 +50,61 @@ authRouter.get("/userInfo", async (req, res) => {
     const user = await authService.getUserInfo(accessToken);
     return res.send(user);
   } catch (error) {
-    const err = apiError(req, error)
+    const err = apiError(req, error);
     return res.send(err).status(err.code);
   }
-})
+});
 
-authRouter.post("/token", async (req, res) => {
+authRouter.post('/token', async (req, res) => {
   const refreshToken = req.cookies[config.auth.refreshTokenCookieName];
   if (!refreshToken) {
-    const err = new ApiError(req, 'missing refresh token', StatusCodes.UNAUTHORIZED);
+    const err = new ApiError(
+      req,
+      'missing refresh token',
+      StatusCodes.UNAUTHORIZED
+    );
     return res.send(err).status(StatusCodes.UNAUTHORIZED);
   }
 
   try {
-    const { email, userAccessToken } = authService.generateAccessToken(refreshToken);
+    const { email, userAccessToken } =
+      authService.generateAccessToken(refreshToken);
     res.cookie(config.auth.accessTokenCookieName, userAccessToken, {
       httpOnly: true,
       path: '/'
     });
 
-    logger(req).info(`generated new access token for user with email '${email}'`);
+    logger(req).info(
+      `generated new access token for user with email '${email}'`
+    );
     return res.sendStatus(StatusCodes.OK);
   } catch (error) {
     const err = apiError(req, error);
     return res.send(err).status(err.code);
   }
-})
+});
 
-authRouter.delete("/logout", async (req, res) => {
+authRouter.delete('/logout', async (req, res) => {
   const accessToken = req.cookies[config.auth.accessTokenCookieName];
   if (!accessToken) {
-    const err = new ApiError(req, 'missing access token', StatusCodes.UNAUTHORIZED);
+    const err = new ApiError(
+      req,
+      'missing access token',
+      StatusCodes.UNAUTHORIZED
+    );
     return res.send(err).status(StatusCodes.UNAUTHORIZED);
   }
 
   try {
     await authService.deleteUserRefreshToken(accessToken);
   } catch (error) {
-    const err = apiError(req, error)
+    const err = apiError(req, error);
     return res.send(err).status(err.code);
   }
 
   res.clearCookie(config.auth.accessTokenCookieName);
   res.clearCookie(config.auth.refreshTokenCookieName);
   return res.sendStatus(StatusCodes.OK);
-})
+});
 
 module.exports = authRouter;

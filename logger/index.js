@@ -5,9 +5,7 @@ const config = require('../config');
 const winstonLogger = createLogger({
   level: config.app.logLevel,
   format: format.json(),
-  transports: [
-    new transports.Console()
-  ]
+  transports: [new transports.Console()]
 });
 
 const requestLogger = {
@@ -17,7 +15,7 @@ const requestLogger = {
     winstonLogger.log({
       level: level,
       message: message,
-      requestId: this._requestId,
+      requestId: this._requestId
     });
   },
 
@@ -34,10 +32,10 @@ const requestLogger = {
   }
 };
 
-const logger = (req) => {
+const logger = req => {
   const requestId = req && req.id ? req.id : '';
   requestLogger._requestId = requestId;
-  
+
   return requestLogger;
 };
 
