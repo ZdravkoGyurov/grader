@@ -6,8 +6,7 @@ const db = require('../../db/user');
 const config = require('../../config');
 const { ApiError, apiError } = require('../../errors/ApiError');
 const logger = require("../../logger");
-
-const redirectUri = `http://${config.app.host}:${config.app.port}/login/oauth/github/callback`;
+const { auth } = require("../../config");
 
 const authRouter = Router();
 
@@ -49,91 +48,52 @@ authRouter.get("/userInfo", async (req, res) => {
   }
 })
 
-authRouter.get("/logout", async (req, res) => {
+authRouter.delete("/logout", async (req, res) => {
   const accessToken = req.cookies[config.auth.accessTokenCookieName];
   if (!accessToken) {
-    console.error('Failed to get access token');
-    return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+    const err = new ApiError(req, 'missing access token', StatusCodes.UNAUTHORIZED);
+    return res.send(err).status(StatusCodes.UNAUTHORIZED);
   }
-  const email = jwt.verify(accessToken, config.auth.accessTokenSecret).email;
 
   try {
-    await db.setUserRefreshToken(email, null);
-    res.clearCookie(config.auth.accessTokenCookieName);
-    res.clearCookie(config.auth.refreshTokenCookieName);
-    return res.sendStatus(StatusCodes.OK);
+    await authService.deleteUserRefreshToken(accessToken);
   } catch (error) {
-    console.error(error);
-    return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+    const err = apiError(req, error)
+    return res.send(err).status(err.code);
   }
+
+  res.clearCookie(config.auth.accessTokenCookieName);
+  res.clearCookie(config.auth.refreshTokenCookieName);
+  return res.sendStatus(StatusCodes.OK);
 })
 
 authRouter.get('/login/oauth/github', async (req, res) => {
   const githubOauthUrl = 'https://github.com/login/oauth/authorize';
+  const redirectUri = `http://${config.app.host}:${config.app.port}/login/oauth/github/callback`;
   const oauthUrlParams = `?client_id=${config.github.clientId}&scope=${config.github.requiredScope}&redirect_uri=${redirectUri}`;
   res.redirect(githubOauthUrl + oauthUrlParams);
 })
 
+
 authRouter.get('/login/oauth/github/callback', async (req, res) => {
-  const data = {
-    client_id: config.github.clientId,
-    client_secret: config.github.clientSecret,
-    code: req.query.code,
-    redirect_uri: redirectUri
-  };
-
-  try {
-      const githubAccessToken = await authService.getGithubAccessToken(data);
-      try {
-          const email = await authService.getGithubUserEmail(githubAccessToken);
-          const { name, avatarUrl } = await authService.getGithubUserInfo(githubAccessToken);
-
-          const userAccessToken = jwt.sign({ email: email }, config.auth.accessTokenSecret);
-          
-          let user = await db.getUser(email);
-          if (!user) {
-              const userRefreshToken = jwt.sign({ email: email }, config.auth.refreshTokenSecret);
-              user = {
-                  email: email,
-                  name: name,
-                  avatarUrl: avatarUrl,
-                  refreshToken: userRefreshToken,
-                  githubAccessToken: githubAccessToken
-              }
-              try {
-                  user = await db.createUser(user);
-              } catch (error) {
-                  console.error(error);
-                  return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
-              }
-          }
-
-          if (!user.refreshToken) {
-              user.refreshToken = jwt.sign({ email: email }, config.auth.refreshTokenSecret);
-              await db.setUserRefreshToken(user.email, user.refreshToken);
-          }
-
-          res.cookie(config.auth.accessTokenCookieName, userAccessToken, {
-              httpOnly: true,
-              path: '/'
-          });
-          res.cookie(config.auth.refreshTokenCookieName, user.refreshToken, {
-              httpOnly: true,
-              path: '/'
-          });
-
-          delete user.refreshToken;
-          delete user.githubAccessToken;
-
-          return res.send(user);
-      } catch (error) {
-          console.error(error);
-          return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
-      }
-  } catch (error) {
-    console.error(error);
-    return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+  const code = req.query.code;
+  if (!code) {
+    const err = new ApiError(req, 'missing code', StatusCodes.BAD_REQUEST);
+    return res.send(err).status(StatusCodes.BAD_REQUEST);
   }
+
+  const { user, tokens } = await authService.login(code);
+
+  res.cookie(config.auth.accessTokenCookieName, tokens.userAccessToken, {
+    httpOnly: true,
+    path: '/'
+  });
+  res.cookie(config.auth.refreshTokenCookieName, tokens.userRefreshToken, {
+    httpOnly: true,
+    path: '/'
+  });
+
+  res.send(user);
 })
 
 module.exports = authRouter;

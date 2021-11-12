@@ -1,8 +1,8 @@
-class JwtVerifyError extends Error {
+class OutboundRequestFailedError extends Error {
   constructor(message) {
     super(message);
     Error.captureStackTrace(this, this.constructor);
   }
 }
 
-module.exports = JwtVerifyError;
+module.exports = OutboundRequestFailedError;

@@ -4,19 +4,17 @@ const DbConflictError = require("./DbConflictError");
 const DbError = require("./DbError");
 const DbNotFoundError = require("./DbNotFoundError");
 const JwtVerifyError = require("./JwtVerifyError");
+const OutboundRequestFailedError = require("./OutboundRequestFailedError");
 
 class ApiError extends Error {
-  constructor(req, message, code = StatusCodes.INTERNAL_SERVER_ERROR, ...params) {
-    super(...params);
-
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, this.constructor);
-    }
+  constructor(req, message, code = StatusCodes.INTERNAL_SERVER_ERROR) {
+    super(message);
+    Error.captureStackTrace(this, this.constructor);
 
     logger(req).error(message);
 
     this.requestId = req.id;
-    this.message = message;
+    this.errorMessage = message;
     this.code = code;
     this.date = new Date();
   }
@@ -33,6 +31,9 @@ const apiError = (req, error) => {
     return new ApiError(req, error.message, StatusCodes.CONFLICT);
   }
   if (error instanceof DbError) {
+    return new ApiError(req, error.message, StatusCodes.INTERNAL_SERVER_ERROR);
+  }
+  if (error instanceof OutboundRequestFailedError) {
     return new ApiError(req, error.message, StatusCodes.INTERNAL_SERVER_ERROR);
   }
 

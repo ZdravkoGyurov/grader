@@ -25,9 +25,11 @@ const config = {
   },
   auth: {
     accessTokenCookieName: process.env.ACCESS_TOKEN_COOKIE_NAME,
-    refreshTokenCookieName: process.env.REFRESH_TOKEN_COOKIE_NAME,
     accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
+    accessTokenExpirationTime: process.env.ACCESS_TOKEN_EXPIRATION_TIME,
+    refreshTokenCookieName: process.env.REFRESH_TOKEN_COOKIE_NAME,
     refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
+    refreshTokenExpirationTime: process.env.REFRESH_TOKEN_EXPIRATION_TIME,
   }
 }
 
