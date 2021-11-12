@@ -15,7 +15,7 @@ authRouter.get('/login/oauth/github', async (req, res) => {
 });
 
 authRouter.get('/login/oauth/github/callback', async (req, res) => {
-  const code = req.query.code;
+  const { code } = req.query;
   if (!code) {
     const err = new ApiError(req, 'missing code', StatusCodes.BAD_REQUEST);
     return res.send(err).status(StatusCodes.BAD_REQUEST);
@@ -32,7 +32,7 @@ authRouter.get('/login/oauth/github/callback', async (req, res) => {
     path: '/'
   });
 
-  res.send(user);
+  return res.send(user);
 });
 
 authRouter.get('/userInfo', async (req, res) => {

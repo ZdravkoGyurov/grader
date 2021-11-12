@@ -16,9 +16,7 @@ const pool = new Pool({
     config.db.idle_in_transaction_session_timeout
 });
 
-const query = async (text, params) => {
-  return await pool.query(text, params);
-};
+const query = (text, params) => pool.query(text, params);
 
 const transcation = async callback => {
   const client = await pool.connect();
@@ -37,7 +35,7 @@ const transcation = async callback => {
 
 const isConflictError = error => {
   if (error instanceof DatabaseError) {
-    if (error.code == 23503 || error.code == 23505) {
+    if (error.code === '23503' || error.code === '23505') {
       return true;
     }
   }

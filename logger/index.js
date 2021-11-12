@@ -9,32 +9,32 @@ const winstonLogger = createLogger({
 });
 
 const requestLogger = {
-  _requestId: '',
+  requestId: '',
 
-  _log: function (level, message) {
-    winstonLogger.log({
-      level: level,
-      message: message,
-      requestId: this._requestId
-    });
+  log(level, message) {
+    const logEntry = { level, message };
+    if (this.requestId !== '') {
+      logEntry.requestId = this.requestId;
+    }
+    winstonLogger.log(logEntry);
   },
 
-  info: function (message) {
-    this._log('info', message);
+  info(message) {
+    this.log('info', message);
   },
 
-  warn: function (message) {
-    this._log('warn', message);
+  warn(message) {
+    this.log('warn', message);
   },
 
-  error: function (message) {
-    this._log('error', message);
+  error(message) {
+    this.log('error', message);
   }
 };
 
 const logger = req => {
   const requestId = req && req.id ? req.id : '';
-  requestLogger._requestId = requestId;
+  requestLogger.requestId = requestId;
 
   return requestLogger;
 };

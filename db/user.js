@@ -5,6 +5,15 @@ const DbNotFoundError = require('../errors/DbNotFoundError');
 
 const userInfoTable = 'user_info';
 
+const mapDbUser = user => ({
+  email: user.email,
+  name: user.name,
+  avatarUrl: user.avatar_url,
+  refreshToken: user.refresh_token,
+  githubAccessToken: user.github_access_token,
+  roleId: user.role_id
+});
+
 const getUser = async email => {
   const query = `SELECT * FROM ${userInfoTable} WHERE email = $1`;
   const values = [email];
@@ -18,7 +27,7 @@ const getUser = async email => {
     );
   }
 
-  if (result.rowCount == 0) {
+  if (result.rowCount === 0) {
     throw new DbNotFoundError(
       `failed to find user with email '${email}' in the database`
     );
@@ -67,20 +76,9 @@ const setUserRefreshToken = async (email, refreshToken) => {
     );
   }
 
-  if (result.rowCount == 0) {
+  if (result.rowCount === 0) {
     throw new DbNotFoundError(`failed to find user with email '${email}'`);
   }
-};
-
-const mapDbUser = user => {
-  return {
-    email: user.email,
-    name: user.name,
-    avatarUrl: user.avatar_url,
-    refreshToken: user.refresh_token,
-    githubAccessToken: user.github_access_token,
-    roleId: user.role_id
-  };
 };
 
 module.exports = {

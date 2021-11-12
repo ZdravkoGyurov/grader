@@ -1,26 +1,30 @@
+const { StatusCodes } = require('http-status-codes');
 const request = require('request');
 
 const githubTokenUrl = 'https://github.com/login/oauth/access_token';
 const githubUserEndpoint = 'https://api.github.com/user';
 const githubUserEmailsEndpoint = 'https://api.github.com/user/emails';
 
-const fetchAccessToken = data => {
-  return new Promise((resolve, reject) => {
+const reqOptions = accessToken => ({
+  headers: { Authorization: `Bearer ${accessToken}`, 'User-Agent': 'node.js' }
+});
+
+const fetchAccessToken = data =>
+  new Promise((resolve, reject) => {
     request.post(githubTokenUrl, { json: data }, (error, response, body) => {
       if (error) {
         return reject(error);
       }
-      if (response.statusCode != 200) {
+      if (response.statusCode !== StatusCodes.OK) {
         return reject(body);
       }
 
       return resolve(body.access_token);
     });
   });
-};
 
-const fetchUserInfo = accessToken => {
-  return new Promise((resolve, reject) => {
+const fetchUserInfo = accessToken =>
+  new Promise((resolve, reject) => {
     request.get(
       githubUserEndpoint,
       reqOptions(accessToken),
@@ -28,7 +32,7 @@ const fetchUserInfo = accessToken => {
         if (error) {
           return reject(error);
         }
-        if (response.statusCode != 200) {
+        if (response.statusCode !== StatusCodes.OK) {
           return reject(body);
         }
 
@@ -40,10 +44,9 @@ const fetchUserInfo = accessToken => {
       }
     );
   });
-};
 
-const fetchUserEmail = accessToken => {
-  return new Promise((resolve, reject) => {
+const fetchUserEmail = accessToken =>
+  new Promise((resolve, reject) => {
     request.get(
       githubUserEmailsEndpoint,
       reqOptions(accessToken),
@@ -51,7 +54,7 @@ const fetchUserEmail = accessToken => {
         if (error) {
           return reject(error);
         }
-        if (response.statusCode != 200) {
+        if (response.statusCode !== StatusCodes.OK) {
           return reject(body);
         }
 
@@ -62,13 +65,6 @@ const fetchUserEmail = accessToken => {
       }
     );
   });
-};
-
-const reqOptions = accessToken => {
-  return {
-    headers: { Authorization: `Bearer ${accessToken}`, 'User-Agent': 'node.js' }
-  };
-};
 
 module.exports = {
   fetchAccessToken,
