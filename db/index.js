@@ -12,8 +12,7 @@ const pool = new Pool({
   query_timeout: config.db.query_timeout,
   connectionTimeoutMillis: config.db.connectionTimeoutMillis,
   statement_timeout: config.db.statement_timeout,
-  idle_in_transaction_session_timeout:
-    config.db.idle_in_transaction_session_timeout
+  idle_in_transaction_session_timeout: config.db.idle_in_transaction_session_timeout
 });
 
 const query = (text, params) => pool.query(text, params);

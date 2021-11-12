@@ -5,6 +5,7 @@ const db = require('../db/user');
 const OutboundRequestFailedError = require('../errors/OutboundRequestFailedError');
 const DbNotFoundError = require('../errors/DbNotFoundError');
 const github = require('./outbound/github');
+const InvalidRefreshTokenError = require('../errors/InvalidRefreshTokenError');
 
 const redirectUri = `http://${config.app.host}:${config.app.port}/login/oauth/github/callback`;
 
@@ -24,9 +25,7 @@ const fetchUserInfo = async githubAccessToken => {
   try {
     return await github.fetchUserInfo(githubAccessToken);
   } catch (error) {
-    throw new OutboundRequestFailedError(
-      `failed to get user name and avatarUrl from Github: ${error.message}`
-    );
+    throw new OutboundRequestFailedError(`failed to get user name and avatarUrl from Github: ${error.message}`);
   }
 };
 
@@ -34,9 +33,7 @@ const fetchGithubEmail = async githubAccessToken => {
   try {
     return await github.fetchUserEmail(githubAccessToken);
   } catch (error) {
-    throw new OutboundRequestFailedError(
-      `failed to get user email from Github: ${error.message}`
-    );
+    throw new OutboundRequestFailedError(`failed to get user email from Github: ${error.message}`);
   }
 };
 
@@ -50,21 +47,31 @@ const fetchGithubAccessToken = async code => {
   try {
     return await github.fetchAccessToken(exchangeCodeData);
   } catch (error) {
-    throw new OutboundRequestFailedError(
-      `failed to exchange code for access token: ${error.message}`
-    );
+    throw new OutboundRequestFailedError(`failed to exchange code for access token: ${error.message}`);
   }
 };
 
-const generateAccessToken = refreshToken => {
+const generateAccessToken = async refreshToken => {
+  let email;
   try {
-    const { email } = jwt.verify(refreshToken, config.auth.refreshTokenSecret);
-    // check in db if user with email ${email} has refresh_token ${refreshToken}
-    const accessToken = createAccessToken(email);
-    return { email, accessToken };
+    email = jwt.verify(refreshToken, config.auth.refreshTokenSecret).email;
   } catch (error) {
-    throw new JwtVerifyError(`failed to verify access token: ${error.message}`);
+    throw new JwtVerifyError(`failed to verify refresh token: ${error.message}`);
   }
+
+  let user;
+  try {
+    user = await db.getUser(email);
+  } catch (error) {
+    throw new Error(`failed to generate access token: ${error.message}`);
+  }
+
+  if (user.refreshToken !== refreshToken) {
+    throw new InvalidRefreshTokenError(`refresh token is invalid`);
+  }
+
+  const accessToken = createAccessToken(email);
+  return { email, accessToken };
 };
 
 const extractEmail = accessToken => {

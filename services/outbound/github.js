@@ -25,45 +25,37 @@ const fetchAccessToken = data =>
 
 const fetchUserInfo = accessToken =>
   new Promise((resolve, reject) => {
-    request.get(
-      githubUserEndpoint,
-      reqOptions(accessToken),
-      (error, response, body) => {
-        if (error) {
-          return reject(error);
-        }
-        if (response.statusCode !== StatusCodes.OK) {
-          return reject(body);
-        }
-
-        const bodyJson = JSON.parse(body);
-        return resolve({
-          name: bodyJson.login,
-          avatarUrl: bodyJson.avatar_url
-        });
+    request.get(githubUserEndpoint, reqOptions(accessToken), (error, response, body) => {
+      if (error) {
+        return reject(error);
       }
-    );
+      if (response.statusCode !== StatusCodes.OK) {
+        return reject(body);
+      }
+
+      const bodyJson = JSON.parse(body);
+      return resolve({
+        name: bodyJson.login,
+        avatarUrl: bodyJson.avatar_url
+      });
+    });
   });
 
 const fetchUserEmail = accessToken =>
   new Promise((resolve, reject) => {
-    request.get(
-      githubUserEmailsEndpoint,
-      reqOptions(accessToken),
-      (error, response, body) => {
-        if (error) {
-          return reject(error);
-        }
-        if (response.statusCode !== StatusCodes.OK) {
-          return reject(body);
-        }
-
-        const bodyJson = JSON.parse(body);
-        const primaryEmail = bodyJson.filter(email => email.primary === true);
-        const email = primaryEmail && primaryEmail[0].email;
-        return resolve(email);
+    request.get(githubUserEmailsEndpoint, reqOptions(accessToken), (error, response, body) => {
+      if (error) {
+        return reject(error);
       }
-    );
+      if (response.statusCode !== StatusCodes.OK) {
+        return reject(body);
+      }
+
+      const bodyJson = JSON.parse(body);
+      const primaryEmail = bodyJson.filter(email => email.primary === true);
+      const email = primaryEmail && primaryEmail[0].email;
+      return resolve(email);
+    });
   });
 
 module.exports = {

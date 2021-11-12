@@ -3,6 +3,7 @@ const logger = require('../logger');
 const DbConflictError = require('./DbConflictError');
 const DbError = require('./DbError');
 const DbNotFoundError = require('./DbNotFoundError');
+const InvalidRefreshTokenError = require('./InvalidRefreshTokenError');
 const JwtVerifyError = require('./JwtVerifyError');
 const OutboundRequestFailedError = require('./OutboundRequestFailedError');
 
@@ -28,6 +29,9 @@ const apiError = (req, error) => {
     return new ApiError(req, error.message, StatusCodes.NOT_FOUND);
   }
   if (error instanceof DbConflictError) {
+    return new ApiError(req, error.message, StatusCodes.CONFLICT);
+  }
+  if (error instanceof InvalidRefreshTokenError) {
     return new ApiError(req, error.message, StatusCodes.CONFLICT);
   }
   if (error instanceof DbError) {

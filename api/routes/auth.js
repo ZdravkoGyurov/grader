@@ -38,11 +38,7 @@ authRouter.get('/login/oauth/github/callback', async (req, res) => {
 authRouter.get('/userInfo', async (req, res) => {
   const accessToken = req.cookies[config.auth.accessTokenCookieName];
   if (!accessToken) {
-    const err = new ApiError(
-      req,
-      'missing access token',
-      StatusCodes.UNAUTHORIZED
-    );
+    const err = new ApiError(req, 'missing access token', StatusCodes.UNAUTHORIZED);
     return res.send(err).status(StatusCodes.UNAUTHORIZED);
   }
 
@@ -58,25 +54,18 @@ authRouter.get('/userInfo', async (req, res) => {
 authRouter.post('/token', async (req, res) => {
   const refreshToken = req.cookies[config.auth.refreshTokenCookieName];
   if (!refreshToken) {
-    const err = new ApiError(
-      req,
-      'missing refresh token',
-      StatusCodes.UNAUTHORIZED
-    );
+    const err = new ApiError(req, 'missing refresh token', StatusCodes.UNAUTHORIZED);
     return res.send(err).status(StatusCodes.UNAUTHORIZED);
   }
 
   try {
-    const { email, userAccessToken } =
-      authService.generateAccessToken(refreshToken);
-    res.cookie(config.auth.accessTokenCookieName, userAccessToken, {
+    const { email, accessToken } = await authService.generateAccessToken(refreshToken);
+    res.cookie(config.auth.accessTokenCookieName, accessToken, {
       httpOnly: true,
       path: '/'
     });
 
-    logger(req).info(
-      `generated new access token for user with email '${email}'`
-    );
+    logger(req).info(`generated new access token for user with email '${email}'`);
     return res.sendStatus(StatusCodes.OK);
   } catch (error) {
     const err = apiError(req, error);
@@ -87,11 +76,7 @@ authRouter.post('/token', async (req, res) => {
 authRouter.delete('/logout', async (req, res) => {
   const accessToken = req.cookies[config.auth.accessTokenCookieName];
   if (!accessToken) {
-    const err = new ApiError(
-      req,
-      'missing access token',
-      StatusCodes.UNAUTHORIZED
-    );
+    const err = new ApiError(req, 'missing access token', StatusCodes.UNAUTHORIZED);
     return res.send(err).status(StatusCodes.UNAUTHORIZED);
   }
 

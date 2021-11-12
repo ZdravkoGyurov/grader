@@ -16,8 +16,7 @@ const config = {
     query_timeout: process.env.DB_QUERY_TIMEOUT_MS,
     connectionTimeoutMillis: process.env.DB_CONNECTION_TIMEOUT_MS,
     statement_timeout: process.env.DB_STATEMENT_TIMEOUT_MS,
-    idle_in_transaction_session_timeout:
-      process.env.DB_IDLE_IN_TRANSACTION_SESSION_TIMEOUT_MS
+    idle_in_transaction_session_timeout: process.env.DB_IDLE_IN_TRANSACTION_SESSION_TIMEOUT_MS
   },
   github: {
     clientId: process.env.GITHUB_CLIENT_ID,
