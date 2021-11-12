@@ -1,4 +1,4 @@
-class DbError extends Error {
+class DbNotFoundError extends Error {
   constructor(message, ...params) {
     super(...params);
 
@@ -10,4 +10,4 @@ class DbError extends Error {
   }
 }
 
-module.exports = DbError;
+module.exports = DbNotFoundError;

@@ -1,40 +1,64 @@
+const { DatabaseError } = require('pg-protocol');
 const db = require('.');
+const DbConflictError = require('../errors/DbConflictError');
+const DbError = require('../errors/DbError');
+const DbNotFoundError = require('../errors/DbNotFoundError');
 
 const userInfoTable = 'user_info'
 
 module.exports = {
-    async getUser(email) {
-        try {
-          const query = `SELECT * FROM ${userInfoTable} WHERE email = $1`;
-          const values = [email];
-          const result = await db.query(query, values);
-          return result.rowCount !== 0 ? mapDbUser(result.rows[0]) : null;
-        } catch (error) {
-          throw new Error(`Failed to get user with email '${email}' from the database: ${error}`);
-        }
-    },
+  async getUser(email) {
+    const query = `SELECT * FROM ${userInfoTable} WHERE email = $1`;
+    const values = [email];
+
+    let result;
+    try {
+      result = await db.query(query, values);
+    } catch (error) {
+      throw DbError(`failed to find user with email '${email}' find the database: ${error.message}`)
+    }
+
+    if (result.rowCount == 0) {
+      throw new DbNotFoundError(`failed to find user with email '${email}' in the database`);
+    }
+
+    return mapDbUser(result.rows[0]);
+  },
 
     async createUser(user) {
-        try {
-            const query = `INSERT INTO ${userInfoTable} (email, name, avatar_url, refresh_token, github_access_token, role_id)
-            VALUES ($1, $2, $3, $4, $5, $6)
-            RETURNING *`;
-            const values = [user.email, user.name, user.avatarUrl, user.refreshToken, user.githubAccessToken, 1];
-            const result = await db.query(query, values);
-            return result.rowCount !== 0 ? mapDbUser(result.rows[0]) : null;
-        } catch (error) {
-            throw new Error(`Failed to create user with email '${user.email}' in the database: ${error}`);
+      const query = `INSERT INTO ${userInfoTable} (email, name, avatar_url, refresh_token, github_access_token, role_id)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING *`;
+      const values = [user.email, user.name, user.avatarUrl, user.refreshToken, user.githubAccessToken, 1];
+
+      let result;
+      try {
+        result = await db.query(query, values);
+      } catch (error) {
+        const errorMessage = `failed to create user with email '${user.email}' in the database: ${error.message}`
+        if (db.isConflictError(error)) {
+          throw new DbConflictError(errorMessage);
         }
+        throw new DbError(errorMessage);
+      }
+
+      return mapDbUser(result.rows[0]);
     },
 
     async setUserRefreshToken(email, refreshToken) {
-        try {
-            const query = `UPDATE ${userInfoTable} SET refresh_token = $1 WHERE email = $2;`;
-            const values = [refreshToken, email];
-            const result = await db.query(query, values);
-        } catch (error) {
-            throw new Error(`Failed to set user refresh_token with email '${email}' in the database: ${error}`);
-        }
+      const query = `UPDATE ${userInfoTable} SET refresh_token = $1 WHERE email = $2;`;
+      const values = [refreshToken, email];
+
+      let result;
+      try {
+        result = await db.query(query, values);
+      } catch (error) {
+        throw new DbError(`failed to set refresh_token for user with email '${email}' in the database: ${error.message}`);
+      }
+
+      if (result.rowCount == 0) {
+        throw new DbNotFoundError(`failed to find user with email '${email}'`);
+      }
     }
 }
 

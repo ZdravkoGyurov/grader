@@ -10,8 +10,8 @@ const startApplication = async () => {
 
   app.use(express.json());
   app.use(requestId);
-  morgan.token('id', req => { return req.id })
-  app.use(morgan(':id :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
+  morgan.token('requestId', req => { return req.id })
+  app.use(morgan(requestLoggerFormat()));
   app.use(cookieParser());
   
   app.use('/', router);
@@ -20,5 +20,22 @@ const startApplication = async () => {
     console.log(`listening on ${config.app.host}:${config.app.port}`);
   });
 };
+
+const requestLoggerFormat = () => {
+  const morganFormat = {
+    requestId: ':requestId',
+    remoteAddress: ':remote-addr',
+    remoteUser: ':remote-user',
+    date: '[:date[clf]]',
+    method: ':method',
+    url: ':url',
+    httpVersion: 'HTTP/:http-version',
+    status: ':status',
+    contentLength: ':res[content-length]',
+    referrer: ':referrer',
+    userAgent: ':user-agent'
+  };
+  return JSON.stringify(morganFormat);
+}
 
 startApplication();

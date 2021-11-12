@@ -1,56 +1,51 @@
 const { Router } = require("express");
 const { StatusCodes } = require('http-status-codes');
 const jwt = require('jsonwebtoken');
-const { generateAccessToken, getGithubAccessToken, getGithubUserInfo, getGithubUserEmail } = require('../../services/auth')
+const authService = require('../../services/auth')
 const db = require('../../db/user');
 const config = require('../../config');
-const ApiError = require('../../errors/ApiError');
+const { ApiError, apiError } = require('../../errors/ApiError');
+const logger = require("../../logger");
 
 const redirectUri = `http://${config.app.host}:${config.app.port}/login/oauth/github/callback`;
 
 const authRouter = Router();
 
-authRouter.get("/token", async (req, res) => {
+authRouter.post("/token", async (req, res) => {
   const refreshToken = req.cookies[config.auth.refreshTokenCookieName];
   if (!refreshToken) {
-    console.error('Failed to get refresh token');
-    return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+    const err = new ApiError(req, 'missing refresh token', StatusCodes.UNAUTHORIZED);
+    return res.send(err).status(StatusCodes.UNAUTHORIZED);
   }
 
   try {
-    const userAccessToken = generateAccessToken(refreshToken);
+    const { email, userAccessToken } = authService.generateAccessToken(refreshToken);
     res.cookie(config.auth.accessTokenCookieName, userAccessToken, {
       httpOnly: true,
       path: '/'
     });
-  } catch (error) {
-    return res.send(new ApiError(req.id, error.message, StatusCodes.UNAUTHORIZED)).status(StatusCodes.UNAUTHORIZED);
-  }
 
-  return res.sendStatus(StatusCodes.OK);
+    logger(req).info(`generated new access token for user with email '${email}'`);
+    return res.sendStatus(StatusCodes.OK);
+  } catch (error) {
+    const err = apiError(req, error);
+    return res.send(err).status(err.code);
+  }
 })
 
 authRouter.get("/userInfo", async (req, res) => {
   const accessToken = req.cookies[config.auth.accessTokenCookieName];
   if (!accessToken) {
-    console.error('Failed to get access token');
-    return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+    const err = new ApiError(req, 'missing access token', StatusCodes.UNAUTHORIZED);
+    return res.send(err).status(StatusCodes.UNAUTHORIZED);
   }
-  const email = jwt.verify(accessToken, config.auth.accessTokenSecret).email;
+
   try {
-    const user = await db.getUser(email);
-    if (!user) {
-      console.error('Failed to get user');
-      return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
-    }
-
-    delete user.refreshToken;
-    delete user.githubAccessToken;
-
+    const user = await authService.getUserInfo(accessToken);
     return res.send(user);
   } catch (error) {
-    console.error(error);
-    return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+    const err = apiError(req, error)
+    return res.send(err).status(err.code);
   }
 })
 
@@ -88,10 +83,10 @@ authRouter.get('/login/oauth/github/callback', async (req, res) => {
   };
 
   try {
-      const githubAccessToken = await getGithubAccessToken(data);
+      const githubAccessToken = await authService.getGithubAccessToken(data);
       try {
-          const email = await getGithubUserEmail(githubAccessToken);
-          const {name, avatarUrl} = await getGithubUserInfo(githubAccessToken);
+          const email = await authService.getGithubUserEmail(githubAccessToken);
+          const { name, avatarUrl } = await authService.getGithubUserInfo(githubAccessToken);
 
           const userAccessToken = jwt.sign({ email: email }, config.auth.accessTokenSecret);
           
