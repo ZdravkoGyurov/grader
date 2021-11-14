@@ -3,7 +3,7 @@ const DbConflictError = require('../errors/DbConflictError');
 const DbError = require('../errors/DbError');
 const DbNotFoundError = require('../errors/DbNotFoundError');
 
-const userInfoTable = 'user_info';
+const userInfoTable = 'users';
 
 const mapDbUser = user => ({
   email: user.email,
