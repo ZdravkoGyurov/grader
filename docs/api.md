@@ -16,14 +16,14 @@
 
 ## Assignment
 
-- POST /course/{id}/assignment - create assignment
-- GET /course/{id}/assignment - get all course assignments
-- GET /course/{id}/assignment/{id} - get assignment by id
-- PATCH /course/{id}/assignment/{id} - edit assignment name, description
-- DELETE /course/{id}/assignment/{id} - delete assignment by id
+- POST /assignment - create assignment, **course_id in body**
+- GET /assignment - get all course assignments, **course_id in body**
+- GET /assignment/{id} - get assignment by id, **course_id in body**
+- PATCH /assignment/{id} - edit assignment name, description, **course_id in body**
+- DELETE /assignment/{id} - delete assignment by id, **course_id in body**
 
 ## Submission
 
-- CREATE /course/{id}/assignment/{id}/submission - create submission
-- GET /course/{id}/assignment/{id}/submission - get all submissions
-- GET /course/{id}/assignment/{id}/submission/{id} - get submission by id
+- CREATE /submission - create submission, **assignment_id in body**
+- GET /submission - get all user submissions, **assignment_id in body**
+- GET /submission/{id} - get submission by id, **assignment_id in body**

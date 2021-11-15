@@ -1,0 +1,164 @@
+openapi: 3.0.0
+info:
+  title: Grader API
+  version: v1
+tags:
+  - name: 'auth'
+    description: 'Authentication operations'
+  - name: 'course'
+    description: 'Operations about course'
+  - name: 'assignment'
+    description: 'Operations about assignment'
+  - name: 'submission'
+    description: 'Operations about submission'
+paths:
+  /login/oauth/github:
+    get:
+      tags:
+        - auth
+      summary: 'Login'
+      responses:
+        '200':
+          description: ''
+  /login/oauth/github/callback:
+    get:
+      tags:
+        - auth
+      summary: 'Login callback used by Github'
+      responses:
+        '200':
+          description: ''
+  /userInfo:
+    get:
+      tags:
+        - auth
+      summary: 'Get info about user'
+      responses:
+        '200':
+          description: ''
+  /token:
+    post:
+      tags:
+        - auth
+      summary: 'Get access token by providing refresh token'
+      responses:
+        '200':
+          description: ''
+  /logout:
+    delete:
+      tags:
+        - auth
+      summary: 'Logout'
+      responses:
+        '200':
+          description: ''
+  /course:
+    post:
+      tags:
+        - course
+      summary: 'Create course'
+      responses:
+        '200':
+          description: ''
+    get:
+      tags:
+        - course
+      summary: 'Get all user courses'
+      responses:
+        '200':
+          description: ''
+  /course/{id}:
+    get:
+      tags:
+        - course
+      summary: 'Get course'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+    patch:
+      tags:
+        - course
+      summary: 'Update course'
+      responses:
+        '200':
+          description: ''
+    delete:
+      tags:
+        - course
+      summary: 'Delete course'
+      responses:
+        '200':
+          description: ''
+  /assignment:
+    post:
+      tags:
+        - assignment
+      summary: 'Create assignment'
+      responses:
+        '200':
+          description: ''
+    get:
+      tags:
+        - assignment
+      summary: 'Get all user assignments'
+      responses:
+        '200':
+          description: ''
+  /assignment/{id}:
+    get:
+      tags:
+        - assignment
+      summary: 'Get assignment'
+      responses:
+        '200':
+          description: ''
+    patch:
+      tags:
+        - assignment
+      summary: 'Update assignment'
+      responses:
+        '200':
+          description: ''
+    delete:
+      tags:
+        - assignment
+      summary: 'Delete assignment'
+      responses:
+        '200':
+          description: ''
+  /submission:
+    post:
+      tags:
+        - submission
+      summary: 'Create submission'
+      responses:
+        '200':
+          description: ''
+    get:
+      tags:
+        - submission
+      summary: 'Get all user submissions'
+      responses:
+        '200':
+          description: ''
+  /submission/{id}:
+    get:
+      tags:
+        - submission
+      summary: 'Get submission'
+      responses:
+        '200':
+          description: ''
+
+components:
+  schemas:
+    Course:
+      title: Course
+      type: object
+      properties:
+        name:
+          type: string
