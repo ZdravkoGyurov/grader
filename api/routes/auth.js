@@ -4,25 +4,28 @@ const authService = require('../../services/auth');
 const config = require('../../config');
 const { ApiError, apiError } = require('../../errors/ApiError');
 const logger = require('../../logger');
+const paths = require('../paths');
 
 const authRouter = new Router();
 
-authRouter.get('/login/oauth/github', async (req, res) => {
+authRouter.get(paths.auth.githubLogin, async (req, res) => {
   const githubOauthUrl = 'https://github.com/login/oauth/authorize';
   const redirectUri = `http://${config.app.host}:${config.app.port}/login/oauth/github/callback`;
   const oauthUrlParams = `?client_id=${config.github.clientId}&scope=${config.github.requiredScope}&redirect_uri=${redirectUri}`;
   res.redirect(githubOauthUrl + oauthUrlParams);
 });
 
-authRouter.get('/login/oauth/github/callback', async (req, res) => {
+authRouter.get(paths.auth.githubLoginCallback, async (req, res) => {
   const { code } = req.query;
   if (!code) {
     const err = new ApiError(req, 'missing code', StatusCodes.BAD_REQUEST);
-    return res.send(err).status(StatusCodes.BAD_REQUEST);
+    return res.status(err.code).send(err);
   }
 
   const { user, tokens } = await authService.login(code);
 
+  // used for debugging with Postman
+  console.log('accessToken => ', tokens.userAccessToken);
   res.cookie(config.auth.accessTokenCookieName, tokens.userAccessToken, {
     httpOnly: true,
     path: '/'
@@ -35,11 +38,11 @@ authRouter.get('/login/oauth/github/callback', async (req, res) => {
   return res.send(user);
 });
 
-authRouter.get('/userInfo', async (req, res) => {
+authRouter.get(paths.auth.userInfo, async (req, res) => {
   const accessToken = req.cookies[config.auth.accessTokenCookieName];
   if (!accessToken) {
     const err = new ApiError(req, 'missing access token', StatusCodes.UNAUTHORIZED);
-    return res.send(err).status(StatusCodes.UNAUTHORIZED);
+    return res.status(err.code).send(err);
   }
 
   try {
@@ -47,15 +50,15 @@ authRouter.get('/userInfo', async (req, res) => {
     return res.send(user);
   } catch (error) {
     const err = apiError(req, error);
-    return res.send(err).status(err.code);
+    return res.status(err.code).send(err);
   }
 });
 
-authRouter.post('/token', async (req, res) => {
+authRouter.post(paths.auth.token, async (req, res) => {
   const refreshToken = req.cookies[config.auth.refreshTokenCookieName];
   if (!refreshToken) {
     const err = new ApiError(req, 'missing refresh token', StatusCodes.UNAUTHORIZED);
-    return res.send(err).status(StatusCodes.UNAUTHORIZED);
+    return res.status(err.code).send(err);
   }
 
   try {
@@ -69,22 +72,22 @@ authRouter.post('/token', async (req, res) => {
     return res.sendStatus(StatusCodes.OK);
   } catch (error) {
     const err = apiError(req, error);
-    return res.send(err).status(err.code);
+    return res.status(err.code).send(err);
   }
 });
 
-authRouter.delete('/logout', async (req, res) => {
+authRouter.delete(paths.auth.logout, async (req, res) => {
   const accessToken = req.cookies[config.auth.accessTokenCookieName];
   if (!accessToken) {
     const err = new ApiError(req, 'missing access token', StatusCodes.UNAUTHORIZED);
-    return res.send(err).status(StatusCodes.UNAUTHORIZED);
+    return res.status(err.code).send(err);
   }
 
   try {
     await authService.deleteUserRefreshToken(accessToken);
   } catch (error) {
     const err = apiError(req, error);
-    return res.send(err).status(err.code);
+    return res.status(err.code).send(err);
   }
 
   res.clearCookie(config.auth.accessTokenCookieName);

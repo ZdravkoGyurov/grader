@@ -92,6 +92,8 @@ const getUserInfo = async accessToken => {
   return user;
 };
 
+const getUser = email => db.getUser(email);
+
 const deleteUserRefreshToken = async accessToken => {
   const email = extractEmail(accessToken);
   await db.setUserRefreshToken(email, null);
@@ -144,6 +146,7 @@ const login = async code => {
 module.exports = {
   generateAccessToken,
   getUserInfo,
+  getUser,
   deleteUserRefreshToken,
   login
 };

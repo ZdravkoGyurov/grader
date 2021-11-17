@@ -1,7 +1,7 @@
 const db = require('.');
-const DbConflictError = require('../errors/DbConflictError');
 const DbError = require('../errors/DbError');
 const DbNotFoundError = require('../errors/DbNotFoundError');
+const DbConflictError = require('../errors/DbConflictError');
 
 const userInfoTable = 'users';
 
@@ -38,9 +38,9 @@ const createUser = async user => {
   RETURNING *`;
   const values = [user.email, user.name, user.avatarUrl, user.refreshToken, user.githubAccessToken, 1];
 
-  let result;
   try {
-    result = await db.query(query, values);
+    const result = await db.query(query, values);
+    return mapDbUser(result.rows[0]);
   } catch (error) {
     const errorMessage = `failed to create user with email '${user.email}' in the database: ${error.message}`;
     if (db.isConflictError(error)) {
@@ -48,8 +48,6 @@ const createUser = async user => {
     }
     throw new DbError(errorMessage);
   }
-
-  return mapDbUser(result.rows[0]);
 };
 
 const setUserRefreshToken = async (email, refreshToken) => {
