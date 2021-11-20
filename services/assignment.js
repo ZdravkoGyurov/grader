@@ -13,11 +13,18 @@ const getAssignments = (email, courseId) => db.getAssignments(email, courseId);
 
 const getAssignment = (id, email) => db.getAssignment(id, email);
 
+const updateAssignment = assignment => {
+  const a = assignment;
+  a.lastEditedOn = new Date();
+  return db.updateAssignment(a);
+};
+
 const deleteAssignment = (id, authorEmail) => db.deleteAssignment(id, authorEmail);
 
 module.exports = {
   createAssignment,
   getAssignments,
   getAssignment,
+  updateAssignment,
   deleteAssignment
 };

@@ -19,7 +19,7 @@
 - POST /assignment - create assignment, **course_id in body**
 - GET /assignment - get all course assignments, **course_id in query**
 - GET /assignment/{id} - get assignment by id
-- PATCH /assignment/{id} - edit assignment name, description, **course_id in body**
+- PATCH /assignment/{id} - edit assignment name, description
 - DELETE /assignment/{id} - delete assignment by id
 
 ## Submission

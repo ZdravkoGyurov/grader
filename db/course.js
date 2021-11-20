@@ -87,7 +87,7 @@ const getCourse = async (id, email) => {
 const updateCourse = async course => {
   const query = `UPDATE ${courseTable}
   SET name=COALESCE($1, name), description=COALESCE($2, description), last_edited_on=$3
-  WHERE id=$4 AND id IN (SELECT course_id FROM ${userCourseTable} WHERE user_email=$5)
+  WHERE id=$4 AND creator_email=$5
   RETURNING *`;
   const values = [course.name, course.description, course.lastEditedOn, course.id, course.creatorEmail];
 

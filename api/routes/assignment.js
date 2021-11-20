@@ -73,6 +73,32 @@ assignmentRouter.get(
   }
 );
 
+assignmentRouter.patch(
+  '/:id',
+  authentication,
+  authorization(role.TEACHER),
+  param('id', 'should be UUID').isUUID(),
+  body('name', 'should be max 36 characters').optional().isLength({ max: 36 }),
+  body('description', 'should be max 25 characters').optional().isLength({ max: 255 }),
+  validation,
+  async (req, res) => {
+    let assignment = {
+      id: req.params.id,
+      name: req.body.name,
+      description: req.body.description,
+      authorEmail: req.user.email
+    };
+
+    try {
+      assignment = await assignmentService.updateAssignment(assignment);
+      return res.send(assignment);
+    } catch (error) {
+      const err = apiError(req, error);
+      return res.status(err.code).send(err);
+    }
+  }
+);
+
 assignmentRouter.delete(
   '/:id',
   authentication,

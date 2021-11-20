@@ -67,7 +67,7 @@ courseRouter.get(
 courseRouter.patch(
   '/:id',
   authentication,
-  authorization(role.STUDENT),
+  authorization(role.TEACHER),
   param('id', 'should be UUID').isUUID(),
   body('name', 'should be max 36 characters').optional().isLength({ max: 36 }),
   body('description', 'should be max 25 characters').optional().isLength({ max: 255 }),
@@ -79,6 +79,7 @@ courseRouter.patch(
       description: req.body.description,
       creatorEmail: req.user.email
     };
+
     try {
       course = await courseService.updateCourse(course);
       return res.send(course);

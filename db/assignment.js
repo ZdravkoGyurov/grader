@@ -88,6 +88,39 @@ const getAssignment = async (id, email) => {
   return mapDbAssignment(result.rows[0]);
 };
 
+const updateAssignment = async assignment => {
+  const query = `UPDATE ${assignmentTable}
+  SET name=COALESCE($1, name), description=COALESCE($2, description), last_edited_on=$3
+  WHERE id=$4 AND author_email=$5
+  RETURNING *`;
+  const values = [
+    assignment.name,
+    assignment.description,
+    assignment.lastEditedOn,
+    assignment.id,
+    assignment.authorEmail
+  ];
+
+  let result;
+  try {
+    result = await db.query(query, values);
+  } catch (error) {
+    const errorMessage = `failed to update assignment with id '${assignment.id}' and author '${assignment.authorEmail}' in the database: ${error.message}`;
+    if (db.isConflictError(error)) {
+      throw new DbConflictError(errorMessage);
+    }
+    throw new DbError(errorMessage);
+  }
+
+  if (result.rowCount === 0) {
+    throw new DbNotFoundError(
+      `failed to find assignment with id '${assignment.id}' and author '${assignment.authorEmail}' in the database`
+    );
+  }
+
+  return mapDbAssignment(result.rows[0]);
+};
+
 const deleteAssignment = async (id, authorEmail) => {
   const query = `DELETE FROM ${assignmentTable} WHERE id=$1 AND author_email=$2`;
   const values = [id, authorEmail];
@@ -105,5 +138,6 @@ module.exports = {
   createAssignment,
   getAssignments,
   getAssignment,
+  updateAssignment,
   deleteAssignment
 };
