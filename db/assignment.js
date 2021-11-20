@@ -61,9 +61,7 @@ const getAssignments = async (email, courseId) => {
     const result = await db.query(query, values);
     return result.rows.map(row => mapDbAssignment(row));
   } catch (error) {
-    const errorMessage = `failed to find assignments with author '${email}' ${
-      courseId ? `and courseId ${courseId}` : ''
-    } in the database: ${error.message}`;
+    const errorMessage = `failed to find assignments for user '${email}' and courseId ${courseId} in the database: ${error.message}`;
     throw new DbError(errorMessage);
   }
 };
