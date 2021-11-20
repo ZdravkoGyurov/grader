@@ -6,7 +6,7 @@ const assignmentService = require('../../services/assignment');
 const authentication = require('../middlewares/authentication');
 const authorization = require('../middlewares/authorization');
 const validation = require('../middlewares/validation');
-const role = require('../../auth');
+const { role } = require('../../consts');
 const paths = require('../paths');
 
 const assignmentRouter = new Router();

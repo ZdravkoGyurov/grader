@@ -5,7 +5,7 @@ const { apiError } = require('../../errors/ApiError');
 const courseService = require('../../services/course');
 const authentication = require('../middlewares/authentication');
 const authorization = require('../middlewares/authorization');
-const role = require('../../auth');
+const { role } = require('../../consts');
 const paths = require('../paths');
 const validation = require('../middlewares/validation');
 

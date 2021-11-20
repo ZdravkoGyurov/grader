@@ -25,5 +25,5 @@
 ## Submission
 
 - CREATE /submission - create submission, **assignment_id in body**
-- GET /submission - get all user submissions, **assignment_id in body**
-- GET /submission/{id} - get submission by id, **assignment_id in body**
+- GET /submission - get all user submissions, **assignment_id in query**
+- GET /submission/{id} - get submission by id

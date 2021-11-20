@@ -70,9 +70,9 @@ CREATE TABLE IF NOT EXISTS user_course (
 );
 
 CREATE TABLE IF NOT EXISTS assistant_course (
-    user_email TEXT,
+    assistant_email TEXT,
     course_id uuid,
-    PRIMARY KEY(user_email, course_id),
-    CONSTRAINT fk_user_email FOREIGN KEY(user_email) REFERENCES users(email),
+    PRIMARY KEY(assistant_email, course_id),
+    CONSTRAINT fk_assistant_email FOREIGN KEY(assistant_email) REFERENCES users(email),
     CONSTRAINT fk_course_id FOREIGN KEY(course_id) REFERENCES course(id)
 );

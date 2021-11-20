@@ -8,7 +8,7 @@ const authorization = requiredRoleId => async (req, res, next) => {
   try {
     const user = await authService.getUser(email);
 
-    if (user.roleId < requiredRoleId) {
+    if (user.roleId > requiredRoleId) {
       const err = new ApiError(req, 'unauthorized', StatusCodes.FORBIDDEN);
       return next(err);
     }
