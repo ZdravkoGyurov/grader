@@ -22,7 +22,7 @@ const transcation = async callback => {
 
   try {
     await client.query('BEGIN');
-    callback(client);
+    await callback(client);
     await client.query('COMMIT');
   } catch (error) {
     await client.query('ROLLBACK');
@@ -34,7 +34,7 @@ const transcation = async callback => {
 
 const isConflictError = error => {
   if (error instanceof DatabaseError) {
-    if (error.code === '23503' || error.code === '23505') {
+    if (error.code === '23505') {
       return true;
     }
   }
