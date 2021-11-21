@@ -6,6 +6,12 @@ CREATE TABLE IF NOT EXISTS role (
     PRIMARY KEY(id)
 );
 
+CREATE TABLE IF NOT EXISTS course_role (
+    id SERIAL,
+    name TEXT,
+    PRIMARY KEY(id)
+);
+
 CREATE TABLE IF NOT EXISTS submission_status (
     id SERIAL,
     name TEXT,
@@ -64,15 +70,9 @@ CREATE TABLE IF NOT EXISTS submission (
 CREATE TABLE IF NOT EXISTS user_course (
     user_email TEXT,
     course_id uuid,
+    course_role_id int,
     PRIMARY KEY(user_email, course_id),
     CONSTRAINT fk_user_email FOREIGN KEY(user_email) REFERENCES users(email),
-    CONSTRAINT fk_course_id FOREIGN KEY(course_id) REFERENCES course(id)
-);
-
-CREATE TABLE IF NOT EXISTS assistant_course (
-    assistant_email TEXT,
-    course_id uuid,
-    PRIMARY KEY(assistant_email, course_id),
-    CONSTRAINT fk_assistant_email FOREIGN KEY(assistant_email) REFERENCES users(email),
-    CONSTRAINT fk_course_id FOREIGN KEY(course_id) REFERENCES course(id)
+    CONSTRAINT fk_course_id FOREIGN KEY(course_id) REFERENCES course(id),
+    CONSTRAINT fk_course_role_id FOREIGN KEY(course_role_id) REFERENCES course_role(id)
 );
