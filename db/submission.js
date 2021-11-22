@@ -17,6 +17,8 @@ const mapDbSubmission = submission => ({
 });
 
 const createSubmission = async submission => {
+  // check if user is in course
+  // SELECT * FROM user_course WHERE user_email=$1 AND course_id=(SELECT course_id FROM assignment WHERE id=$2) [submission.submitterEmail, submission.assignmentId]
   const query = `INSERT INTO ${submissionTable} (id, result, submission_status_id, submitter_email, assignment_id)
   VALUES ($1, $2, $3, $4, $5)
   RETURNING *`;
