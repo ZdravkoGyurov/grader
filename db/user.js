@@ -2,6 +2,7 @@ const db = require('.');
 const DbError = require('../errors/DbError');
 const DbNotFoundError = require('../errors/DbNotFoundError');
 const DbConflictError = require('../errors/DbConflictError');
+const { role } = require('../consts');
 
 const userInfoTable = 'users';
 
@@ -32,11 +33,31 @@ const getUser = async email => {
   return mapDbUser(result.rows[0]);
 };
 
+const updateUserRole = async user => {
+  const query = `UPDATE ${userInfoTable} SET role_id=$1 WHERE email=$2`;
+  const values = [user.roleId, user.email];
+
+  let result;
+  try {
+    result = await db.query(query, values);
+  } catch (error) {
+    const errorMessage = `failed to find user with email '${user.email}' in the database: ${error.message}`;
+    if (db.isConflictError(error)) {
+      throw new DbConflictError(errorMessage);
+    }
+    throw new DbError(errorMessage);
+  }
+
+  if (result.rowCount === 0) {
+    throw new DbNotFoundError(`failed to find user with email '${user.email}' in the database`);
+  }
+};
+
 const createUser = async user => {
   const query = `INSERT INTO ${userInfoTable} (email, name, avatar_url, refresh_token, github_access_token, role_id)
   VALUES ($1, $2, $3, $4, $5, $6)
   RETURNING *`;
-  const values = [user.email, user.name, user.avatarUrl, user.refreshToken, user.githubAccessToken, 1];
+  const values = [user.email, user.name, user.avatarUrl, user.refreshToken, user.githubAccessToken, role.STUDENT];
 
   try {
     const result = await db.query(query, values);
@@ -69,5 +90,6 @@ const setUserRefreshToken = async (email, refreshToken) => {
 module.exports = {
   getUser,
   createUser,
+  updateUserRole,
   setUserRefreshToken
 };

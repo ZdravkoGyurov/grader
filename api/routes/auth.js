@@ -1,10 +1,15 @@
 const { Router } = require('express');
 const { StatusCodes } = require('http-status-codes');
+const { body } = require('express-validator');
 const authService = require('../../services/auth');
 const config = require('../../config');
 const { ApiError, apiError } = require('../../errors/ApiError');
 const logger = require('../../logger');
 const paths = require('../paths');
+const validation = require('../middlewares/validation');
+const authentication = require('../middlewares/authentication');
+const authorization = require('../middlewares/authorization');
+const { role } = require('../../consts');
 
 const authRouter = new Router();
 
@@ -53,6 +58,29 @@ authRouter.get(paths.auth.userInfo, async (req, res) => {
     return res.status(err.code).send(err);
   }
 });
+
+authRouter.patch(
+  paths.auth.userInfo,
+  authentication,
+  authorization(role.ADMIN),
+  body('email', 'should be an email').notEmpty().isEmail(),
+  body('roleId', 'should be an integer [1, 2, 3]').notEmpty().isInt({ min: 1, max: 3 }),
+  validation,
+  async (req, res) => {
+    const user = {
+      email: req.body.email,
+      roleId: req.body.roleId
+    };
+
+    try {
+      await authService.updateAssignment(user);
+      return res.sendStatus(StatusCodes.OK);
+    } catch (error) {
+      const err = apiError(req, error);
+      return res.status(err.code).send(err);
+    }
+  }
+);
 
 authRouter.post(paths.auth.token, async (req, res) => {
   const refreshToken = req.cookies[config.auth.refreshTokenCookieName];

@@ -2,6 +2,7 @@ const db = require('.');
 const DbError = require('../errors/DbError');
 const DbConflictError = require('../errors/DbConflictError');
 const DbNotFoundError = require('../errors/DbNotFoundError');
+const { courseRole } = require('../consts');
 
 const courseTable = 'course';
 const userCourseTable = 'user_course';
@@ -30,8 +31,8 @@ const createCourse = async course => {
     course.lastEditedOn
   ];
 
-  const createUserCourseQuery = `INSERT INTO ${userCourseTable} (user_email, course_id)
-  VALUES ($1, $2)`;
+  const createUserCourseQuery = `INSERT INTO ${userCourseTable} (user_email, course_id, course_role_id)
+  VALUES ($1, $2, ${courseRole.ASSISTANT})`;
   const createUserCourseValues = [course.creatorEmail, course.id];
 
   try {

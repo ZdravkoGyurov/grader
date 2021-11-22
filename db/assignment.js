@@ -1,4 +1,5 @@
 const db = require('.');
+const dbCourse = require('./course');
 const DbError = require('../errors/DbError');
 const DbConflictError = require('../errors/DbConflictError');
 const DbNotFoundError = require('../errors/DbNotFoundError');
@@ -31,6 +32,18 @@ const createAssignment = async assignment => {
     assignment.createdOn,
     assignment.lastEditedOn
   ];
+
+  let course;
+  try {
+    course = await dbCourse.getCourse(assignment.courseId, assignment.authorEmail);
+  } catch (error) {
+    const errorMessage = `failed to create assignment, only course creators can create assignments: ${error.message}`;
+    throw new DbError(errorMessage);
+  }
+
+  if (course.creatorEmail !== assignment.authorEmail) {
+    throw new DbError(`failed to create assignment, only course creators can create assignments`);
+  }
 
   try {
     const result = await db.query(query, values);

@@ -92,6 +92,8 @@ const getUserInfo = async accessToken => {
   return user;
 };
 
+const updateAssignment = user => db.updateUserRole(user);
+
 const getUser = email => db.getUser(email);
 
 const deleteUserRefreshToken = async accessToken => {
@@ -146,6 +148,7 @@ const login = async code => {
 module.exports = {
   generateAccessToken,
   getUserInfo,
+  updateAssignment,
   getUser,
   deleteUserRefreshToken,
   login

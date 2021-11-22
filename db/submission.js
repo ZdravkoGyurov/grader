@@ -2,7 +2,9 @@ const db = require('.');
 const DbError = require('../errors/DbError');
 const DbConflictError = require('../errors/DbConflictError');
 const DbNotFoundError = require('../errors/DbNotFoundError');
+const { courseRole } = require('../consts');
 
+const assignmentTable = 'assignment';
 const submissionTable = 'submission';
 const userCourseTable = 'user_course';
 
@@ -39,9 +41,9 @@ const createSubmission = async submission => {
 };
 
 const getSubmissions = async (email, assignmentId) => {
-  const query = `SELECT * FROM submission
-  WHERE assignment_id=$1 AND assignment_id IN (SELECT id FROM assignment
-                         WHERE course_id IN (SELECT course_id FROM ${userCourseTable} WHERE user_email=$2))`;
+  const query = `SELECT * FROM ${submissionTable}
+  WHERE assignment_id=$1 AND (submitter_email=$2 OR assignment_id IN (SELECT id FROM ${assignmentTable}
+                         WHERE course_id IN (SELECT course_id FROM ${userCourseTable} WHERE user_email=$2)))`;
   const values = [assignmentId, email];
 
   try {
@@ -54,9 +56,9 @@ const getSubmissions = async (email, assignmentId) => {
 };
 
 const getSubmission = async (id, email) => {
-  const query = `SELECT * FROM submission
-  WHERE id=$1 AND assignment_id IN (SELECT id FROM assignment
-                       WHERE course_id IN (SELECT course_id FROM ${userCourseTable} WHERE user_email=$2))`;
+  const query = `SELECT * FROM ${submissionTable}
+  WHERE id=$1 AND (submitter_email=$2 OR assignment_id IN (SELECT id FROM ${assignmentTable}
+                       WHERE course_id IN (SELECT course_id FROM ${userCourseTable} WHERE user_email=$2 AND course_role_id=${courseRole.ASSISTANT})))`;
   const values = [id, email];
 
   let result;
