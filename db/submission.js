@@ -17,12 +17,13 @@ const mapDbSubmission = submission => ({
 });
 
 const createSubmission = async submission => {
-  // check if user is in course
-  // SELECT * FROM user_course WHERE user_email=$1 AND course_id=(SELECT course_id FROM assignment WHERE id=$2) [submission.submitterEmail, submission.assignmentId]
-  const query = `INSERT INTO ${submissionTable} (id, result, submission_status_id, submitter_email, assignment_id)
+  const userCourseQuery = `SELECT * FROM ${userCourseTable} WHERE user_email=$1 AND course_id=(SELECT course_id FROM ${assignmentTable} WHERE id=$2)`;
+  const userCourseValues = [submission.submitterEmail, submission.assignmentId];
+
+  const createSubmissionQuery = `INSERT INTO ${submissionTable} (id, result, submission_status_id, submitter_email, assignment_id)
   VALUES ($1, $2, $3, $4, $5)
   RETURNING *`;
-  const values = [
+  const createSubmissionValues = [
     submission.id,
     '{}',
     submission.submissionStatusId,
@@ -31,7 +32,14 @@ const createSubmission = async submission => {
   ];
 
   try {
-    const result = await db.query(query, values);
+    let result;
+    await db.transcation(async client => {
+      result = await client.query(userCourseQuery, userCourseValues);
+      if (result.rowCount === 0) {
+        throw new Error('user is not in the course');
+      }
+      result = await db.query(createSubmissionQuery, createSubmissionValues);
+    });
     return mapDbSubmission(result.rows[0]);
   } catch (error) {
     const errorMessage = `failed to create submission for assignment with id '${submission.assignmentId}' in the database: ${error.message}`;

@@ -38,9 +38,9 @@
 
 ==================================================
 
-## Submissions ❌
+## Submissions ✔️
 
-### Create submission ❌
+### Create submission ✔️
 
 - **Every user** who is in that course can create a submission
 
