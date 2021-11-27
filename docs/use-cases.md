@@ -58,16 +58,16 @@
 
 ==================================================
 
-## User-Course ❌
+## User-Course ✔️
 
-### Create User-Course mapping ❌
+### Create User-Course mapping ✔️
 
 - **Course creator** can add users in a course
 
-### Edit User-Course mapping ❌
+### Edit User-Course mapping ✔️
 
 - **Course creator** can promote/demote student to assistant
 
-### Delete User-Course mapping ❌
+### Delete User-Course mapping ✔️
 
 - **Course creator** can remove users from a course
