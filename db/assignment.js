@@ -37,7 +37,7 @@ const createAssignment = async assignment => {
   try {
     course = await dbCourse.getCourse(assignment.courseId, assignment.authorEmail);
   } catch (error) {
-    const errorMessage = `failed to create assignment, only course creators can create assignments: ${error.message}`;
+    const errorMessage = `failed to create assignment: ${error.message}`;
     throw new DbError(errorMessage);
   }
 

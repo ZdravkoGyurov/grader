@@ -9,5 +9,6 @@ module.exports = {
   },
   course: '/course',
   assignment: '/assignment',
-  submission: '/submission'
+  submission: '/submission',
+  userCourse: '/userCourse'
 };
