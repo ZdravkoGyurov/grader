@@ -6,6 +6,7 @@ const router = require('./api/routes');
 const requestId = require('./api/middlewares/requestId');
 const logger = require('./logger');
 const errorMiddleware = require('./api/middlewares/error');
+const db = require('./db');
 
 const requestLoggerFormat = () => {
   const morganFormat = {
@@ -24,6 +25,29 @@ const requestLoggerFormat = () => {
   return JSON.stringify(morganFormat);
 };
 
+const gracefulShutdownHandler = server => signal => {
+  logger().warn(`caught ${signal}, gracefully shutting down...`);
+
+  setTimeout(() => {
+    logger().info('shutting down server...');
+
+    server.close(async () => {
+      logger().info('server stopped');
+
+      logger().info('disconnecting from db...');
+      await db.disconnect();
+      logger().info('disconnected from db');
+
+      process.exit();
+    });
+  }, 0);
+};
+
+const registerShutdownHandler = server => {
+  process.on('SIGINT', gracefulShutdownHandler(server));
+  process.on('SIGTERM', gracefulShutdownHandler(server));
+};
+
 const startApplication = async () => {
   const app = express();
   app.use(express.json());
@@ -33,7 +57,8 @@ const startApplication = async () => {
   app.use(cookieParser());
   app.use('/', router);
   app.use(errorMiddleware);
-  app.listen(config.app.port, config.app.host, () => {
+  const server = app.listen(config.app.port, config.app.host, () => {
+    registerShutdownHandler(server);
     logger().info(`listening on ${config.app.host}:${config.app.port}`);
   });
 };

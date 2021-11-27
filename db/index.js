@@ -15,6 +15,8 @@ const pool = new Pool({
   idle_in_transaction_session_timeout: config.db.idle_in_transaction_session_timeout
 });
 
+const disconnect = () => pool.end();
+
 const query = (text, params) => pool.query(text, params);
 
 const transcation = async callback => {
@@ -41,4 +43,9 @@ const isConflictError = error => {
   return false;
 };
 
-module.exports = { query, transcation, isConflictError };
+module.exports = {
+  query,
+  transcation,
+  isConflictError,
+  disconnect
+};
