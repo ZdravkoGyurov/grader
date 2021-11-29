@@ -1,12 +1,18 @@
 const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const config = require('./config');
 const router = require('./api/routes');
 const requestId = require('./api/middlewares/requestId');
 const logger = require('./logger');
 const errorMiddleware = require('./api/middlewares/error');
 const db = require('./db');
+
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true
+};
 
 const requestLoggerFormat = () => {
   const morganFormat = {
@@ -50,6 +56,7 @@ const registerShutdownHandler = server => {
 
 const startApplication = async () => {
   const app = express();
+  app.use(cors(corsOptions));
   app.use(express.json());
   app.use(requestId);
   morgan.token('requestId', req => req.id);

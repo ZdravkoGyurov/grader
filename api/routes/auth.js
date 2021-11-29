@@ -40,7 +40,9 @@ authRouter.get(paths.auth.githubLoginCallback, async (req, res) => {
     path: '/'
   });
 
-  return res.send(user);
+  const uiUrl = 'http://localhost:3000';
+  // return res.send(user);
+  res.redirect(uiUrl);
 });
 
 authRouter.get(paths.auth.userInfo, async (req, res) => {
