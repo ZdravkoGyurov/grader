@@ -1,0 +1,13 @@
+host: localhost
+port: 8081
+server:
+  readTimeout: 30s
+  writeTimeout: 30s
+  shutdownTimeout: 30s
+db:
+  uri: postgresql://postgres:postgres@localhost:5432?connect_timeout=10
+  connectTimeout: 30s
+  requestTimeout: 30s
+executor:
+  maxWorkers: 5
+  maxConcurrentJobs: 100
