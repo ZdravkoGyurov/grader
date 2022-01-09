@@ -9,11 +9,11 @@ const userCourseTable = 'user_course';
 const mapDbUserCourseMapping = userCourseMapping => ({
   userEmail: userCourseMapping.user_email,
   courseId: userCourseMapping.course_id,
-  courseRoleId: userCourseMapping.course_role_id
+  courseRoleName: userCourseMapping.course_role_name
 });
 
 const createUserCourseMapping = async (email, userCourseMapping) => {
-  const query = `INSERT INTO ${userCourseTable} (user_email, course_id, course_role_id)
+  const query = `INSERT INTO ${userCourseTable} (user_email, course_id, course_role_name)
   VALUES ($1, $2, $3)
   RETURNING *`;
   const values = [userCourseMapping.userEmail, userCourseMapping.courseId, userCourseMapping.courseRoleId];
@@ -44,7 +44,7 @@ const createUserCourseMapping = async (email, userCourseMapping) => {
 
 const updateUserCourseMapping = async userCourseMapping => {
   const query = `UPDATE ${userCourseTable}
-  SET course_role_id=$1
+  SET course_role_name=$1
   WHERE user_email=$2 AND course_id=$3
   RETURNING *`;
   const values = [userCourseMapping.courseRoleId, userCourseMapping.userEmail, userCourseMapping.courseId];

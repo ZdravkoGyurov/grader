@@ -31,7 +31,7 @@ const createCourse = async course => {
     course.lastEditedOn
   ];
 
-  const createUserCourseQuery = `INSERT INTO ${userCourseTable} (user_email, course_id, course_role_id)
+  const createUserCourseQuery = `INSERT INTO ${userCourseTable} (user_email, course_id, course_role_name)
   VALUES ($1, $2, ${courseRole.ASSISTANT})`;
   const createUserCourseValues = [course.creatorEmail, course.id];
 

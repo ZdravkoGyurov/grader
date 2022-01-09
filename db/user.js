@@ -12,7 +12,7 @@ const mapDbUser = user => ({
   avatarUrl: user.avatar_url,
   refreshToken: user.refresh_token,
   githubAccessToken: user.github_access_token,
-  roleId: user.role_id
+  roleName: user.role_name
 });
 
 const getUser = async email => {
@@ -34,8 +34,8 @@ const getUser = async email => {
 };
 
 const updateUserRole = async user => {
-  const query = `UPDATE ${userInfoTable} SET role_id=$1 WHERE email=$2`;
-  const values = [user.roleId, user.email];
+  const query = `UPDATE ${userInfoTable} SET role_name=$1 WHERE email=$2`;
+  const values = [user.roleName, user.email];
 
   let result;
   try {
@@ -54,7 +54,7 @@ const updateUserRole = async user => {
 };
 
 const createUser = async user => {
-  const query = `INSERT INTO ${userInfoTable} (email, name, avatar_url, refresh_token, github_access_token, role_id)
+  const query = `INSERT INTO ${userInfoTable} (email, name, avatar_url, refresh_token, github_access_token, role_name)
   VALUES ($1, $2, $3, $4, $5, $6)
   RETURNING *`;
   const values = [user.email, user.name, user.avatarUrl, user.refreshToken, user.githubAccessToken, role.STUDENT];

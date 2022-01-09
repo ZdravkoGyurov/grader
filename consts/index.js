@@ -1,16 +1,16 @@
 module.exports = {
   role: {
-    ADMIN: 1,
-    TEACHER: 2,
-    STUDENT: 3
+    ADMIN: 'Admin',
+    TEACHER: 'Teacher',
+    STUDENT: 'Student'
   },
   courseRole: {
-    ASSISTANT: 1,
-    STUDENT: 2
+    ASSISTANT: 'Assistant',
+    STUDENT: 'Student'
   },
   submissionStatus: {
-    SUCCESS: 1,
-    PENDING: 2,
-    FAIL: 3
+    SUCCESS: 'Success',
+    PENDING: 'Pending',
+    FAIL: 'Fail'
   }
 };

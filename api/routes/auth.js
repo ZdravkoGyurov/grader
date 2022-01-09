@@ -66,12 +66,12 @@ authRouter.patch(
   authentication,
   authorization(role.ADMIN),
   body('email', 'should be an email').notEmpty().isEmail(),
-  body('roleId', 'should be an integer [1, 2, 3]').notEmpty().isInt({ min: 1, max: 3 }),
+  body('roleName', 'should not be empty').notEmpty(),
   validation,
   async (req, res) => {
     const user = {
       email: req.body.email,
-      roleId: req.body.roleId
+      roleName: req.body.roleName
     };
 
     try {

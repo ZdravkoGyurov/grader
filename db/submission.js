@@ -11,7 +11,7 @@ const userCourseTable = 'user_course';
 const mapDbSubmission = submission => ({
   id: submission.id,
   result: submission.result,
-  submissionStatusId: submission.submission_status_id,
+  submissionStatusName: submission.submission_status_name,
   submitterEmail: submission.submitter_email,
   assignmentId: submission.assignment_id
 });
@@ -20,7 +20,7 @@ const createSubmission = async submission => {
   const userCourseQuery = `SELECT * FROM ${userCourseTable} WHERE user_email=$1 AND course_id=(SELECT course_id FROM ${assignmentTable} WHERE id=$2)`;
   const userCourseValues = [submission.submitterEmail, submission.assignmentId];
 
-  const createSubmissionQuery = `INSERT INTO ${submissionTable} (id, result, submission_status_id, submitter_email, assignment_id)
+  const createSubmissionQuery = `INSERT INTO ${submissionTable} (id, result, submission_status_name, submitter_email, assignment_id)
   VALUES ($1, $2, $3, $4, $5)
   RETURNING *`;
   const createSubmissionValues = [
@@ -68,7 +68,7 @@ const getSubmissions = async (email, assignmentId) => {
 const getSubmission = async (id, email) => {
   const query = `SELECT * FROM ${submissionTable}
   WHERE id=$1 AND (submitter_email=$2 OR assignment_id IN (SELECT id FROM ${assignmentTable}
-                       WHERE course_id IN (SELECT course_id FROM ${userCourseTable} WHERE user_email=$2 AND course_role_id=${courseRole.ASSISTANT})))`;
+                       WHERE course_id IN (SELECT course_id FROM ${userCourseTable} WHERE user_email=$2 AND course_role_name=${courseRole.ASSISTANT})))`;
   const values = [id, email];
 
   let result;

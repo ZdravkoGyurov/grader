@@ -25,7 +25,8 @@ const fetchUserInfo = async githubAccessToken => {
   try {
     return await github.fetchUserInfo(githubAccessToken);
   } catch (error) {
-    throw new OutboundRequestFailedError(`failed to get user name and avatarUrl from Github: ${error.message}`);
+    const errMsg = error.message || error;
+    throw new OutboundRequestFailedError(`failed to get user name and avatarUrl from Github: ${errMsg}`);
   }
 };
 
@@ -33,7 +34,8 @@ const fetchGithubEmail = async githubAccessToken => {
   try {
     return await github.fetchUserEmail(githubAccessToken);
   } catch (error) {
-    throw new OutboundRequestFailedError(`failed to get user email from Github: ${error.message}`);
+    const errMsg = error.message || error;
+    throw new OutboundRequestFailedError(`failed to get user email from Github: ${errMsg}`);
   }
 };
 
@@ -136,7 +138,7 @@ const login = async code => {
       email,
       name,
       avatarUrl,
-      roleId: user.roleId
+      roleName: user.roleName
     },
     tokens: {
       userAccessToken: createAccessToken(email),

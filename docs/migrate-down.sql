@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS user_course;
+DROP TABLE IF EXISTS submission;
+DROP TABLE IF EXISTS assignment;
+DROP TABLE IF EXISTS course;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS submission_status;
+DROP TABLE IF EXISTS course_role;
+DROP TABLE IF EXISTS role;
