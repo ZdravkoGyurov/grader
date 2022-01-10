@@ -23,7 +23,6 @@ func RunTests(ctx context.Context, testsConfig TestsRunConfig) (string, error) {
 	if err != nil && false { // TODO: check additionally if error was from test fail
 		return output, fmt.Errorf("failed docker run: %w", err)
 	}
-	defer handleRemoveContainer(ctx, testsConfig.ContainerName)
 
 	return output, nil
 }
@@ -31,11 +30,5 @@ func RunTests(ctx context.Context, testsConfig TestsRunConfig) (string, error) {
 func handleRemoveImage(ctx context.Context, imageName string) {
 	if err := removeImage(imageName); err != nil {
 		log.CtxLogger(ctx).Err(err).Msg("failed to remove docker image")
-	}
-}
-
-func handleRemoveContainer(ctx context.Context, containerName string) {
-	if err := removeContainer(containerName); err != nil {
-		log.CtxLogger(ctx).Err(err).Msg("failed to remove docker container")
 	}
 }

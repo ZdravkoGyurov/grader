@@ -22,23 +22,13 @@ func buildSubmissionImage(testsConfig TestsRunConfig, dockerfile string) (string
 }
 
 func runImage(imageName, containerName string) (string, error) {
-	cmd := exec.Command("docker", "run", "--name", containerName, imageName)
+	cmd := exec.Command("docker", "run", "--rm", "--name", containerName, imageName)
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		Setpgid: true,
 	}
 
 	bytes, err := cmd.CombinedOutput()
 	return string(bytes), err
-}
-
-func removeContainer(containerName string) error {
-	cmd := exec.Command("docker", "rm", containerName)
-	cmd.SysProcAttr = &syscall.SysProcAttr{
-		Setpgid: true,
-	}
-
-	_, err := cmd.CombinedOutput()
-	return err
 }
 
 func removeImage(imageName string) error {
