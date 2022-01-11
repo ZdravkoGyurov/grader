@@ -8,7 +8,6 @@ import (
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/controller"
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/dexec"
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/errors"
-	"github.com/ZdravkoGyurov/grader/job-executor/pkg/log"
 )
 
 type Job struct {
@@ -16,8 +15,6 @@ type Job struct {
 }
 
 func (h *Job) Post(writer http.ResponseWriter, request *http.Request) {
-	logger := log.RequestLogger(request)
-
 	testsRunConfig := dexec.TestsRunConfig{}
 	if err := json.NewDecoder(request.Body).Decode(&testsRunConfig); err != nil {
 		err = errors.HTTPErr{StatusCode: http.StatusBadRequest, Err: err}
@@ -31,7 +28,6 @@ func (h *Job) Post(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	logger.Info().Msgf("executing tests for submission '%s'", testsRunConfig.SubmissionID)
 	if err := h.Controller.ExecJob(request.Context(), testsRunConfig); err != nil {
 		response.SendError(writer, request, err)
 		return
