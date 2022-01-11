@@ -35,7 +35,7 @@ type Application struct {
 	config     config.Config
 	server     *http.Server
 	storage    *storage.Storage
-	exe        *executor.Executor
+	executor   *executor.Executor
 }
 
 func New(cfg config.Config) *Application {
@@ -43,9 +43,9 @@ func New(cfg config.Config) *Application {
 
 	storage := storage.New(cfg.DB)
 
-	exe := executor.New(cfg.Executor)
+	executor := executor.New(cfg.Executor)
 
-	ctrl := controller.New(cfg, storage, exe)
+	ctrl := controller.New(cfg, storage, executor)
 	r := router.New(ctrl)
 
 	server := &http.Server{
@@ -60,7 +60,7 @@ func New(cfg config.Config) *Application {
 		config:     cfg,
 		server:     server,
 		storage:    storage,
-		exe:        exe,
+		executor:   executor,
 	}
 }
 
@@ -74,7 +74,7 @@ func (a *Application) Start() error {
 	}
 	logger.Info().Msg("storage connection opened")
 
-	a.exe.Start()
+	a.executor.Start()
 	logger.Info().Msg("job executor started")
 
 	logger.Info().Msg("server started")
@@ -125,6 +125,6 @@ func (a *Application) stopServer() {
 }
 
 func (a *Application) stopExecutor() {
-	a.exe.Stop()
+	a.executor.Stop()
 	log.DefaultLogger().Info().Msg("job executor stopped")
 }

@@ -2,9 +2,9 @@ package storage
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/config"
+	"github.com/ZdravkoGyurov/grader/job-executor/pkg/errors"
 
 	"github.com/jackc/pgx/v4/pgxpool"
 )
@@ -26,7 +26,7 @@ func (s *Storage) Connect(ctx context.Context) error {
 
 	pool, err := pgxpool.Connect(connectCtx, s.cfg.URI)
 	if err != nil {
-		return fmt.Errorf("could not create postgresql connection pool: %w", err)
+		return errors.Newf("could not create postgresql connection pool: %w", err)
 	}
 
 	s.pool = pool

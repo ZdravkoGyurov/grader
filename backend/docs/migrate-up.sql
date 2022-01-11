@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS assignment (
 
 CREATE TABLE IF NOT EXISTS submission (
     id uuid DEFAULT uuid_generate_v4(),
-    result jsonb,
+    result TEXT,
     submission_status_name TEXT NOT NULL,
     submitter_email TEXT NOT NULL,
     assignment_id uuid NOT NULL, 

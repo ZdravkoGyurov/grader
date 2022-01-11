@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/ZdravkoGyurov/grader/job-executor/pkg/errors"
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/log"
 )
 
@@ -18,19 +19,28 @@ func SendData(writer http.ResponseWriter, request *http.Request, status int, dat
 	respond(writer, request, status, jsonBytes)
 }
 
-func SendError(writer http.ResponseWriter, request *http.Request, status int, err error) {
+func SendError(writer http.ResponseWriter, request *http.Request, err error) {
 	logger := log.RequestLogger(request)
 	if err == nil {
-		respondInternalError(writer, request)
 		logger.Error().Msg("failed to return nil error")
+		respondInternalError(writer, request)
 		return
 	}
-	if status == http.StatusInternalServerError {
+
+	httpErr := &errors.HTTPErr{}
+	if errors.As(err, httpErr) {
+		logger.Err(err).Send()
 		respondInternalError(writer, request)
-	} else {
-		respondError(writer, request, status, err.Error())
+		return
 	}
+
+	if httpErr.StatusCode == http.StatusInternalServerError {
+		respondInternalError(writer, request)
+		return
+	}
+
 	logger.Err(err).Send()
+	respondError(writer, request, httpErr.StatusCode, err.Error())
 }
 
 func respondInternalError(writer http.ResponseWriter, request *http.Request) {

@@ -1,10 +1,10 @@
 package middlewares
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/api/response"
+	"github.com/ZdravkoGyurov/grader/job-executor/pkg/errors"
 )
 
 func PanicRecovery(next http.Handler) http.Handler {
@@ -12,8 +12,8 @@ func PanicRecovery(next http.Handler) http.Handler {
 		defer func() {
 			panicErr := recover()
 			if panicErr != nil {
-				err := fmt.Errorf("recovered from panic: %s", panicErr)
-				response.SendError(writer, request, http.StatusInternalServerError, err)
+				err := errors.Newf("recovered from panic: %s", panicErr)
+				response.SendError(writer, request, err)
 			}
 		}()
 

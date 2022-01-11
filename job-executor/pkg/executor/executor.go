@@ -2,21 +2,19 @@ package executor
 
 import (
 	"context"
+	"net/http"
 	"sync"
 
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/config"
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/errors"
-	"github.com/ZdravkoGyurov/grader/job-executor/pkg/log"
-	"github.com/google/uuid"
+)
 
-	"github.com/rs/zerolog"
+var (
+	ErrTooManyRequests = errors.New("too many requests")
 )
 
 type job struct {
-	id     string
-	name   string
-	exec   func()
-	logger *zerolog.Logger
+	exec func()
 }
 
 type Executor struct {
@@ -37,41 +35,34 @@ func New(cfg config.Executor) *Executor {
 }
 
 func (e *Executor) Start() {
-	e.wg.Add(e.cfg.MaxWorkers)
 	for i := 0; i < e.cfg.MaxWorkers; i++ {
 		e.startWorker()
 	}
 }
 
-func (e *Executor) QueueJob(ctx context.Context, name string, exec func()) error {
+func (e *Executor) QueueJob(ctx context.Context, exec func()) error {
 	if e.stopped {
-		return errors.New("executor is stopped")
+		return errors.HTTPErr{StatusCode: http.StatusInternalServerError, Err: errors.New("executor is stopped")}
 	}
 
-	j := job{
-		id:     uuid.NewString(),
-		name:   name,
-		exec:   exec,
-		logger: log.CtxLogger(ctx),
-	}
+	j := job{exec: exec}
 
 	select {
 	case e.jobs <- j:
-		j.logger.Info().Msgf("enqueued job %s '%s'\n", j.id, j.name)
 		return nil
 	default:
-		return errors.New("channel is full")
+		// channel is full
+		return errors.HTTPErr{StatusCode: http.StatusTooManyRequests, Err: ErrTooManyRequests}
 	}
 }
 
 func (e *Executor) startWorker() {
+	e.wg.Add(1)
 	go func() {
 		defer e.wg.Done()
 
 		for job := range e.jobs {
-			job.logger.Info().Msgf("executing job %s\n", job.id)
 			job.exec()
-			job.logger.Info().Msgf("finished job %s\n", job.id)
 		}
 	}()
 }

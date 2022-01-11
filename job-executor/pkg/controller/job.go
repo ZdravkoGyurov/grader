@@ -2,36 +2,32 @@ package controller
 
 import (
 	"context"
+	"strings"
 
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/dexec"
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/errors"
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/log"
+	"github.com/ZdravkoGyurov/grader/job-executor/pkg/random"
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/types"
 )
 
-func (c *Controller) ExecJob(ctx context.Context, submissionID string) error {
+func (c *Controller) ExecJob(ctx context.Context, config dexec.TestsRunConfig) error {
 	logger := log.CtxLogger(ctx)
 	logger.Info().Msg("executing job")
 
-	jobName := "" // TODO
-	err := c.executor.QueueJob(ctx, jobName, func() {
-		// TODO run tests
-		output, err := dexec.RunTests(ctx, dexec.TestsRunConfig{
-			ImageName:     "job-exec-test-image1",
-			ContainerName: "job-exec-test-container1",
-		})
+	config.ImageName = random.LowercaseString(10)
+	config.ContainerName = random.LowercaseString(10)
+
+	err := c.executor.QueueJob(ctx, func() {
+		result, err := dexec.RunTests(ctx, config)
 		if err != nil {
 			logger.Err(err).Send()
 		}
-		logger.Info().Msgf("output: %s", output)
-
-		result := "{}"                          // TODO
-		status := types.SubmissionStatusSuccess // TODO
 
 		submission := types.Submission{
-			ID:     submissionID,
+			ID:     config.SubmissionID,
 			Result: result,
-			Status: status,
+			Status: parseResultStatus(result),
 		}
 		if err := c.storage.UpdateSubmission(submission); err != nil {
 			logger.Err(err).Send()
@@ -42,4 +38,11 @@ func (c *Controller) ExecJob(ctx context.Context, submissionID string) error {
 	}
 
 	return nil
+}
+
+func parseResultStatus(result string) types.SubmissionStatus {
+	if strings.Contains(result, "\n0 tests failed") {
+		return types.SubmissionStatusSuccess
+	}
+	return types.SubmissionStatusFail
 }
