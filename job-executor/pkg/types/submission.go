@@ -13,3 +13,12 @@ type Submission struct {
 	Result string
 	Status SubmissionStatus
 }
+
+type SubmissionInfo struct {
+	CourseGithubName     string
+	AssignmentGithubName string
+	SubmitterGithubName  string
+	SubmitterGithubToken string
+	TesterGithubName     string
+	TesterGithubToken    string
+}

@@ -14,8 +14,9 @@ import (
 func (c *Controller) ExecJob(ctx context.Context, config dexec.TestsRunConfig) error {
 	logger := log.CtxLogger(ctx)
 
-	config.ImageName = random.LowercaseString(10)
-	config.ContainerName = random.LowercaseString(10)
+	if err := c.fillTestsRunConfig(ctx, &config); err != nil {
+		return err
+	}
 
 	err := c.executor.QueueJob(ctx, func() {
 		submission := types.Submission{ID: config.SubmissionID}
@@ -39,6 +40,24 @@ func (c *Controller) ExecJob(ctx context.Context, config dexec.TestsRunConfig) e
 	if err != nil {
 		return errors.Newf("failed to enqueue job: %w", err)
 	}
+
+	return nil
+}
+
+func (c *Controller) fillTestsRunConfig(ctx context.Context, config *dexec.TestsRunConfig) error {
+	submissionInfo, err := c.storage.GetSubmissionInfo(ctx, config.SubmissionID)
+	if err != nil {
+		return err
+	}
+
+	config.ImageName = random.LowercaseString(10)
+	config.ContainerName = random.LowercaseString(10)
+	config.CourseGithubName = submissionInfo.CourseGithubName
+	config.AssignmentGithubName = submissionInfo.AssignmentGithubName
+	config.SubmitterGithubName = submissionInfo.SubmitterGithubName
+	config.SubmitterGithubToken = submissionInfo.SubmitterGithubToken
+	config.TesterGithubName = submissionInfo.TesterGithubName
+	config.TesterGithubToken = submissionInfo.TesterGithubToken
 
 	return nil
 }
