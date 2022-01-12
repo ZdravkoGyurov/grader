@@ -2,15 +2,10 @@ package executor
 
 import (
 	"context"
-	"net/http"
 	"sync"
 
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/config"
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/errors"
-)
-
-var (
-	ErrTooManyRequests = errors.New("too many requests")
 )
 
 type job struct {
@@ -42,7 +37,7 @@ func (e *Executor) Start() {
 
 func (e *Executor) QueueJob(ctx context.Context, exec func()) error {
 	if e.stopped {
-		return errors.HTTPErr{StatusCode: http.StatusInternalServerError, Err: errors.New("executor is stopped")}
+		return errors.New("executor is stopped")
 	}
 
 	j := job{exec: exec}
@@ -52,7 +47,7 @@ func (e *Executor) QueueJob(ctx context.Context, exec func()) error {
 		return nil
 	default:
 		// channel is full
-		return errors.HTTPErr{StatusCode: http.StatusTooManyRequests, Err: ErrTooManyRequests}
+		return errors.ErrTooManyRequests
 	}
 }
 

@@ -27,20 +27,13 @@ func SendError(writer http.ResponseWriter, request *http.Request, err error) {
 		return
 	}
 
-	httpErr := &errors.HTTPErr{}
-	if errors.As(err, httpErr) {
-		logger.Err(err).Send()
-		respondInternalError(writer, request)
-		return
-	}
-
-	if httpErr.StatusCode == http.StatusInternalServerError {
-		respondInternalError(writer, request)
-		return
-	}
-
 	logger.Err(err).Send()
-	respondError(writer, request, httpErr.StatusCode, err.Error())
+	status := getStatus(err)
+	if status == http.StatusInternalServerError {
+		respondInternalError(writer, request)
+	} else {
+		respondError(writer, request, status, err.Error())
+	}
 }
 
 func respondInternalError(writer http.ResponseWriter, request *http.Request) {
@@ -58,4 +51,23 @@ func respond(writer http.ResponseWriter, request *http.Request, status int, json
 	writer.WriteHeader(status)
 	writer.Write(jsonBytes)
 	log.RequestLogger(request).Info().Msgf("responded with %d - %s", status, string(jsonBytes))
+}
+
+func getStatus(err error) int {
+	if errors.Is(err, errors.ErrInvalidEntity) {
+		return http.StatusBadRequest
+	}
+	if errors.Is(err, errors.ErrEntityNotFound) {
+		return http.StatusNotFound
+	}
+	if errors.Is(err, errors.ErrRefEntityNotFound) {
+		return http.StatusNotFound
+	}
+	if errors.Is(err, errors.ErrEntityAlreadyExists) {
+		return http.StatusConflict
+	}
+	if errors.Is(err, errors.ErrTooManyRequests) {
+		return http.StatusTooManyRequests
+	}
+	return http.StatusInternalServerError
 }

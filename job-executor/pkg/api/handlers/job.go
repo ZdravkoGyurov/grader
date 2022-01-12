@@ -17,13 +17,7 @@ type Job struct {
 func (h *Job) Post(writer http.ResponseWriter, request *http.Request) {
 	testsRunConfig := dexec.TestsRunConfig{}
 	if err := json.NewDecoder(request.Body).Decode(&testsRunConfig); err != nil {
-		err = errors.HTTPErr{StatusCode: http.StatusBadRequest, Err: err}
-		response.SendError(writer, request, err)
-		return
-	}
-
-	if err := testsRunConfig.Validate(); err != nil {
-		err = errors.HTTPErr{StatusCode: http.StatusBadRequest, Err: errors.Newf("invalid tests config: %w", err)}
+		err = errors.Newf("%s: %w", err, errors.ErrInvalidEntity)
 		response.SendError(writer, request, err)
 		return
 	}

@@ -14,6 +14,10 @@ import (
 func (c *Controller) ExecJob(ctx context.Context, config dexec.TestsRunConfig) error {
 	logger := log.CtxLogger(ctx)
 
+	if err := config.Validate(); err != nil {
+		return errors.Newf("invalid tests config: %s: %w", err, errors.ErrInvalidEntity)
+	}
+
 	if err := c.fillTestsRunConfig(ctx, &config); err != nil {
 		return err
 	}

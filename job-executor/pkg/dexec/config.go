@@ -20,7 +20,7 @@ type TestsRunConfig struct {
 
 func (c *TestsRunConfig) Validate() error {
 	if _, err := uuid.Parse(c.SubmissionID); err != nil {
-		return errors.Newf("invalid submissionID :%w", err)
+		return errors.Newf("invalid submissionID: %w", err)
 	}
 
 	return nil

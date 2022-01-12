@@ -12,11 +12,10 @@ var (
 	Newf = fmt.Errorf
 )
 
-type HTTPErr struct {
-	StatusCode int
-	Err        error
-}
-
-func (e HTTPErr) Error() string {
-	return fmt.Sprintf("%d - %s", e.StatusCode, e.Err)
-}
+var (
+	ErrInvalidEntity       = errors.New("entity is invalid")
+	ErrEntityNotFound      = errors.New("entity not found")
+	ErrRefEntityNotFound   = errors.New("referenced entity not found")
+	ErrEntityAlreadyExists = errors.New("entity already exists")
+	ErrTooManyRequests     = errors.New("too many requests")
+)

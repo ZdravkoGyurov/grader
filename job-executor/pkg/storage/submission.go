@@ -25,7 +25,7 @@ func (s *Storage) UpdateSubmission(submission types.Submission) error {
 		return mapDBError(errors.Newf("failed to update submission: %w", err))
 	}
 	if result.RowsAffected() != 1 {
-		return errors.Newf("failed to update submission: %w", errNoRowsAffected)
+		return errors.Newf("failed to update submission: %w", errors.ErrEntityNotFound)
 	}
 
 	return nil
