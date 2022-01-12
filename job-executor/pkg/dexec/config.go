@@ -7,10 +7,9 @@ import (
 )
 
 type TestsRunConfig struct {
-	SubmissionID  string `json:"submissionId"`
-	ImageName     string
-	ContainerName string
-
+	SubmissionID         string `json:"submissionId"`
+	ImageName            string
+	ContainerName        string
 	CourseGithubName     string
 	AssignmentGithubName string
 	SubmitterGithubName  string
