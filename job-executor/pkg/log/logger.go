@@ -1,7 +1,9 @@
 package log
 
 import (
+	"io"
 	"net/http"
+	"os"
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -17,7 +19,12 @@ const (
 var logger zerolog.Logger
 
 func init() {
-	loggerOutput := zerolog.NewConsoleWriter() // os.Stdout for json logging
+	var loggerOutput io.Writer
+	if os.Getenv("LOCAL_DEV") == "true" {
+		loggerOutput = zerolog.NewConsoleWriter()
+	} else {
+		loggerOutput = os.Stdout
+	}
 	logger = zerolog.New(loggerOutput).With().Timestamp().Str(componentAttribute, component).Logger()
 }
 
