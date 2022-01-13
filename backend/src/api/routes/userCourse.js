@@ -2,13 +2,13 @@ const { Router } = require('express');
 const { StatusCodes } = require('http-status-codes');
 const { body, query } = require('express-validator');
 const { apiError } = require('../../errors/ApiError');
-const { role } = require('../../consts');
+const { role, courseRole } = require('../../consts');
 const authentication = require('../middlewares/authentication');
 const authorization = require('../middlewares/authorization');
 const validation = require('../middlewares/validation');
 const userCourseService = require('../../services/userCourse');
 
-const userCourseRouter = new Router();
+const userCourseRouter = Router();
 
 userCourseRouter.post(
   '/',
@@ -16,13 +16,13 @@ userCourseRouter.post(
   authorization(role.TEACHER),
   body('userEmail', 'should be non-empty email').notEmpty().isEmail(),
   body('courseId', 'should be non-empty UUID').notEmpty().isUUID(),
-  body('courseRoleId', 'should be integer min 1 max 2').notEmpty().isInt({ min: 1, max: 2 }),
+  body('courseRoleName', 'should be Assistant or Student').notEmpty().isIn(courseRole.ASSISTANT, courseRole.STUDENT),
   validation,
   async (req, res) => {
     let userCourseMapping = {
       userEmail: req.body.userEmail,
       courseId: req.body.courseId,
-      courseRoleId: req.body.courseRoleId
+      courseRoleName: req.body.courseRoleName
     };
 
     try {
@@ -41,13 +41,13 @@ userCourseRouter.put(
   authorization(role.TEACHER),
   body('userEmail', 'should be non-empty email').notEmpty().isEmail(),
   body('courseId', 'should be non-empty UUID').notEmpty().isUUID(),
-  body('courseRoleId', 'should be integer min 1 ma]x 2').notEmpty().isInt({ min: 1, max: 2 }),
+  body('courseRoleName', 'should be Assistant or Student').notEmpty().isIn(courseRole.ASSISTANT, courseRole.STUDENT),
   validation,
   async (req, res) => {
     let userCourseMapping = {
       userEmail: req.body.userEmail,
       courseId: req.body.courseId,
-      courseRoleId: req.body.courseRoleId
+      courseRoleName: req.body.courseRoleName
     };
 
     try {

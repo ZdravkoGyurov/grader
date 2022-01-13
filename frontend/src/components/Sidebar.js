@@ -4,7 +4,6 @@ import { Badge, Divider, Flex, Heading } from "@chakra-ui/layout";
 import { useContext, useState } from "react";
 import { FiMenu, FiUsers, FiBook } from "react-icons/fi";
 import { useLocation } from "react-router";
-import consts from "../consts";
 import ThemeContext from "../contexts/ThemeContext";
 import UserContext from "../contexts/UserContext";
 import NavItem from "./NavItem";
@@ -109,7 +108,7 @@ const Sidebar = () => {
               {user.email}
             </Heading>
             <Badge marginTop="0.5rem" w="max-content" colorScheme="blue">
-              {consts.roles[user.roleId]}
+              {user.roleName}
             </Badge>
           </Flex>
         </Flex>

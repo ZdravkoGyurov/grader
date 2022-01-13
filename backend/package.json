@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --delay 500ms server.js",
-    "lint": "eslint . --ext .js"
+    "lint": "eslint . --ext .js",
+    "test": "mocha"
   },
   "author": "",
   "license": "ISC",
@@ -22,14 +23,14 @@
     "pg-protocol": "^1.5.0",
     "request": "^2.88.2",
     "uuid": "^8.3.2",
-    "winston": "^3.3.3",
-    "workerpool": "^6.1.5"
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "eslint": "^8.2.0",
     "eslint-config-airbnb": "^19.0.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^8.3.0",
+    "mocha": "^9.1.3",
     "nodemon": "^2.0.14",
     "prettier": "^2.4.1"
   }

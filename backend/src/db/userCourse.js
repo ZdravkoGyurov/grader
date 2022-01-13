@@ -16,7 +16,7 @@ const createUserCourseMapping = async (email, userCourseMapping) => {
   const query = `INSERT INTO ${userCourseTable} (user_email, course_id, course_role_name)
   VALUES ($1, $2, $3)
   RETURNING *`;
-  const values = [userCourseMapping.userEmail, userCourseMapping.courseId, userCourseMapping.courseRoleId];
+  const values = [userCourseMapping.userEmail, userCourseMapping.courseId, userCourseMapping.courseRoleName];
 
   let course;
   try {
@@ -47,7 +47,7 @@ const updateUserCourseMapping = async userCourseMapping => {
   SET course_role_name=$1
   WHERE user_email=$2 AND course_id=$3
   RETURNING *`;
-  const values = [userCourseMapping.courseRoleId, userCourseMapping.userEmail, userCourseMapping.courseId];
+  const values = [userCourseMapping.courseRoleName, userCourseMapping.userEmail, userCourseMapping.courseId];
 
   let result;
   try {

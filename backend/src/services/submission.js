@@ -6,7 +6,7 @@ const createSubmission = submission => {
   const s = submission;
   s.id = uuid.v4();
   s.result = '{}';
-  s.submissionStatusId = submissionStatus.PENDING;
+  s.submissionStatusName = submissionStatus.PENDING;
   return db.createSubmission(submission);
 };
 

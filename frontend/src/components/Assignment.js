@@ -21,7 +21,6 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import assignmentApi from "../api/assignment";
 import courseApi from "../api/course";
 import submissionApi from "../api/submission";
-import consts from "../consts";
 import ThemeContext from "../contexts/ThemeContext";
 
 const Assignment = () => {
@@ -180,13 +179,13 @@ const Assignment = () => {
     await fetchSubmissions();
   };
 
-  const submissionStatusColor = (submissionStatusId) => {
-    switch (submissionStatusId) {
-      case 1:
+  const submissionStatusColor = (submissionStatusName) => {
+    switch (submissionStatusName) {
+      case "Success":
         return "green";
-      case 2:
+      case "Pending":
         return "yellow";
-      case 3:
+      case "Fail":
         return "red";
       default:
         return "blue";
@@ -323,10 +322,10 @@ const Assignment = () => {
                     <Flex>
                       <Badge
                         colorScheme={submissionStatusColor(
-                          submission.submissionStatusId
+                          submission.submissionStatusName
                         )}
                       >
-                        {consts.submissionStatus[submission.submissionStatusId]}
+                        {submission.submissionStatusName}
                       </Badge>
                     </Flex>
                   </Td>

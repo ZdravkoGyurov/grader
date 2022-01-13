@@ -9,10 +9,10 @@ const pool = new Pool({
   password: config.db.password,
   max: config.db.poolSize,
   idleTimeoutMillis: config.db.idleTimeoutMillis,
-  query_timeout: config.db.query_timeout,
+  query_timeout: config.db.queryTimeout,
   connectionTimeoutMillis: config.db.connectionTimeoutMillis,
-  statement_timeout: config.db.statement_timeout,
-  idle_in_transaction_session_timeout: config.db.idle_in_transaction_session_timeout
+  statement_timeout: config.db.statementTimeout,
+  idle_in_transaction_session_timeout: config.db.idleInTransactionSessionTimeout
 });
 
 const disconnect = () => pool.end();

@@ -11,7 +11,7 @@ const authentication = require('../middlewares/authentication');
 const authorization = require('../middlewares/authorization');
 const { role } = require('../../consts');
 
-const authRouter = new Router();
+const authRouter = Router();
 
 authRouter.get(paths.auth.githubLogin, async (req, res) => {
   const githubOauthUrl = 'https://github.com/login/oauth/authorize';

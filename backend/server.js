@@ -2,12 +2,12 @@ const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const config = require('./config');
-const router = require('./api/routes');
-const requestId = require('./api/middlewares/requestId');
-const logger = require('./logger');
-const errorMiddleware = require('./api/middlewares/error');
-const db = require('./db');
+const config = require('./src/config');
+const router = require('./src/api/routes');
+const requestId = require('./src/api/middlewares/requestId');
+const logger = require('./src/logger');
+const errorMiddleware = require('./src/api/middlewares/error');
+const db = require('./src/db');
 
 const corsOptions = {
   origin: 'http://localhost:3000',

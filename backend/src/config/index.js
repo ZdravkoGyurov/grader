@@ -13,10 +13,10 @@ const config = {
     password: process.env.DB_PASSWORD,
     poolSize: process.env.DB_POOL_SIZE,
     idleTimeoutMillis: process.env.DB_IDLE_TIMEOUT_MS,
-    query_timeout: process.env.DB_QUERY_TIMEOUT_MS,
+    queryTimeout: process.env.DB_QUERY_TIMEOUT_MS,
     connectionTimeoutMillis: process.env.DB_CONNECTION_TIMEOUT_MS,
-    statement_timeout: process.env.DB_STATEMENT_TIMEOUT_MS,
-    idle_in_transaction_session_timeout: process.env.DB_IDLE_IN_TRANSACTION_SESSION_TIMEOUT_MS
+    statementTimeout: process.env.DB_STATEMENT_TIMEOUT_MS,
+    idleInTransactionSessionTimeout: process.env.DB_IDLE_IN_TRANSACTION_SESSION_TIMEOUT_MS
   },
   github: {
     clientId: process.env.GITHUB_CLIENT_ID,

@@ -26,7 +26,7 @@ const createSubmission = async submission => {
   const createSubmissionValues = [
     submission.id,
     '{}',
-    submission.submissionStatusId,
+    submission.submissionStatusName,
     submission.submitterEmail,
     submission.assignmentId
   ];
@@ -68,7 +68,7 @@ const getSubmissions = async (email, assignmentId) => {
 const getSubmission = async (id, email) => {
   const query = `SELECT * FROM ${submissionTable}
   WHERE id=$1 AND (submitter_email=$2 OR assignment_id IN (SELECT id FROM ${assignmentTable}
-                       WHERE course_id IN (SELECT course_id FROM ${userCourseTable} WHERE user_email=$2 AND course_role_name=${courseRole.ASSISTANT})))`;
+                       WHERE course_id IN (SELECT course_id FROM ${userCourseTable} WHERE user_email=$2 AND course_role_name='${courseRole.ASSISTANT}')))`;
   const values = [id, email];
 
   let result;

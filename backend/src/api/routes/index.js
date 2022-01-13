@@ -6,7 +6,7 @@ const assignmentRouter = require('./assignment');
 const submissionRouter = require('./submission');
 const { userCourseRouter } = require('./userCourse');
 
-const router = new Router();
+const router = Router();
 router.use(paths.api, authRouter);
 router.use(paths.course, courseRouter);
 router.use(paths.assignment, assignmentRouter);

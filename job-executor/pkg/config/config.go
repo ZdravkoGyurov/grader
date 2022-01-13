@@ -10,7 +10,7 @@ import (
 
 const (
 	configDir         = "config"
-	appConfigFileName = "app-config.yaml"
+	appConfigFileName = "app_config.yaml"
 )
 
 // Config for application properties

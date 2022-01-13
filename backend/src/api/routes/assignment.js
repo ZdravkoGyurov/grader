@@ -1,35 +1,37 @@
 const { Router } = require('express');
 const { StatusCodes } = require('http-status-codes');
-const { body, param } = require('express-validator');
+const { body, param, query } = require('express-validator');
 const { apiError } = require('../../errors/ApiError');
-const courseService = require('../../services/course');
+const assignmentService = require('../../services/assignment');
 const authentication = require('../middlewares/authentication');
 const authorization = require('../middlewares/authorization');
+const validation = require('../middlewares/validation');
 const { role } = require('../../consts');
 const paths = require('../paths');
-const validation = require('../middlewares/validation');
 
-const courseRouter = new Router();
+const assignmentRouter = Router();
 
-courseRouter.post(
+assignmentRouter.post(
   '/',
   authentication,
   authorization(role.TEACHER),
   body('name', 'should be min 1 and max 36 characters').notEmpty().isLength({ max: 36 }),
   body('description', 'should be min 1 and max 256 characters').notEmpty().isLength({ max: 255 }),
   body('githubName', 'should not be empty').notEmpty(),
+  body('courseId', 'should be non-empty UUID').notEmpty().isUUID(),
   validation,
   async (req, res) => {
-    let course = {
+    let assignment = {
       name: req.body.name,
       description: req.body.description,
       githubName: req.body.githubName,
-      creatorEmail: req.user.email
+      authorEmail: req.user.email,
+      courseId: req.body.courseId
     };
 
     try {
-      course = await courseService.createCourse(course);
-      return res.status(StatusCodes.CREATED).location(`${paths.course}/${course.id}`).json(course);
+      assignment = await assignmentService.createAssignment(assignment);
+      return res.status(StatusCodes.CREATED).location(`${paths.assignment}/${assignment.id}`).json(assignment);
     } catch (error) {
       const err = apiError(req, error);
       return res.status(err.code).send(err);
@@ -37,17 +39,24 @@ courseRouter.post(
   }
 );
 
-courseRouter.get('/', authentication, authorization(role.STUDENT), async (req, res) => {
-  try {
-    const courses = await courseService.getCourses(req.user.email);
-    return res.send(courses);
-  } catch (error) {
-    const err = apiError(req, error);
-    return res.status(err.code).send(err);
+assignmentRouter.get(
+  '/',
+  authentication,
+  authorization(role.STUDENT),
+  query('courseId', 'should be UUID').isUUID(),
+  validation,
+  async (req, res) => {
+    try {
+      const assignments = await assignmentService.getAssignments(req.user.email, req.query.courseId);
+      return res.send(assignments);
+    } catch (error) {
+      const err = apiError(req, error);
+      return res.status(err.code).send(err);
+    }
   }
-});
+);
 
-courseRouter.get(
+assignmentRouter.get(
   '/:id',
   authentication,
   authorization(role.STUDENT),
@@ -55,8 +64,8 @@ courseRouter.get(
   validation,
   async (req, res) => {
     try {
-      const course = await courseService.getCourse(req.params.id, req.user.email);
-      return res.send(course);
+      const assignment = await assignmentService.getAssignment(req.params.id, req.user.email);
+      return res.send(assignment);
     } catch (error) {
       const err = apiError(req, error);
       return res.status(err.code).send(err);
@@ -64,7 +73,7 @@ courseRouter.get(
   }
 );
 
-courseRouter.patch(
+assignmentRouter.patch(
   '/:id',
   authentication,
   authorization(role.TEACHER),
@@ -73,16 +82,16 @@ courseRouter.patch(
   body('description', 'should be max 25 characters').optional().isLength({ max: 255 }),
   validation,
   async (req, res) => {
-    let course = {
+    let assignment = {
       id: req.params.id,
       name: req.body.name,
       description: req.body.description,
-      creatorEmail: req.user.email
+      authorEmail: req.user.email
     };
 
     try {
-      course = await courseService.updateCourse(course);
-      return res.send(course);
+      assignment = await assignmentService.updateAssignment(assignment);
+      return res.send(assignment);
     } catch (error) {
       const err = apiError(req, error);
       return res.status(err.code).send(err);
@@ -90,7 +99,7 @@ courseRouter.patch(
   }
 );
 
-courseRouter.delete(
+assignmentRouter.delete(
   '/:id',
   authentication,
   authorization(role.TEACHER),
@@ -98,7 +107,7 @@ courseRouter.delete(
   validation,
   async (req, res) => {
     try {
-      await courseService.deleteCourse(req.params.id, req.user.email);
+      await assignmentService.deleteAssignment(req.params.id, req.user.email);
       return res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (error) {
       const err = apiError(req, error);
@@ -107,4 +116,4 @@ courseRouter.delete(
   }
 );
 
-module.exports = courseRouter;
+module.exports = assignmentRouter;

@@ -9,7 +9,7 @@ const { role } = require('../../consts');
 const submissionService = require('../../services/submission');
 const paths = require('../paths');
 
-const submissionRouter = new Router();
+const submissionRouter = Router();
 
 submissionRouter.post(
   '/',
