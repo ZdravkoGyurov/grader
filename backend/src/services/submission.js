@@ -1,6 +1,7 @@
 const uuid = require('uuid');
 const db = require('../db/submission');
 const { submissionStatus } = require('../consts');
+const { createJobRun } = require('./outbound/jobExecutor');
 
 const createSubmission = submission => {
   const s = submission;
@@ -10,12 +11,15 @@ const createSubmission = submission => {
   return db.createSubmission(submission);
 };
 
+const createSubmissionJob = submissionId => createJobRun(submissionId);
+
 const getSubmissions = (email, assignmentId) => db.getSubmissions(email, assignmentId);
 
 const getSubmission = (id, email) => db.getSubmission(id, email);
 
 module.exports = {
   createSubmission,
+  createSubmissionJob,
   getSubmissions,
   getSubmission
 };

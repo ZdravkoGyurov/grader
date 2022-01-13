@@ -25,6 +25,7 @@ submissionRouter.post(
 
     try {
       submission = await submissionService.createSubmission(submission);
+      await submissionService.createSubmissionJob(submission.id);
       return res.status(StatusCodes.ACCEPTED).location(`${paths.submission}/${submission.id}`).json();
     } catch (error) {
       const err = apiError(req, error);

@@ -23,6 +23,9 @@ const config = {
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
     requiredScope: process.env.GITHUB_REQUIRED_SCOPE
   },
+  jobExecutor: {
+    url: process.env.JOB_EXECUTOR_URL
+  },
   auth: {
     accessTokenCookieName: process.env.ACCESS_TOKEN_COOKIE_NAME,
     accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
