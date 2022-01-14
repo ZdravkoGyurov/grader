@@ -15,11 +15,13 @@ const (
 
 // Config for application properties
 type Config struct {
-	Host     string `yaml:"host"`
-	Port     int    `yaml:"port"`
-	Server   `yaml:"server"`
-	DB       `yaml:"db"`
-	Executor `yaml:"executor"`
+	Host        string `yaml:"host"`
+	Port        int    `yaml:"port"`
+	Server      `yaml:"server"`
+	DB          `yaml:"db"`
+	JobExecutor `yaml:"job_executor"`
+	Github      `yaml:"github"`
+	Auth        `yaml:"auth"`
 }
 
 type Server struct {
@@ -34,9 +36,21 @@ type DB struct {
 	RequestTimeout time.Duration `yaml:"request_timeout"`
 }
 
-type Executor struct {
-	MaxWorkers        int `yaml:"max_workers"`
-	MaxConcurrentJobs int `yaml:"max_concurrent_jobs"`
+type JobExecutor struct {
+	URL string `yaml:"url"`
+}
+
+type Github struct {
+	ClientID      string `yaml:"client_id"`
+	ClientSecret  string `yaml:"client_secret"`
+	RequiredScope string `yaml:"required_scope"`
+}
+
+type Auth struct {
+	AccessTokenString          string        `yaml:"access_token_secret"`
+	AccessTokenExpirationTime  time.Duration `yaml:"access_token_expiration_time"`
+	RefreshTokenSecret         string        `yaml:"refresh_token_secret"`
+	RefreshTokenExpirationTime time.Duration `yaml:"refresh_token_expiration_time"`
 }
 
 func Load() (Config, error) {

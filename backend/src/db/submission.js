@@ -86,11 +86,8 @@ const getSubmission = async (id, email) => {
   return mapDbSubmission(result.rows[0]);
 };
 
-const updateSubmission = () => {};
-
 module.exports = {
   createSubmission,
   getSubmissions,
-  getSubmission,
-  updateSubmission
+  getSubmission
 };
