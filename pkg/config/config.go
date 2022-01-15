@@ -48,7 +48,7 @@ type Github struct {
 }
 
 type Auth struct {
-	AccessTokenString          string        `yaml:"access_token_secret"`
+	AccessTokenSecret          string        `yaml:"access_token_secret"`
 	AccessTokenExpirationTime  time.Duration `yaml:"access_token_expiration_time"`
 	RefreshTokenSecret         string        `yaml:"refresh_token_secret"`
 	RefreshTokenExpirationTime time.Duration `yaml:"refresh_token_expiration_time"`

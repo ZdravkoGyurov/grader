@@ -34,7 +34,7 @@ var (
 	deleteAssignmentQuery = fmt.Sprintf(`DELETE FROM %s WHERE id=$1 AND author_email=$2`, assignmentTable)
 )
 
-func (s *Storage) CreateAssignment(ctx context.Context, assignment types.Assignment) error {
+func (s *Storage) CreateAssignment(ctx context.Context, assignment *types.Assignment) error {
 	dbCtx, cancel := context.WithTimeout(ctx, s.cfg.RequestTimeout)
 	defer cancel()
 

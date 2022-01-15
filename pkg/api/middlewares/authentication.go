@@ -6,9 +6,8 @@ import (
 	"github.com/ZdravkoGyurov/grader/pkg/api/req"
 	"github.com/ZdravkoGyurov/grader/pkg/api/response"
 	"github.com/ZdravkoGyurov/grader/pkg/config"
+	"github.com/ZdravkoGyurov/grader/pkg/controller"
 	"github.com/ZdravkoGyurov/grader/pkg/errors"
-	"github.com/ZdravkoGyurov/grader/pkg/types"
-	"github.com/golang-jwt/jwt"
 )
 
 const accessTokenCookieName = "jid1"
@@ -26,24 +25,8 @@ func (a *Authenticator) Authenticate(next http.Handler) http.Handler {
 		}
 
 		accessToken := accessTokenCookie.Value
-		claims := &types.JWTClaims{}
-		token, err := jwt.ParseWithClaims(accessToken, claims, func(token *jwt.Token) (interface{}, error) {
-			return []byte(a.AuthConfig.AccessTokenString), nil
-		})
+		claims, err := controller.VerifyJWT(accessToken, a.AuthConfig.AccessTokenSecret)
 		if err != nil {
-			if err == jwt.ErrSignatureInvalid {
-				err = errors.Newf("invalid token signature %s: %w", err, errors.ErrInvalidAccessToken)
-				response.SendError(writer, request, err)
-				return
-			}
-
-			err = errors.Newf("failed to validate token signature %s: %w", err, errors.ErrInvalidAccessToken)
-			response.SendError(writer, request, err)
-			return
-		}
-
-		if !token.Valid {
-			err = errors.Newf("invalid token %s: %w", err, errors.ErrInvalidAccessToken)
 			response.SendError(writer, request, err)
 			return
 		}

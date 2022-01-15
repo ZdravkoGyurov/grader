@@ -23,7 +23,7 @@ func (a *Authorizer) Authorize(requiredRoleName types.Role) func(next http.Handl
 				return
 			}
 
-			user, err := a.Controller.GetUser(userData.Email)
+			user, err := a.Controller.GetUser(request.Context(), userData.Email)
 			if err != nil {
 				response.SendError(writer, request, err)
 				return
