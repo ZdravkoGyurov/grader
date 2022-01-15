@@ -7,3 +7,13 @@ type Submission struct {
 	SubmitterEmail       string           `json:"submitterEmail"`
 	AssignmentID         string           `json:"assignmentId"`
 }
+
+func (s Submission) Fields() []interface{} {
+	return []interface{}{
+		s.ID,
+		s.Result,
+		s.SubmissionStatusName,
+		s.SubmitterEmail,
+		s.AssignmentID,
+	}
+}

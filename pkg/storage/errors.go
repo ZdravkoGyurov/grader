@@ -12,7 +12,7 @@ const (
 	uniqueViolation     = "23505"
 )
 
-func mapDBError(err error) error {
+func dbError(err error) error {
 	if errors.Is(err, pgx.ErrNoRows) {
 		return errors.ErrEntityNotFound
 	}

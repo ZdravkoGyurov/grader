@@ -11,3 +11,15 @@ type Course struct {
 	CreatedOn    time.Time `json:"createdOn"`
 	LastEditedOn time.Time `json:"lastEditedOn"`
 }
+
+func (c Course) Fields() []interface{} {
+	return []interface{}{
+		c.ID,
+		c.Name,
+		c.Description,
+		c.GithubName,
+		c.CreatorEmail,
+		c.CreatedOn,
+		c.LastEditedOn,
+	}
+}

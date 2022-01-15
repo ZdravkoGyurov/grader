@@ -17,3 +17,18 @@ func (s *Storage) UpdateUserCourse(ctx context.Context, userCourse *types.UserCo
 func (s *Storage) DeleteUserCourse(ctx context.Context, userCourse *types.UserCourse) error {
 	return nil
 }
+
+func readUserCourseRecord(row dbRecord) (*types.UserCourse, error) {
+	var userCourse types.UserCourse
+
+	err := row.Scan(
+		&userCourse.UserEmail,
+		&userCourse.CourseID,
+		&userCourse.CourseRoleName,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &userCourse, nil
+}

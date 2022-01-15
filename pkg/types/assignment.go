@@ -12,3 +12,16 @@ type Assignment struct {
 	CreatedOn    time.Time `json:"createdOn"`
 	LastEditedOn time.Time `json:"lastEditedOn"`
 }
+
+func (a Assignment) Fields() []interface{} {
+	return []interface{}{
+		a.ID,
+		a.Name,
+		a.Description,
+		a.GithubName,
+		a.AuthorEmail,
+		a.CourseID,
+		a.CreatedOn,
+		a.LastEditedOn,
+	}
+}

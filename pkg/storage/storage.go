@@ -37,3 +37,7 @@ func (s *Storage) Connect(ctx context.Context) error {
 func (s *Storage) Close() {
 	s.pool.Close()
 }
+
+type dbRecord interface {
+	Scan(dest ...interface{}) error
+}

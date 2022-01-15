@@ -5,3 +5,11 @@ type UserCourse struct {
 	CourseID       string     `json:"courseId"`
 	CourseRoleName CourseRole `json:"courseRoleName"`
 }
+
+func (uc UserCourse) Fields() []interface{} {
+	return []interface{}{
+		uc.UserEmail,
+		uc.CourseID,
+		uc.CourseRoleName,
+	}
+}
