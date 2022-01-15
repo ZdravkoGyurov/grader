@@ -8,3 +8,14 @@ type User struct {
 	GithubAccessToken string `json:"githubAccessToken"`
 	RoleName          Role   `json:"roleName"`
 }
+
+func (u User) Fields() []interface{} {
+	return []interface{}{
+		u.Email,
+		u.Name,
+		u.AvatarURL,
+		u.RefreshToken,
+		u.GithubAccessToken,
+		u.RoleName,
+	}
+}
