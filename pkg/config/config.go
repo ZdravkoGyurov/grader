@@ -18,6 +18,7 @@ type Config struct {
 	Host        string `yaml:"host"`
 	Port        int    `yaml:"port"`
 	Server      `yaml:"server"`
+	Outbound    `yaml:"outbound"`
 	DB          `yaml:"db"`
 	JobExecutor `yaml:"job_executor"`
 	Github      `yaml:"github"`
@@ -51,6 +52,10 @@ type Auth struct {
 	AccessTokenExpirationTime  time.Duration `yaml:"access_token_expiration_time"`
 	RefreshTokenSecret         string        `yaml:"refresh_token_secret"`
 	RefreshTokenExpirationTime time.Duration `yaml:"refresh_token_expiration_time"`
+}
+
+type Outbound struct {
+	Timeout time.Duration `yaml:"timeout"`
 }
 
 func Load() (Config, error) {

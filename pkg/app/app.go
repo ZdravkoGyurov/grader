@@ -38,9 +38,11 @@ type Application struct {
 func New(cfg config.Config) *Application {
 	globalContext := NewGlobalContext()
 
+	client := http.Client{
+		Timeout: cfg.Outbound.Timeout,
+	}
 	storage := storage.New(cfg.DB)
-
-	ctrl := controller.New(cfg, storage)
+	ctrl := controller.New(cfg, client, storage)
 	r := router.New(ctrl)
 
 	server := &http.Server{
