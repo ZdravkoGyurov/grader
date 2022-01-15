@@ -11,7 +11,7 @@ import (
 )
 
 type Authorizer struct {
-	Controller *controller.Controller
+	Controller controller.Controller
 }
 
 func (a *Authorizer) Authorize(requiredRoleName types.Role) func(next http.Handler) http.Handler {

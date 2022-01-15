@@ -13,8 +13,8 @@ type Controller struct {
 	storage *storage.Storage
 }
 
-func New(cfg config.Config, client http.Client, storage *storage.Storage) *Controller {
-	return &Controller{
+func New(cfg config.Config, client http.Client, storage *storage.Storage) Controller {
+	return Controller{
 		Config:  cfg,
 		client:  client,
 		storage: storage,

@@ -14,16 +14,16 @@ const (
 
 func dbError(err error) error {
 	if errors.Is(err, pgx.ErrNoRows) {
-		return errors.ErrEntityNotFound
+		return errors.Newf("%s: %w", err, errors.ErrEntityNotFound)
 	}
 
 	var pgxErr *pgconn.PgError
 	if ok := errors.As(err, &pgxErr); ok {
 		switch pgxErr.Code {
 		case uniqueViolation:
-			return errors.ErrEntityAlreadyExists
+			return errors.Newf("%s: %w", err, errors.ErrEntityAlreadyExists)
 		case foreignKeyViolation:
-			return errors.ErrRefEntityNotFound
+			return errors.Newf("%s: %w", err, errors.ErrRefEntityViolation)
 		}
 	}
 

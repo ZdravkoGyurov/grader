@@ -69,11 +69,11 @@ func getStatus(err error) int {
 	if errors.Is(err, errors.ErrEntityNotFound) {
 		return http.StatusNotFound
 	}
-	if errors.Is(err, errors.ErrRefEntityNotFound) {
-		return http.StatusNotFound
-	}
 	if errors.Is(err, errors.ErrEntityAlreadyExists) {
 		return http.StatusConflict
+	}
+	if errors.Is(err, errors.ErrRefEntityViolation) {
+		return http.StatusInternalServerError
 	}
 	return http.StatusInternalServerError
 }

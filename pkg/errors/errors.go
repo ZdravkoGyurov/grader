@@ -18,6 +18,6 @@ var (
 	ErrInvalidAccessToken  = errors.New("invalid access token")
 	ErrUnauthorized        = errors.New("unauthorized")
 	ErrEntityNotFound      = errors.New("entity not found")
-	ErrRefEntityNotFound   = errors.New("referenced entity not found")
 	ErrEntityAlreadyExists = errors.New("entity already exists")
+	ErrRefEntityViolation  = errors.New("referenced entity violation")
 )

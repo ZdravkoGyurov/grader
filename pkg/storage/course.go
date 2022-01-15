@@ -28,8 +28,8 @@ var (
 	(SELECT course_id FROM %s WHERE user_email=$2)`, courseTable, userCourseTable)
 
 	updateCourseQuery = fmt.Sprintf(`UPDATE %s SET
-	name=COALESCE($1, name), 
-	description=COALESCE($2, description), 
+	name=COALESCE(NULLIF($1, ''), name), 
+	description=COALESCE(NULLIF($2, ''), description), 
 	last_edited_on=$3
 	WHERE id=$4 AND creator_email=$5
 	RETURNING *`, courseTable)

@@ -45,12 +45,6 @@ func (a Assignment) ValidateUpdate() error {
 	if _, err := uuid.Parse(a.ID); err != nil {
 		return errors.Newf("assignment id should be UUID: %w", errors.ErrInvalidEntity)
 	}
-	if a.Name == "" {
-		return errors.Newf("assignment name should not be empty: %w", errors.ErrInvalidEntity)
-	}
-	if a.Description == "" {
-		return errors.Newf("assignment description should not be empty: %w", errors.ErrInvalidEntity)
-	}
 	if a.AuthorEmail == "" {
 		return errors.Newf("assignment author email should not be empty: %w", errors.ErrInvalidEntity)
 	}

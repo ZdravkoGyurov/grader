@@ -8,7 +8,7 @@ import (
 
 func VerifyJWT(jwtToken, secret string) (types.JWTClaims, error) {
 	claims := types.JWTClaims{}
-	token, err := jwt.ParseWithClaims(jwtToken, claims, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(jwtToken, &claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte(secret), nil
 	})
 	if err != nil {
