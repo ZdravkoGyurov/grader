@@ -4,7 +4,7 @@ import (
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/errors"
 
 	"github.com/jackc/pgconn"
-	"github.com/jackc/pgx"
+	"github.com/jackc/pgx/v4"
 )
 
 const (
@@ -12,7 +12,7 @@ const (
 	uniqueViolation     = "23505"
 )
 
-func mapDBError(err error) error {
+func dbError(err error) error {
 	if errors.Is(err, pgx.ErrNoRows) {
 		return errors.ErrEntityNotFound
 	}

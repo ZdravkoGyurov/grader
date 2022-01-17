@@ -31,7 +31,7 @@ func (a *Authenticator) Authenticate(next http.Handler) http.Handler {
 			return
 		}
 
-		request = req.AddUserData(request, req.UserData{
+		req.AddUserData(request, req.UserData{
 			Email: claims.Email,
 		})
 

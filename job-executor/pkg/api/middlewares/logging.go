@@ -29,7 +29,7 @@ func CorrelationIDMiddleware(next http.Handler) http.Handler {
 			correlationID = uuid.NewString()
 		}
 
-		r = req.AddCorrelationID(r, correlationID)
+		req.AddCorrelationID(r, correlationID)
 		log.SetCorrelationID(logger, correlationID)
 
 		w.Header().Set(log.CorrelationIDHeader, correlationID)

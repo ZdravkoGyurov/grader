@@ -22,7 +22,7 @@ func (s *Storage) UpdateSubmission(submission types.Submission) error {
 	updateQuery := fmt.Sprintf(`UPDATE %s SET result=$1, submission_status_name=$2 WHERE id=$3`, submissionTable)
 	result, err := s.pool.Exec(ctx, updateQuery, submission.Result, submission.Status, submission.ID)
 	if err != nil {
-		return mapDBError(errors.Newf("failed to update submission: %w", err))
+		return dbError(errors.Newf("failed to update submission: %w", err))
 	}
 	if result.RowsAffected() != 1 {
 		return errors.Newf("failed to update submission: %w", errors.ErrEntityNotFound)
@@ -50,7 +50,7 @@ func (s *Storage) GetSubmissionInfo(ctx context.Context, submissionID string) (*
 	row := s.pool.QueryRow(ctx, query, submissionID)
 	err := row.Scan(&courseGithubName, &assignmentGithubName, &creatorEmail, &submitterEmail)
 	if err != nil {
-		return nil, mapDBError(errors.Newf("failed to get submission info: %w", err))
+		return nil, dbError(errors.Newf("failed to get submission info: %w", err))
 	}
 
 	submitterGithubName, submitterGithubToken, err := s.getSubmissionUserInfo(ctx, submitterEmail)
@@ -81,7 +81,7 @@ func (s *Storage) getSubmissionUserInfo(ctx context.Context, email string) (stri
 	)
 	err := s.pool.QueryRow(ctx, query, email).Scan(&name, &accessToken)
 	if err != nil {
-		return "", "", mapDBError(errors.Newf("failed to get submission user '%s' info: %w", email, err))
+		return "", "", dbError(errors.Newf("failed to get submission user '%s' info: %w", email, err))
 	}
 
 	return name, accessToken, nil

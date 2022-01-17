@@ -26,6 +26,7 @@ func New(ctrl controller.Controller) Router {
 	router.Use(middlewares.LoggerMiddleware)
 	router.Use(middlewares.CorrelationIDMiddleware)
 	router.mountCourseRoutes()
+	router.mountAssignmentRoutes()
 	return router
 }
 
@@ -52,4 +53,13 @@ func (r Router) mountCourseRoutes() {
 	r.Role(types.RoleStudent).Methods(http.MethodGet).Path(paths.CourseWithIDPath).HandlerFunc(courseHandler.Get)
 	r.Role(types.RoleTeacher).Methods(http.MethodPatch).Path(paths.CourseWithIDPath).HandlerFunc(courseHandler.Patch)
 	r.Role(types.RoleTeacher).Methods(http.MethodDelete).Path(paths.CourseWithIDPath).HandlerFunc(courseHandler.Delete)
+}
+
+func (r Router) mountAssignmentRoutes() {
+	assignmentHandler := handlers.Assignment{Controller: r.controller}
+	r.Role(types.RoleTeacher).Methods(http.MethodPost).Path(paths.AssignmentPath).HandlerFunc(assignmentHandler.Post)
+	r.Role(types.RoleStudent).Methods(http.MethodGet).Path(paths.AssignmentPath).HandlerFunc(assignmentHandler.GetAll)
+	r.Role(types.RoleStudent).Methods(http.MethodGet).Path(paths.AssignmentWithIDPath).HandlerFunc(assignmentHandler.Get)
+	r.Role(types.RoleTeacher).Methods(http.MethodPatch).Path(paths.AssignmentWithIDPath).HandlerFunc(assignmentHandler.Patch)
+	r.Role(types.RoleTeacher).Methods(http.MethodDelete).Path(paths.AssignmentWithIDPath).HandlerFunc(assignmentHandler.Delete)
 }

@@ -22,14 +22,13 @@ func (c *Course) Post(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	course := types.Course{
-		CreatorEmail: userData.Email,
-	}
+	course := types.Course{}
 	if err := json.NewDecoder(request.Body).Decode(&course); err != nil {
 		err = errors.Newf("%s: %w", err, errors.ErrInvalidEntity)
 		response.SendError(writer, request, err)
 		return
 	}
+	course.CreatorEmail = userData.Email
 
 	createdCourse, err := c.Controller.CreateCourse(request.Context(), &course)
 	if err != nil {

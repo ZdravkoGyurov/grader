@@ -11,8 +11,8 @@ var (
 	CorrelationIDKey correlationIDKey
 )
 
-func AddCorrelationID(r *http.Request, correlationID string) *http.Request {
-	return r.WithContext(context.WithValue(r.Context(), CorrelationIDKey, correlationID))
+func AddCorrelationID(r *http.Request, correlationID string) {
+	*r = *r.WithContext(context.WithValue(r.Context(), CorrelationIDKey, correlationID))
 }
 
 func GetCorrelationID(r *http.Request) (string, bool) {

@@ -21,8 +21,8 @@ type UserData struct {
 	RoleName          types.Role
 }
 
-func AddCorrelationID(r *http.Request, correlationID string) *http.Request {
-	return r.WithContext(context.WithValue(r.Context(), CorrelationIDKey, correlationID))
+func AddCorrelationID(r *http.Request, correlationID string) {
+	*r = *r.WithContext(context.WithValue(r.Context(), CorrelationIDKey, correlationID))
 }
 
 func GetCorrelationID(r *http.Request) (string, bool) {
@@ -30,8 +30,8 @@ func GetCorrelationID(r *http.Request) (string, bool) {
 	return correlationID, ok
 }
 
-func AddUserData(r *http.Request, userData UserData) *http.Request {
-	return r.WithContext(context.WithValue(r.Context(), UserDataKey, userData))
+func AddUserData(r *http.Request, userData UserData) {
+	*r = *r.WithContext(context.WithValue(r.Context(), UserDataKey, userData))
 }
 
 func GetUserData(r *http.Request) (UserData, bool) {

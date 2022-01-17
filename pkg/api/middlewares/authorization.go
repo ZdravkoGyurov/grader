@@ -34,7 +34,7 @@ func (a *Authorizer) Authorize(requiredRoleName types.Role) func(next http.Handl
 				return
 			}
 
-			request = req.AddUserData(request, req.UserData{
+			req.AddUserData(request, req.UserData{
 				Email:             user.Email,
 				GithubAccessToken: user.GithubAccessToken,
 				RoleName:          user.RoleName,
