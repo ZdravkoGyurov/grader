@@ -16,5 +16,4 @@ const (
 	SubmissionPath       = "/submission"
 	SubmissionWithIDPath = "/submission/{id}"
 	UserCoursePath       = "/userCourse"
-	UserCourseWithIDPath = "/userCourse/{id}"
 )
