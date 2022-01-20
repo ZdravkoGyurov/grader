@@ -79,6 +79,8 @@ func (c *Controller) getGithubAccessToken(ctx context.Context, accessTokenReqBod
 	if err != nil {
 		return "", errors.Newf("failed to create github token request :%w", err)
 	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "application/json")
 
 	response, err := c.client.Do(req)
 	if err != nil {
@@ -89,7 +91,7 @@ func (c *Controller) getGithubAccessToken(ctx context.Context, accessTokenReqBod
 		return "", errors.Newf("failed to call github, status: %d", response.StatusCode)
 	}
 
-	var githubAccessToken *githubAccessToken
+	githubAccessToken := &githubAccessToken{}
 	if err := json.NewDecoder(response.Body).Decode(githubAccessToken); err != nil {
 		return "", errors.Newf("failed to decode github access token: %w", err)
 	}
@@ -113,7 +115,7 @@ func (c *Controller) getGithubUserInfo(ctx context.Context, accessToken string) 
 		return nil, errors.Newf("failed to call github emails endpoint, status: %d", response.StatusCode)
 	}
 
-	var githubUser *githubUser
+	githubUser := &githubUser{}
 	if err := json.NewDecoder(response.Body).Decode(githubUser); err != nil {
 		return nil, errors.Newf("failed to decode github user: %w", err)
 	}

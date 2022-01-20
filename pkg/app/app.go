@@ -13,6 +13,7 @@ import (
 	"github.com/ZdravkoGyurov/grader/pkg/controller"
 	"github.com/ZdravkoGyurov/grader/pkg/log"
 	"github.com/ZdravkoGyurov/grader/pkg/storage"
+	"github.com/rs/cors"
 )
 
 type GlobalContext struct {
@@ -44,10 +45,23 @@ func New(cfg config.Config) *Application {
 	storage := storage.New(cfg.DB)
 	ctrl := controller.New(cfg, client, storage)
 	r := router.New(ctrl)
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:3000"},
+		AllowCredentials: true,
+		AllowedMethods: []string{
+			http.MethodGet,
+			http.MethodPost,
+			http.MethodPatch,
+			http.MethodPut,
+			http.MethodOptions,
+			http.MethodDelete,
+		},
+		Debug: true,
+	})
 
 	server := &http.Server{
 		Addr:         fmt.Sprintf("%s:%d", cfg.Host, cfg.Port),
-		Handler:      r,
+		Handler:      c.Handler(r),
 		ReadTimeout:  cfg.Server.ReadTimeout,
 		WriteTimeout: cfg.Server.WriteTimeout,
 	}

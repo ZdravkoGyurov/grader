@@ -13,11 +13,11 @@ var (
 	(email, name, avatar_url, refresh_token, github_access_token, role_name)
 	VALUES ($1, $2, $3, $4, $5, $6)`, userTable)
 
-	readUserQuery = fmt.Sprintf(`SELECT * FROM %s WHERE email = $1`, userTable)
+	readUserQuery = fmt.Sprintf(`SELECT * FROM %s WHERE email=$1`, userTable)
 
-	updateUserRoleQuery = fmt.Sprintf(`UPDATE %s SET role_name=$1 WHERE email=$2`, userTable)
+	updateUserRoleQuery = fmt.Sprintf(`UPDATE %s SET role_name=$1 WHERE email=$2 RETURNING *`, userTable)
 
-	updateUserRefreshTokenQuery = fmt.Sprintf(`UPDATE %s SET refresh_token = $1 WHERE email = $2;`, userTable)
+	updateUserRefreshTokenQuery = fmt.Sprintf(`UPDATE %s SET refresh_token=$1 WHERE email=$2 RETURNING *`, userTable)
 )
 
 func (s *Storage) CreateUser(ctx context.Context, user *types.User) error {

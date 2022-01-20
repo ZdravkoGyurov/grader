@@ -60,6 +60,9 @@ func getStatus(err error) int {
 	if errors.Is(err, errors.ErrNoAccessToken) {
 		return http.StatusUnauthorized
 	}
+	if errors.Is(err, errors.ErrNoRefreshToken) {
+		return http.StatusUnauthorized
+	}
 	if errors.Is(err, errors.ErrInvalidAccessToken) {
 		return http.StatusUnauthorized
 	}

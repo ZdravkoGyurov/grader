@@ -12,12 +12,6 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-type LoginInfo struct {
-	User         *types.User
-	AccessToken  string
-	RefreshToken string
-}
-
 func (c *Controller) GenerateAccessToken(ctx context.Context, refreshToken string) (string, error) {
 	claims, err := VerifyJWT(refreshToken, c.Config.Auth.RefreshTokenSecret)
 	if err != nil {
@@ -62,31 +56,31 @@ func (c *Controller) GetUser(ctx context.Context, email string) (*types.User, er
 	return c.storage.GetUser(ctx, email)
 }
 
-func (c *Controller) Login(ctx context.Context, code string) (*LoginInfo, error) {
+func (c *Controller) Login(ctx context.Context, code string) (string, string, error) {
 	accessToken, err := c.fetchGithubAccessToken(ctx, code)
 	if err != nil {
-		return nil, errors.Newf("failed to fetch access token from github: %w", err)
+		return "", "", errors.Newf("failed to fetch access token from github: %w", err)
 	}
 
 	email, err := c.getGithubUserEmail(ctx, accessToken)
 	if err != nil {
-		return nil, errors.Newf("failed to fetch user email from github: %w", err)
+		return "", "", errors.Newf("failed to fetch user email from github: %w", err)
 	}
 
 	githubUser, err := c.getGithubUserInfo(ctx, accessToken)
 	if err != nil {
-		return nil, errors.Newf("failed to fetch user info from github: %w", err)
+		return "", "", errors.Newf("failed to fetch user info from github: %w", err)
 	}
 
 	user, err := c.storage.GetUser(ctx, email)
 	if err != nil {
 		if !errors.Is(err, errors.ErrEntityNotFound) {
-			return nil, errors.Newf("failed to get user: %w", err)
+			return "", "", errors.Newf("failed to get user: %w", err)
 		}
 
 		refreshToken, err := c.createRefreshToken(email)
 		if err != nil {
-			return nil, errors.Newf("failed to create refresh token: %w", err)
+			return "", "", errors.Newf("failed to create refresh token: %w", err)
 		}
 		user = &types.User{
 			Email:             email,
@@ -96,34 +90,30 @@ func (c *Controller) Login(ctx context.Context, code string) (*LoginInfo, error)
 			RefreshToken:      refreshToken,
 		}
 		if err := c.storage.CreateUser(ctx, user); err != nil {
-			return nil, errors.Newf("failed to create user: %w", err)
+			return "", "", errors.Newf("failed to create user: %w", err)
 		}
 	}
 
 	if user.RefreshToken == "" {
 		refreshToken, err := c.createRefreshToken(email)
 		if err != nil {
-			return nil, errors.Newf("failed to generate new user refresh token: %w", err)
+			return "", "", errors.Newf("failed to generate new user refresh token: %w", err)
 		}
 		userWithRefreshToken := &types.User{
 			Email:        email,
 			RefreshToken: refreshToken,
 		}
 		if _, err := c.storage.UpdateUserRefreshToken(ctx, userWithRefreshToken); err != nil {
-			return nil, errors.Newf("failed to set new user refresh token: %w", err)
+			return "", "", errors.Newf("failed to set new user refresh token: %w", err)
 		}
 	}
 
 	userAccessToken, err := c.createAccessToken(email)
 	if err != nil {
-		return nil, errors.Newf("failed to generate new user access token: %w", err)
+		return "", "", errors.Newf("failed to generate new user access token: %w", err)
 	}
 
-	return &LoginInfo{
-		User:         user,
-		AccessToken:  userAccessToken,
-		RefreshToken: user.RefreshToken,
-	}, nil
+	return userAccessToken, user.RefreshToken, nil
 }
 
 func (c *Controller) DeleteUserRefreshToken(ctx context.Context, accessToken string) error {

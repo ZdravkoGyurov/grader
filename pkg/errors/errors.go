@@ -15,6 +15,7 @@ var (
 var (
 	ErrInvalidEntity       = errors.New("entity is invalid")
 	ErrNoAccessToken       = errors.New("missing access token")
+	ErrNoRefreshToken      = errors.New("missing refresh token")
 	ErrInvalidAccessToken  = errors.New("invalid access token")
 	ErrUnauthorized        = errors.New("unauthorized")
 	ErrEntityNotFound      = errors.New("entity not found")

@@ -25,6 +25,7 @@ func New(ctrl controller.Controller) Router {
 	router.Use(middlewares.PanicRecovery)
 	router.Use(middlewares.LoggerMiddleware)
 	router.Use(middlewares.CorrelationIDMiddleware)
+	router.mountAuthRoutes()
 	router.mountCourseRoutes()
 	router.mountAssignmentRoutes()
 	router.mountSubmissionRoutes()
@@ -46,6 +47,16 @@ func (r Router) Role(requiredRole types.Role) Router {
 		Router:     authRouter,
 		controller: r.controller,
 	}
+}
+
+func (r Router) mountAuthRoutes() {
+	authHandler := handlers.Auth{Controller: r.controller}
+	r.Methods(http.MethodGet).Path(paths.GithubLoginPath).HandlerFunc(authHandler.Login)
+	r.Methods(http.MethodGet).Path(paths.GithubLoginCallbackPath).HandlerFunc(authHandler.LoginCallback)
+	r.Methods(http.MethodGet).Path(paths.UserInfoPath).HandlerFunc(authHandler.GetUserInfo)
+	r.Methods(http.MethodPatch).Path(paths.UserInfoPath).HandlerFunc(authHandler.PatchUserRole)
+	r.Methods(http.MethodPost).Path(paths.TokenPath).HandlerFunc(authHandler.RefreshToken)
+	r.Methods(http.MethodDelete).Path(paths.LogoutPath).HandlerFunc(authHandler.Logout)
 }
 
 func (r Router) mountCourseRoutes() {
