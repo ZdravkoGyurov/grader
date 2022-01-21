@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const login = () => {
-  window.location.href = "http://localhost:8080/login/oauth/github";
+  window.location.href = "http://localhost:8080/login/oauth/gitlab";
 };
 
 const getUser = async () => {

@@ -1,6 +1,6 @@
 import { Button } from "@chakra-ui/button";
 import { Flex } from "@chakra-ui/layout";
-import { FiGithub } from "react-icons/fi";
+import { FiGitlab } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import UserContext from "../contexts/UserContext";
@@ -31,13 +31,13 @@ const Home = () => {
         _hover={{ backgroundColor: "none", color: "#FFFFFF" }}
         _focus={{ boxShadow: "none" }}
         _active={{ backgroundColor: styles.accentDark }}
-        leftIcon={<FiGithub />}
+        leftIcon={<FiGitlab />}
         variant="solid"
         onClick={() => {
           authApi.login();
         }}
       >
-        Continue with Github
+        Continue with Gitlab
       </Button>
     </Flex>
   );

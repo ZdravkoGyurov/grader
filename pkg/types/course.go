@@ -12,7 +12,7 @@ type Course struct {
 	ID           string    `json:"id"`
 	Name         string    `json:"name"`
 	Description  string    `json:"description"`
-	GithubName   string    `json:"githubName"`
+	GitlabName   string    `json:"gitlabName"`
 	CreatorEmail string    `json:"creatorEmail"`
 	CreatedOn    time.Time `json:"createdOn"`
 	LastEditedOn time.Time `json:"lastEditedOn"`
@@ -28,8 +28,8 @@ func (c Course) ValidateCreate() error {
 	if c.Description == "" {
 		return errors.Newf("course description should not be empty: %w", errors.ErrInvalidEntity)
 	}
-	if c.GithubName == "" {
-		return errors.Newf("course github name should not be empty: %w", errors.ErrInvalidEntity)
+	if c.GitlabName == "" {
+		return errors.Newf("course gitlab name should not be empty: %w", errors.ErrInvalidEntity)
 	}
 	if c.CreatorEmail == "" {
 		return errors.Newf("course creator email should not be empty: %w", errors.ErrInvalidEntity)
@@ -52,7 +52,7 @@ func (c Course) Fields() []interface{} {
 		c.ID,
 		c.Name,
 		c.Description,
-		c.GithubName,
+		c.GitlabName,
 		c.CreatorEmail,
 		c.CreatedOn,
 		c.LastEditedOn,

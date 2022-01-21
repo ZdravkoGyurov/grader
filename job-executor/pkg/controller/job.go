@@ -56,12 +56,13 @@ func (c *Controller) fillTestsRunConfig(ctx context.Context, config *dexec.Tests
 
 	config.ImageName = random.LowercaseString(10)
 	config.ContainerName = random.LowercaseString(10)
-	config.CourseGithubName = submissionInfo.CourseGithubName
-	config.AssignmentGithubName = submissionInfo.AssignmentGithubName
-	config.SubmitterGithubName = submissionInfo.SubmitterGithubName
-	config.SubmitterGithubToken = submissionInfo.SubmitterGithubToken
-	config.TesterGithubName = submissionInfo.TesterGithubName
-	config.TesterGithubToken = submissionInfo.TesterGithubToken
+	config.GraderGitlabPAT = c.Config.Gitlab.PAT
+	config.GraderGitlabHost = c.Config.Gitlab.Host
+	config.GraderGitlabName = c.Config.Gitlab.GroupParentName
+	config.CourseGitlabName = submissionInfo.CourseGitlabName
+	config.AssignmentGitlabName = submissionInfo.AssignmentGitlabName
+	config.SubmitterGitlabName = submissionInfo.SubmitterGitlabName
+	config.TesterGitlabName = submissionInfo.TesterGitlabName
 
 	return nil
 }

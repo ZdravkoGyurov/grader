@@ -1,11 +1,12 @@
 FROM openjdk:18-jdk-alpine3.15
 
-ARG courseGithubName
-ARG assignmentGithubName
-ARG submitterGithubName
-ARG submitterGithubToken
-ARG testerGithubName
-ARG testerGithubToken
+ARG graderGitlabPAT
+ARG graderGitlabHost
+ARG graderGitlabName
+ARG courseGitlabName
+ARG assignmentGitlabName
+ARG submitterGitlabName
+ARG testerGitlabName
 ARG junitConsoleLauncherName=junit-platform-console-standalone
 ARG junitConsoleLauncherVersion=1.8.2
 ENV JUNIT_JAR ${junitConsoleLauncherName}-${junitConsoleLauncherVersion}.jar
@@ -19,10 +20,10 @@ RUN apk update && apk upgrade && apk add --no-cache git
 RUN wget https://repo1.maven.org/maven2/org/junit/platform/${junitConsoleLauncherName}/${junitConsoleLauncherVersion}/$JUNIT_JAR
 
 # download solution and tests
-RUN git clone https://${submitterGithubName}:${submitterGithubToken}@github.com/${submitterGithubName}/${courseGithubName}.git
-RUN cp -r ./${courseGithubName}/${assignmentGithubName}/src/* ./src && rm -rf ./${courseGithubName}
-RUN git clone https://${testerGithubName}:${testerGithubToken}@github.com/${testerGithubName}/${courseGithubName}.git
-RUN cp -r ./${courseGithubName}/${assignmentGithubName}/test/* ./test && rm -rf ./${courseGithubName}
+RUN git clone https://${graderGitlabName}:${graderGitlabPAT}@${graderGitlabHost}/${graderGitlabName}/${courseGitlabName}/${submitterGitlabName}.git
+RUN cp -r ./${submitterGitlabName}/${assignmentGitlabName}/src/* src/ && rm -rf ./${submitterGitlabName}
+RUN git clone https://${graderGitlabName}:${graderGitlabPAT}@${graderGitlabHost}/${graderGitlabName}/${courseGitlabName}/${testerGitlabName}.git
+RUN cp -r ./${testerGitlabName}/${assignmentGitlabName}/test/* test/ && rm -rf ./${testerGitlabName}
 
 # compile java files
 RUN mkdir -p target

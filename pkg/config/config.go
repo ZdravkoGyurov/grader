@@ -21,7 +21,7 @@ type Config struct {
 	Outbound    `yaml:"outbound"`
 	DB          `yaml:"db"`
 	JobExecutor `yaml:"job_executor"`
-	Github      `yaml:"github"`
+	Gitlab      `yaml:"gitlab"`
 	Auth        `yaml:"auth"`
 }
 
@@ -41,10 +41,14 @@ type JobExecutor struct {
 	URL string `yaml:"url"`
 }
 
-type Github struct {
-	ClientID      string `yaml:"client_id"`
-	ClientSecret  string `yaml:"client_secret"`
-	RequiredScope string `yaml:"required_scope"`
+type Gitlab struct {
+	Host            string `yaml:"host"`
+	RequiredScope   string `yaml:"required_scope"`
+	ClientID        string `yaml:"client_id"`
+	ClientSecret    string `yaml:"client_secret"`
+	GroupParentID   string `yaml:"group_parent_id"`
+	GroupParentName string `yaml:"group_parent_name"`
+	PAT             string `yaml:"pat"`
 }
 
 type Auth struct {

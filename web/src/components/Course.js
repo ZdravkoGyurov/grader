@@ -90,8 +90,8 @@ const Course = () => {
       <Flex m="0 5%" overflowY="auto" flexDir="column" p="0 2rem">
         <Flex justifyContent="space-between">
           <Flex flexDir="column">
-            <Text fontWeight="bold">GITHUB NAME</Text>
-            <Text>{course.githubName}</Text>
+            <Text fontWeight="bold">GITLAB NAME</Text>
+            <Text>{course.gitlabName}</Text>
           </Flex>
           <Flex flexDir="column">
             <Text fontWeight="bold">CREATED BY</Text>

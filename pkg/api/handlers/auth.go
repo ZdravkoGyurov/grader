@@ -7,9 +7,11 @@ import (
 	"time"
 
 	"github.com/ZdravkoGyurov/grader/pkg/api/response"
+	"github.com/ZdravkoGyurov/grader/pkg/api/router/paths"
 	"github.com/ZdravkoGyurov/grader/pkg/controller"
 	"github.com/ZdravkoGyurov/grader/pkg/errors"
 	"github.com/ZdravkoGyurov/grader/pkg/types"
+	"github.com/google/uuid"
 )
 
 type Auth struct {
@@ -17,14 +19,15 @@ type Auth struct {
 }
 
 func (a Auth) Login(writer http.ResponseWriter, request *http.Request) {
-	githubOauthURL := "https://github.com/login/oauth/authorize"
-	redirectURI := fmt.Sprintf(`http://%s:%d/login/oauth/github/callback`, a.Controller.Config.Host, a.Controller.Config.Port)
+	gitlabOauthURL := fmt.Sprintf("https://%s/oauth/authorize", a.Controller.Config.Gitlab.Host)
+	redirectURI := fmt.Sprintf(`http://%s:%d%s`, a.Controller.Config.Host, a.Controller.Config.Port, paths.GitlabLoginCallbackPath)
 	url := fmt.Sprintf(
-		"%s?client_id=%s&scope=%s&redirect_uri=%s",
-		githubOauthURL,
-		a.Controller.Config.Github.ClientID,
-		a.Controller.Config.Github.RequiredScope,
+		"%s?client_id=%s&scope=%s&redirect_uri=%s&response_type=code&state=%s",
+		gitlabOauthURL,
+		a.Controller.Config.Gitlab.ClientID,
+		a.Controller.Config.Gitlab.RequiredScope,
 		redirectURI,
+		uuid.NewString(),
 	)
 
 	http.Redirect(writer, request, url, http.StatusFound)
@@ -73,7 +76,6 @@ func (a Auth) GetUserInfo(writer http.ResponseWriter, request *http.Request) {
 		response.SendError(writer, request, err)
 		return
 	}
-	user.GithubAccessToken = ""
 	user.RefreshToken = ""
 
 	response.SendData(writer, request, http.StatusOK, user)
@@ -92,7 +94,6 @@ func (a Auth) PatchUserRole(writer http.ResponseWriter, request *http.Request) {
 		response.SendError(writer, request, err)
 		return
 	}
-	user.GithubAccessToken = ""
 	user.RefreshToken = ""
 
 	response.SendData(writer, request, http.StatusOK, updatedUser)

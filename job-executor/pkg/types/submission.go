@@ -15,10 +15,8 @@ type Submission struct {
 }
 
 type SubmissionInfo struct {
-	CourseGithubName     string
-	AssignmentGithubName string
-	SubmitterGithubName  string
-	SubmitterGithubToken string
-	TesterGithubName     string
-	TesterGithubToken    string
+	CourseGitlabName     string
+	AssignmentGitlabName string
+	SubmitterGitlabName  string
+	TesterGitlabName     string
 }

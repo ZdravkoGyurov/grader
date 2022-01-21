@@ -11,9 +11,8 @@ import (
 )
 
 const (
-	githubTokenUrl           = "https://github.com/login/oauth/access_token"
-	githubUserEndpoint       = "https://api.github.com/user"
-	githubUserEmailsEndpoint = "https://api.github.com/user/emails"
+	gitlabTokenPath = "/oauth/token"
+	gitlabUserPath  = "/api/v4/user"
 )
 
 type submissionReqBody struct {
@@ -27,17 +26,14 @@ type accessTokenReqBody struct {
 	RedirectURI  string `json:"redirect_uri"`
 }
 
-type githubUser struct {
-	Name      string `json:"login"`
+type gitlabUser struct {
+	ID        int    `json:"id"`
+	Name      string `json:"name"`
+	Email     string `json:"email"`
 	AvatarURL string `json:"avatar_url"`
 }
 
-type githubEmail struct {
-	Email   string `json:"email"`
-	Primary bool   `json:"primary"`
-}
-
-type githubAccessToken struct {
+type gitlabAccessToken struct {
 	AccessToken string `json:"access_token"`
 }
 
@@ -68,95 +64,60 @@ func (c *Controller) createJobRun(ctx context.Context, submissionID string) erro
 	return nil
 }
 
-func (c *Controller) getGithubAccessToken(ctx context.Context, accessTokenReqBody accessTokenReqBody) (string, error) {
-	accessTokenJSON, err := json.Marshal(accessTokenReqBody)
+func (c *Controller) getGitlabAccessToken(ctx context.Context, accessTokenReqBody accessTokenReqBody) (string, error) {
+	gitlabTokenEndpoint := fmt.Sprintf("https://%s%s", c.Config.Gitlab.Host, gitlabTokenPath)
+	exchangeURL := fmt.Sprintf("%s?client_id=%s&client_secret=%s&code=%s&grant_type=authorization_code&redirect_uri=%s",
+		gitlabTokenEndpoint, accessTokenReqBody.ClientID, accessTokenReqBody.ClientSecret, accessTokenReqBody.Code, accessTokenReqBody.RedirectURI)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, exchangeURL, nil)
 	if err != nil {
-		return "", errors.Newf("failed to marshal access token request body:%w", err)
-	}
-
-	body := bytes.NewBuffer(accessTokenJSON)
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, githubTokenUrl, body)
-	if err != nil {
-		return "", errors.Newf("failed to create github token request :%w", err)
+		return "", errors.Newf("failed to create gitlab token request :%w", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
 
 	response, err := c.client.Do(req)
 	if err != nil {
-		return "", errors.Newf("failed to call github:%w", err)
+		return "", errors.Newf("failed to call gitlab: %w", err)
 	}
 
 	if response.StatusCode != http.StatusOK {
-		return "", errors.Newf("failed to call github, status: %d", response.StatusCode)
+		return "", errors.Newf("failed to call gitlab, status: %d", response.StatusCode)
 	}
 
-	githubAccessToken := &githubAccessToken{}
-	if err := json.NewDecoder(response.Body).Decode(githubAccessToken); err != nil {
-		return "", errors.Newf("failed to decode github access token: %w", err)
+	gitlabAccessToken := gitlabAccessToken{}
+	if err := json.NewDecoder(response.Body).Decode(&gitlabAccessToken); err != nil {
+		return "", errors.Newf("failed to decode gitlab access token: %w", err)
 	}
 
-	return githubAccessToken.AccessToken, nil
+	return gitlabAccessToken.AccessToken, nil
 }
 
-func (c *Controller) getGithubUserInfo(ctx context.Context, accessToken string) (*githubUser, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, githubUserEndpoint, nil)
+func (c *Controller) getGitlabUserInfo(ctx context.Context, accessToken string) (gitlabUser, error) {
+	gitlabUserEndpoint := fmt.Sprintf("https://%s%s", c.Config.Gitlab.Host, gitlabUserPath)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, gitlabUserEndpoint, nil)
 	if err != nil {
-		return nil, errors.Newf("failed to create github user request: %w", err)
+		return gitlabUser{}, errors.Newf("failed to create gitlab user request: %w", err)
 	}
-	setGithubHeaders(req, accessToken)
+	setGitlabHeaders(req, accessToken)
 
 	response, err := c.client.Do(req)
 	if err != nil {
-		return nil, errors.Newf("failed to call github user endpoint: %w", err)
+		return gitlabUser{}, errors.Newf("failed to call gitlab user endpoint: %w", err)
 	}
 
 	if response.StatusCode != http.StatusOK {
-		return nil, errors.Newf("failed to call github emails endpoint, status: %d", response.StatusCode)
+		return gitlabUser{}, errors.Newf("failed to call gitlab user endpoint, status: %d", response.StatusCode)
 	}
 
-	githubUser := &githubUser{}
-	if err := json.NewDecoder(response.Body).Decode(githubUser); err != nil {
-		return nil, errors.Newf("failed to decode github user: %w", err)
+	gitlabUser := gitlabUser{}
+	if err := json.NewDecoder(response.Body).Decode(&gitlabUser); err != nil {
+		return gitlabUser, errors.Newf("failed to decode gitlab user: %w", err)
 	}
 
-	return githubUser, nil
+	return gitlabUser, nil
 }
 
-func (c *Controller) getGithubUserEmail(ctx context.Context, accessToken string) (string, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, githubUserEmailsEndpoint, nil)
-	if err != nil {
-		return "", errors.Newf("failed to create github emails request: %w", err)
-	}
-	setGithubHeaders(req, accessToken)
-
-	response, err := c.client.Do(req)
-	if err != nil {
-		return "", errors.Newf("failed to call github emails endpoint: %w", err)
-	}
-
-	if response.StatusCode != http.StatusOK {
-		return "", errors.Newf("failed to call github emails endpoint, status: %d", response.StatusCode)
-	}
-
-	var emails []githubEmail
-	if err := json.NewDecoder(response.Body).Decode(&emails); err != nil {
-		return "", errors.Newf("failed to decode github emails: %w", err)
-	}
-
-	return getPrimaryEmail(emails)
-}
-
-func getPrimaryEmail(emails []githubEmail) (string, error) {
-	for _, email := range emails {
-		if email.Primary {
-			return email.Email, nil
-		}
-	}
-	return "", errors.New("no primary email")
-}
-
-func setGithubHeaders(req *http.Request, accessToken string) {
+func setGitlabHeaders(req *http.Request, accessToken string) {
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	req.Header.Add("User-Agent", "golang")
 }

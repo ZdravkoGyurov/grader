@@ -10,7 +10,7 @@ import (
 
 var (
 	insertUserQuery = fmt.Sprintf(`INSERT INTO %s 
-	(email, name, avatar_url, refresh_token, github_access_token, role_name)
+	(email, name, avatar_url, gitlab_id, refresh_token, role_name)
 	VALUES ($1, $2, $3, $4, $5, $6)`, userTable)
 
 	readUserQuery = fmt.Sprintf(`SELECT * FROM %s WHERE email=$1`, userTable)
@@ -78,8 +78,8 @@ func readUserRecord(row dbRecord) (*types.User, error) {
 		&user.Email,
 		&user.Name,
 		&user.AvatarURL,
+		&user.GitlabID,
 		&user.RefreshToken,
-		&user.GithubAccessToken,
 		&user.RoleName,
 	)
 	if err != nil {

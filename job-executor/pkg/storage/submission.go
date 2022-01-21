@@ -35,54 +35,49 @@ func (s *Storage) GetSubmissionInfo(ctx context.Context, submissionID string) (*
 	ctx, cancel := context.WithTimeout(ctx, s.cfg.RequestTimeout)
 	defer cancel()
 
-	query := fmt.Sprintf(`SELECT c.github_name as course_github_name, 
-	a.github_name as assignment_github_name, 
+	query := fmt.Sprintf(`SELECT c.gitlab_name as course_gitlab_name, 
+	a.gitlab_name as assignment_gitlab_name, 
 	c.creator_email, 
 	s.submitter_email 
 	from %s as s inner join %s as a on s.assignment_id = a.id 
 	inner join %s as c on a.course_id = c.id where s.id=$1`, submissionTable, assignmentTable, courseTable)
 	var (
-		courseGithubName     string
-		assignmentGithubName string
+		courseGitlabName     string
+		assignmentGitlabName string
 		creatorEmail         string
 		submitterEmail       string
 	)
 	row := s.pool.QueryRow(ctx, query, submissionID)
-	err := row.Scan(&courseGithubName, &assignmentGithubName, &creatorEmail, &submitterEmail)
+	err := row.Scan(&courseGitlabName, &assignmentGitlabName, &creatorEmail, &submitterEmail)
 	if err != nil {
 		return nil, dbError(errors.Newf("failed to get submission info: %w", err))
 	}
 
-	submitterGithubName, submitterGithubToken, err := s.getSubmissionUserInfo(ctx, submitterEmail)
+	submitterGitlabName, err := s.getSubmissionUserInfo(ctx, submitterEmail)
 	if err != nil {
 		return nil, err
 	}
 
-	testerGithubName, testerGithubToken, err := s.getSubmissionUserInfo(ctx, creatorEmail)
+	testerGitlabName, err := s.getSubmissionUserInfo(ctx, creatorEmail)
 	if err != nil {
 		return nil, err
 	}
 
 	return &types.SubmissionInfo{
-		CourseGithubName:     courseGithubName,
-		AssignmentGithubName: assignmentGithubName,
-		SubmitterGithubName:  submitterGithubName,
-		SubmitterGithubToken: submitterGithubToken,
-		TesterGithubName:     testerGithubName,
-		TesterGithubToken:    testerGithubToken,
+		CourseGitlabName:     courseGitlabName,
+		AssignmentGitlabName: assignmentGitlabName,
+		SubmitterGitlabName:  submitterGitlabName,
+		TesterGitlabName:     testerGitlabName,
 	}, nil
 }
 
-func (s *Storage) getSubmissionUserInfo(ctx context.Context, email string) (string, string, error) {
-	query := fmt.Sprintf(`SELECT name, github_access_token from %s where email=$1`, usersTable)
-	var (
-		name        string
-		accessToken string
-	)
-	err := s.pool.QueryRow(ctx, query, email).Scan(&name, &accessToken)
+func (s *Storage) getSubmissionUserInfo(ctx context.Context, email string) (string, error) {
+	query := fmt.Sprintf(`SELECT name from %s where email=$1`, usersTable)
+	var name string
+	err := s.pool.QueryRow(ctx, query, email).Scan(&name)
 	if err != nil {
-		return "", "", dbError(errors.Newf("failed to get submission user '%s' info: %w", email, err))
+		return "", dbError(errors.Newf("failed to get submission user '%s' info: %w", email, err))
 	}
 
-	return name, accessToken, nil
+	return name, nil
 }

@@ -10,7 +10,7 @@ import (
 
 var (
 	insertAssignmentQuery = fmt.Sprintf(`INSERT INTO %s 
-	(id, name, description, author_email, course_id, github_name, created_on, last_edited_on)
+	(id, name, description, author_email, course_id, gitlab_name, created_on, last_edited_on)
 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, assignmentTable)
 
 	readAssignmentsByCourseIDQuery = fmt.Sprintf(`SELECT * FROM %s 
@@ -144,7 +144,7 @@ func readAssignmentRecord(row dbRecord) (*types.Assignment, error) {
 		&assignment.ID,
 		&assignment.Name,
 		&assignment.Description,
-		&assignment.GithubName,
+		&assignment.GitlabName,
 		&assignment.AuthorEmail,
 		&assignment.CourseID,
 		&assignment.CreatedOn,

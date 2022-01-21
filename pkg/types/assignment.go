@@ -14,7 +14,7 @@ type Assignment struct {
 	Description  string    `json:"description"`
 	AuthorEmail  string    `json:"authorEmail"`
 	CourseID     string    `json:"courseId"`
-	GithubName   string    `json:"githubName"`
+	GitlabName   string    `json:"gitlabName"`
 	CreatedOn    time.Time `json:"createdOn"`
 	LastEditedOn time.Time `json:"lastEditedOn"`
 }
@@ -29,8 +29,8 @@ func (a Assignment) ValidateCreate() error {
 	if a.Description == "" {
 		return errors.Newf("assignment description should not be empty: %w", errors.ErrInvalidEntity)
 	}
-	if a.GithubName == "" {
-		return errors.Newf("assignment github name should not be empty: %w", errors.ErrInvalidEntity)
+	if a.GitlabName == "" {
+		return errors.Newf("assignment gitlab name should not be empty: %w", errors.ErrInvalidEntity)
 	}
 	if a.AuthorEmail == "" {
 		return errors.Newf("assignment author email should not be empty: %w", errors.ErrInvalidEntity)
@@ -58,7 +58,7 @@ func (a Assignment) Fields() []interface{} {
 		a.Description,
 		a.AuthorEmail,
 		a.CourseID,
-		a.GithubName,
+		a.GitlabName,
 		a.CreatedOn,
 		a.LastEditedOn,
 	}

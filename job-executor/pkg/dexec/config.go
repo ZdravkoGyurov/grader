@@ -10,12 +10,13 @@ type TestsRunConfig struct {
 	SubmissionID         string `json:"submissionId"`
 	ImageName            string
 	ContainerName        string
-	CourseGithubName     string
-	AssignmentGithubName string
-	SubmitterGithubName  string
-	SubmitterGithubToken string
-	TesterGithubName     string
-	TesterGithubToken    string
+	GraderGitlabPAT      string
+	GraderGitlabHost     string
+	GraderGitlabName     string
+	CourseGitlabName     string
+	AssignmentGitlabName string
+	SubmitterGitlabName  string
+	TesterGitlabName     string
 }
 
 func (c *TestsRunConfig) Validate() error {

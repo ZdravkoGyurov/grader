@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/ZdravkoGyurov/grader/pkg/api/router/paths"
@@ -57,37 +58,33 @@ func (c *Controller) GetUser(ctx context.Context, email string) (*types.User, er
 }
 
 func (c *Controller) Login(ctx context.Context, code string) (string, string, error) {
-	accessToken, err := c.fetchGithubAccessToken(ctx, code)
+	accessToken, err := c.fetchGitlabAccessToken(ctx, code)
 	if err != nil {
-		return "", "", errors.Newf("failed to fetch access token from github: %w", err)
+		return "", "", errors.Newf("failed to fetch access token from gitlab: %w", err)
 	}
 
-	email, err := c.getGithubUserEmail(ctx, accessToken)
+	gitlabUser, err := c.getGitlabUserInfo(ctx, accessToken)
 	if err != nil {
-		return "", "", errors.Newf("failed to fetch user email from github: %w", err)
+		return "", "", errors.Newf("failed to fetch user info from gitlab: %w", err)
 	}
 
-	githubUser, err := c.getGithubUserInfo(ctx, accessToken)
-	if err != nil {
-		return "", "", errors.Newf("failed to fetch user info from github: %w", err)
-	}
-
-	user, err := c.storage.GetUser(ctx, email)
+	user, err := c.storage.GetUser(ctx, gitlabUser.Email)
 	if err != nil {
 		if !errors.Is(err, errors.ErrEntityNotFound) {
 			return "", "", errors.Newf("failed to get user: %w", err)
 		}
 
-		refreshToken, err := c.createRefreshToken(email)
+		refreshToken, err := c.createRefreshToken(gitlabUser.Email)
 		if err != nil {
 			return "", "", errors.Newf("failed to create refresh token: %w", err)
 		}
 		user = &types.User{
-			Email:             email,
-			Name:              githubUser.Name,
-			AvatarURL:         githubUser.AvatarURL,
-			GithubAccessToken: accessToken,
-			RefreshToken:      refreshToken,
+			Email:        gitlabUser.Email,
+			Name:         gitlabUser.Name,
+			AvatarURL:    gitlabUser.AvatarURL,
+			GitlabID:     strconv.Itoa(gitlabUser.ID),
+			RefreshToken: refreshToken,
+			RoleName:     types.RoleStudent,
 		}
 		if err := c.storage.CreateUser(ctx, user); err != nil {
 			return "", "", errors.Newf("failed to create user: %w", err)
@@ -95,12 +92,12 @@ func (c *Controller) Login(ctx context.Context, code string) (string, string, er
 	}
 
 	if user.RefreshToken == "" {
-		refreshToken, err := c.createRefreshToken(email)
+		refreshToken, err := c.createRefreshToken(gitlabUser.Email)
 		if err != nil {
 			return "", "", errors.Newf("failed to generate new user refresh token: %w", err)
 		}
 		userWithRefreshToken := &types.User{
-			Email:        email,
+			Email:        gitlabUser.Email,
 			RefreshToken: refreshToken,
 		}
 		if _, err := c.storage.UpdateUserRefreshToken(ctx, userWithRefreshToken); err != nil {
@@ -108,7 +105,7 @@ func (c *Controller) Login(ctx context.Context, code string) (string, string, er
 		}
 	}
 
-	userAccessToken, err := c.createAccessToken(email)
+	userAccessToken, err := c.createAccessToken(gitlabUser.Email)
 	if err != nil {
 		return "", "", errors.Newf("failed to generate new user access token: %w", err)
 	}
@@ -157,12 +154,12 @@ func (c *Controller) createRefreshToken(email string) (string, error) {
 	return token.SignedString([]byte(c.Config.Auth.RefreshTokenSecret))
 }
 
-func (c *Controller) fetchGithubAccessToken(ctx context.Context, code string) (string, error) {
+func (c *Controller) fetchGitlabAccessToken(ctx context.Context, code string) (string, error) {
 	accessTokenReqBody := accessTokenReqBody{
-		ClientID:     c.Config.Github.ClientID,
-		ClientSecret: c.Config.Github.ClientSecret,
+		ClientID:     c.Config.Gitlab.ClientID,
+		ClientSecret: c.Config.Gitlab.ClientSecret,
 		Code:         code,
-		RedirectURI:  fmt.Sprintf("http://%s:%d%s", c.Config.Host, c.Config.Port, paths.GithubLoginCallbackPath),
+		RedirectURI:  fmt.Sprintf("http://%s:%d%s", c.Config.Host, c.Config.Port, paths.GitlabLoginCallbackPath),
 	}
-	return c.getGithubAccessToken(ctx, accessTokenReqBody)
+	return c.getGitlabAccessToken(ctx, accessTokenReqBody)
 }

@@ -16,9 +16,10 @@ var (
 )
 
 type UserData struct {
-	Email             string
-	GithubAccessToken string
-	RoleName          types.Role
+	Email    string
+	Name     string
+	GitlabID string
+	RoleName types.Role
 }
 
 func AddCorrelationID(r *http.Request, correlationID string) {

@@ -51,8 +51,8 @@ func (r Router) Role(requiredRole types.Role) Router {
 
 func (r Router) mountAuthRoutes() {
 	authHandler := handlers.Auth{Controller: r.controller}
-	r.Methods(http.MethodGet).Path(paths.GithubLoginPath).HandlerFunc(authHandler.Login)
-	r.Methods(http.MethodGet).Path(paths.GithubLoginCallbackPath).HandlerFunc(authHandler.LoginCallback)
+	r.Methods(http.MethodGet).Path(paths.GitlabLoginPath).HandlerFunc(authHandler.Login)
+	r.Methods(http.MethodGet).Path(paths.GitlabLoginCallbackPath).HandlerFunc(authHandler.LoginCallback)
 	r.Methods(http.MethodGet).Path(paths.UserInfoPath).HandlerFunc(authHandler.GetUserInfo)
 	r.Methods(http.MethodPatch).Path(paths.UserInfoPath).HandlerFunc(authHandler.PatchUserRole)
 	r.Methods(http.MethodPost).Path(paths.TokenPath).HandlerFunc(authHandler.RefreshToken)

@@ -3,8 +3,8 @@ package paths
 const (
 	RootPath = "/"
 
-	GithubLoginPath         = "/login/oauth/github"
-	GithubLoginCallbackPath = "/login/oauth/github/callback"
+	GitlabLoginPath         = "/login/oauth/gitlab"
+	GitlabLoginCallbackPath = "/login/oauth/gitlab/callback"
 	UserInfoPath            = "/userInfo"
 	TokenPath               = "/token"
 	LogoutPath              = "/logout"

@@ -12,7 +12,7 @@ import (
 
 var (
 	insertCourseQuery = fmt.Sprintf(`INSERT INTO %s 
-	(id, name, description, github_name, creator_email, created_on, last_edited_on)
+	(id, name, description, gitlab_name, creator_email, created_on, last_edited_on)
 	VALUES ($1, $2, $3, $4, $5, $6, $7)
 	RETURNING *`, courseTable)
 
@@ -135,7 +135,7 @@ func readCourseRecord(row dbRecord) (*types.Course, error) {
 		&course.ID,
 		&course.Name,
 		&course.Description,
-		&course.GithubName,
+		&course.GitlabName,
 		&course.CreatorEmail,
 		&course.CreatedOn,
 		&course.LastEditedOn,

@@ -20,6 +20,7 @@ type Config struct {
 	Server   `yaml:"server"`
 	DB       `yaml:"db"`
 	Executor `yaml:"executor"`
+	Gitlab   `yaml:"gitlab"`
 }
 
 type Server struct {
@@ -37,6 +38,12 @@ type DB struct {
 type Executor struct {
 	MaxWorkers        int `yaml:"max_workers"`
 	MaxConcurrentJobs int `yaml:"max_concurrent_jobs"`
+}
+
+type Gitlab struct {
+	Host            string `yaml:"host"`
+	GroupParentName string `yaml:"group_parent_name"`
+	PAT             string `yaml:"pat"`
 }
 
 func Load() (Config, error) {

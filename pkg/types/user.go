@@ -3,12 +3,12 @@ package types
 import "github.com/ZdravkoGyurov/grader/pkg/errors"
 
 type User struct {
-	Email             string `json:"email"`
-	Name              string `json:"name"`
-	AvatarURL         string `json:"avatarUrl"`
-	RefreshToken      string `json:"refreshToken"`
-	GithubAccessToken string `json:"githubAccessToken"`
-	RoleName          Role   `json:"roleName"`
+	Email        string `json:"email"`
+	Name         string `json:"name"`
+	AvatarURL    string `json:"avatarUrl"`
+	GitlabID     string `json:"gitlabId"`
+	RefreshToken string `json:"refreshToken"`
+	RoleName     Role   `json:"roleName"`
 }
 
 func (u User) ValidateUpdateRole() error {
@@ -26,8 +26,8 @@ func (u User) Fields() []interface{} {
 		u.Email,
 		u.Name,
 		u.AvatarURL,
+		u.GitlabID,
 		u.RefreshToken,
-		u.GithubAccessToken,
 		u.RoleName,
 	}
 }

@@ -11,3 +11,7 @@ db:
 executor:
   max_workers: 5
   max_concurrent_jobs: 100
+gitlab:
+  host: gitlab.com
+  group_parent_name: demo-grader-123
+  pat: pat
