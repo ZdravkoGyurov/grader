@@ -4,8 +4,19 @@ import {
   BreadcrumbLink,
 } from "@chakra-ui/breadcrumb";
 import { IconButton } from "@chakra-ui/button";
-import Icon from "@chakra-ui/icon";
-import { Badge, Flex, Link, Text } from "@chakra-ui/layout";
+import { Badge, Flex, Text } from "@chakra-ui/layout";
+import {
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+  Link,
+  Code,
+  Divider,
+} from "@chakra-ui/react";
 import {
   Table,
   TableCaption,
@@ -16,17 +27,19 @@ import {
   Tr,
 } from "@chakra-ui/table";
 import { useContext, useEffect, useReducer } from "react";
-import { FiArrowLeft, FiArrowRight, FiCheckSquare } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { useLocation, useNavigate, useParams } from "react-router";
 import assignmentApi from "../api/assignment";
 import courseApi from "../api/course";
 import submissionApi from "../api/submission";
 import ThemeContext from "../contexts/ThemeContext";
+import SubmissionResultModal from "./SubmissionResultModal";
 
 const Assignment = () => {
   const { styles } = useContext(ThemeContext);
   const { state } = useLocation();
   const { courseId, assignmentId } = useParams();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   let navigate = useNavigate();
 
   const courseReducer = (state, action) => {
@@ -244,34 +257,30 @@ const Assignment = () => {
           <TableCaption placement="top">Submissions</TableCaption>
           <Thead borderBottom={`2px solid ${styles.colorPrimary}`}>
             <Tr>
-              <Th>Name</Th>
+              <Th>Date</Th>
               <Th>
                 <Flex alignItems="center" justifyContent="space-between">
                   Status
                   <Flex alignItems="center">
                     <IconButton
-                      color="#FFFFFF"
+                      variant="ghost"
                       disabled={submissionsState.page === 1}
+                      colorScheme="black"
                       icon={<FiArrowLeft />}
                       _focus={{ boxShadow: "none" }}
-                      _hover={{ backgroundColor: styles.accentLight }}
-                      _active={{ backgroundColor: styles.accentDark }}
-                      bg={styles.accentLight}
                       onClick={() => {
                         submissionsDispatch({ type: "decrementPage" });
                       }}
                     />
                     <Text m="0.5rem">Page {submissionsState.page} </Text>
                     <IconButton
-                      color="#FFFFFF"
+                      variant="ghost"
                       disabled={
                         submissionsState.page >= submissionsState.lastPage
                       }
-                      bg={styles.accentLight}
+                      colorScheme="black"
                       icon={<FiArrowRight />}
                       _focus={{ boxShadow: "none" }}
-                      _hover={{ backgroundColor: styles.accentLight }}
-                      _active={{ backgroundColor: styles.accentDark }}
                       onClick={() => {
                         submissionsDispatch({ type: "incrementPage" });
                       }}
@@ -293,41 +302,16 @@ const Assignment = () => {
                   key={submission.id}
                 >
                   <Td>
-                    <Flex>
-                      <Icon
-                        color={styles.accentLight}
-                        marginRight="1rem"
-                        fontSize="2xl"
-                        as={FiCheckSquare}
-                      />
-                      <Link
-                        onClick={() =>
-                          navigate(
-                            `/courses/${courseState.course.id}/assignments/${assignmentState.assignment.id}/submissions/${submission}`,
-                            {
-                              state: {
-                                course: courseState.course,
-                                assignment: assignmentState.assignment,
-                                submission: submission,
-                              },
-                            }
-                          )
-                        }
-                      >
-                        {submission.id}
-                      </Link>
-                    </Flex>
+                    <SubmissionResultModal submission={submission} />
                   </Td>
                   <Td>
-                    <Flex>
-                      <Badge
-                        colorScheme={submissionStatusColor(
-                          submission.submissionStatusName
-                        )}
-                      >
-                        {submission.submissionStatusName}
-                      </Badge>
-                    </Flex>
+                    <Badge
+                      colorScheme={submissionStatusColor(
+                        submission.submissionStatusName
+                      )}
+                    >
+                      {submission.submissionStatusName}
+                    </Badge>
                   </Td>
                 </Tr>
               ))}

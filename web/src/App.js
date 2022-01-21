@@ -56,7 +56,7 @@ const App = () => {
       <ThemeContext.Provider
         value={{ theme, setTheme, styles: themeStyles(theme) }}
       >
-        <Flex backgroundColor="#F3F3F3" h="100vh" p="0.5rem">
+        <Flex backgroundColor="#F3F3F3" h="100vh">
           {user ? (
             <>
               <Sidebar />

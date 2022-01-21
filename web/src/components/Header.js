@@ -26,16 +26,16 @@ const Header = () => {
 
   return (
     <Flex
-      borderRadius="8px"
+      borderBottomLeftRadius="8px"
       color={styles.colorPrimary}
       bg={styles.bg}
-      marginBottom="0.5rem"
+      marginBottom="0.25rem"
       boxShadow="0 4px 12px 0 rgba(0, 0, 0, 0.05)"
       justifyContent="space-between"
       alignItems="center"
-      p="1rem"
+      p=".5rem 1rem"
     >
-      <Text fontSize="3xl">Grader.io</Text>
+      <Text fontSize="3xl">{window.location.host}</Text>
       <Flex alignItems="center">
         <Icon
           color={styles.colorSecondary}
@@ -54,13 +54,10 @@ const Header = () => {
         />
         <Button
           marginLeft="1rem"
-          color="#FFFFFF"
-          backgroundColor={styles.accentLight}
-          _hover={{ backgroundColor: styles.accentLight }}
+          colorScheme="black"
           _focus={{ boxShadow: "none" }}
-          _active={{ backgroundColor: styles.accentDark }}
           leftIcon={<FiLogOut />}
-          variant="solid"
+          variant="ghost"
           onClick={() => {
             handleLogout();
           }}

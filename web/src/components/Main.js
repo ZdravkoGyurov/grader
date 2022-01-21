@@ -8,7 +8,6 @@ import { useContext } from "react";
 import ThemeContext from "../contexts/ThemeContext";
 import Course from "./Course";
 import Assignment from "./Assignment";
-import Submission from "./Submission";
 
 const Main = () => {
   const { styles } = useContext(ThemeContext);
@@ -19,8 +18,8 @@ const Main = () => {
       color={styles.colorPrimary}
       w="100%"
       boxShadow="0 4px 12px 0 rgba(0, 0, 0, 0.05)"
-      borderRadius="8px"
-      p="1rem"
+      borderTopLeftRadius="8px"
+      p=".5rem 1rem"
       h="100%"
     >
       <Routes>
@@ -31,12 +30,6 @@ const Main = () => {
           strict
           path="/courses/:courseId/assignments/:assignmentId"
           element={<Assignment />}
-        />
-        <Route
-          exact
-          strict
-          path="/courses/:courseId/assignments/:assignmentId/submissions/:submissionId"
-          element={<Submission />}
         />
         <Route exact strict path="/users" element={<Users />} />
         <Route exact strict path="/" element={<Home />} />

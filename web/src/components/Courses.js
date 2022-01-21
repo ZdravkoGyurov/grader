@@ -1,22 +1,14 @@
 import { IconButton } from "@chakra-ui/button";
-import Icon from "@chakra-ui/icon";
-import { Flex, Link, Text } from "@chakra-ui/layout";
+import { Flex, Text } from "@chakra-ui/layout";
 import { useContext, useEffect, useReducer } from "react";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-} from "@chakra-ui/react";
-import { FiArrowLeft, FiArrowRight, FiBook } from "react-icons/fi";
+import { Table, Thead, Tbody, Tr, Th, TableCaption } from "@chakra-ui/react";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import ThemeContext from "../contexts/ThemeContext";
 import courseApi from "../api/course";
 import { useNavigate } from "react-router";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import Loading from "./Loading";
+import CourseTableRow from "./CourseTableRow";
 
 const Courses = () => {
   const { styles } = useContext(ThemeContext);
@@ -96,39 +88,35 @@ const Courses = () => {
           <Loading />
         ) : (
           <Table variant="unstyled">
-            <TableCaption placement="top">Courses</TableCaption>
+            <TableCaption m={0} placement="top">
+              Courses
+            </TableCaption>
             <Thead borderBottom={`2px solid ${styles.colorPrimary}`}>
               <Tr>
+                <Th>Name</Th>
                 <Th>
-                  <Flex alignItems="center" justifyContent="space-between">
-                    Name
-                    <Flex alignItems="center">
-                      <IconButton
-                        color="#FFFFFF"
-                        disabled={state.page === 1}
-                        icon={<FiArrowLeft />}
-                        _focus={{ boxShadow: "none" }}
-                        _hover={{ backgroundColor: styles.accentLight }}
-                        _active={{ backgroundColor: styles.accentDark }}
-                        bg={styles.accentLight}
-                        onClick={() => {
-                          dispatch({ type: "decrementPage" });
-                        }}
-                      />
-                      <Text m="0.5rem">Page {state.page} </Text>
-                      <IconButton
-                        color="#FFFFFF"
-                        disabled={state.page >= state.lastPage}
-                        bg={styles.accentLight}
-                        icon={<FiArrowRight />}
-                        _focus={{ boxShadow: "none" }}
-                        _hover={{ backgroundColor: styles.accentLight }}
-                        _active={{ backgroundColor: styles.accentDark }}
-                        onClick={() => {
-                          dispatch({ type: "incrementPage" });
-                        }}
-                      />
-                    </Flex>
+                  <Flex alignItems="center" justifyContent="end">
+                    <IconButton
+                      variant="ghost"
+                      disabled={state.page === 1}
+                      colorScheme="black"
+                      icon={<FiArrowLeft />}
+                      _focus={{ boxShadow: "none" }}
+                      onClick={() => {
+                        dispatch({ type: "decrementPage" });
+                      }}
+                    />
+                    <Text m="0.5rem">Page {state.page} </Text>
+                    <IconButton
+                      variant="ghost"
+                      disabled={state.page >= state.lastPage}
+                      colorScheme="black"
+                      icon={<FiArrowRight />}
+                      _focus={{ boxShadow: "none" }}
+                      onClick={() => {
+                        dispatch({ type: "incrementPage" });
+                      }}
+                    />
                   </Flex>
                 </Th>
               </Tr>
@@ -137,30 +125,7 @@ const Courses = () => {
               {state.courses
                 .slice((state.page - 1) * pageSize, state.page * pageSize)
                 .map((course) => (
-                  <Tr
-                    borderBottom={`1px solid ${styles.colorPrimary}`}
-                    key={course.id}
-                  >
-                    <Td>
-                      <Flex>
-                        <Icon
-                          color={styles.accentLight}
-                          marginRight="1rem"
-                          fontSize="2xl"
-                          as={FiBook}
-                        />
-                        <Link
-                          onClick={() =>
-                            navigate(`/courses/${course.id}`, {
-                              state: { course: course },
-                            })
-                          }
-                        >
-                          {course.name}
-                        </Link>
-                      </Flex>
-                    </Td>
-                  </Tr>
+                  <CourseTableRow course={course} />
                 ))}
             </Tbody>
           </Table>

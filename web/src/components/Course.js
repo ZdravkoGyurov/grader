@@ -105,7 +105,9 @@ const Course = () => {
       </Flex>
       <Flex m="0 5%" overflowY="auto" flexDir="column" p="2rem">
         <Table variant="unstyled">
-          <TableCaption placement="top">Assignments</TableCaption>
+          <TableCaption m={0} placement="top">
+            Assignments
+          </TableCaption>
           <Thead borderBottom={`2px solid ${styles.colorPrimary}`}>
             <Tr>
               <Th>
@@ -113,26 +115,22 @@ const Course = () => {
                   Name
                   <Flex alignItems="center">
                     <IconButton
-                      color="#FFFFFF"
+                      variant="ghost"
                       disabled={page === 1}
+                      colorScheme="black"
                       icon={<FiArrowLeft />}
                       _focus={{ boxShadow: "none" }}
-                      _hover={{ backgroundColor: styles.accentLight }}
-                      _active={{ backgroundColor: styles.accentDark }}
-                      bg={styles.accentLight}
                       onClick={() => {
                         if (page > 1) setPage(page - 1);
                       }}
                     />
                     <Text m="0.5rem">Page {page} </Text>
                     <IconButton
-                      color="#FFFFFF"
+                      variant="ghost"
                       disabled={page >= maxPageSize}
-                      bg={styles.accentLight}
+                      colorScheme="black"
                       icon={<FiArrowRight />}
                       _focus={{ boxShadow: "none" }}
-                      _hover={{ backgroundColor: styles.accentLight }}
-                      _active={{ backgroundColor: styles.accentDark }}
                       onClick={() => {
                         if (page < maxPageSize) setPage(page + 1);
                       }}

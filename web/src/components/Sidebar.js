@@ -32,7 +32,7 @@ const Sidebar = () => {
   return (
     <Flex
       position="sticky"
-      marginRight="0.5rem"
+      margin="0.25rem"
       boxShadow="0 4px 12px 0 rgba(0, 0, 0, 0.05)"
       borderRadius="8px"
       flexDir="column"
