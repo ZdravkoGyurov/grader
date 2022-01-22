@@ -1,74 +1,43 @@
 import { IconButton } from "@chakra-ui/button";
 import { Flex, Text } from "@chakra-ui/layout";
 import { useContext, useEffect, useReducer } from "react";
-import { Table, Thead, Tbody, Tr, Th, TableCaption } from "@chakra-ui/react";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  TableCaption,
+  Tfoot,
+} from "@chakra-ui/react";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import ThemeContext from "../contexts/ThemeContext";
 import courseApi from "../api/course";
-import { useNavigate } from "react-router";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import Loading from "./Loading";
 import CourseTableRow from "./CourseTableRow";
+import CreateCourse from "./CreateCourse";
+import coursesReducer from "../reducers/CoursesReducer";
+import consts from "../consts/consts";
 
 const Courses = () => {
   const { styles } = useContext(ThemeContext);
-  const pageSize = 5;
 
-  const reducer = (state, action) => {
-    switch (action.type) {
-      case "incrementPage":
-        return {
-          ...state,
-          page: state.page < state.lastPage ? state.page + 1 : state.page,
-        };
-      case "decrementPage":
-        return {
-          ...state,
-          page: state.page > 1 ? state.page - 1 : state.page,
-        };
-      case "setCourse":
-        return {
-          ...state,
-          courses: action.courses,
-          lastPage: Math.ceil(action.courses.length / pageSize),
-          fetched: true,
-          error: null,
-        };
-      case "setError":
-        return {
-          ...state,
-          courses: null,
-          lastPage: 1,
-          fetched: true,
-          error: action.error,
-        };
-      default:
-        throw new Error("Wrong reducer action type");
-    }
-  };
-
-  const initialState = {
-    courses: null,
-    page: 1,
-    lastPage: 1,
-    fetched: false,
-    error: null,
-  };
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  let navigate = useNavigate();
-
-  const fetchCourses = async () => {
-    try {
-      const courses = await courseApi.getCourses();
-      dispatch({ type: "setCourse", courses: courses });
-    } catch (error) {
-      console.error(error);
-      dispatch({ type: "setError", error: error });
-    }
-  };
+  const [state, dispatch] = useReducer(
+    coursesReducer.reducer,
+    coursesReducer.initialState
+  );
 
   useEffect(() => {
+    async function fetchCourses() {
+      try {
+        const courses = await courseApi.getCourses();
+        dispatch({ type: "setCourses", courses: courses });
+      } catch (error) {
+        console.error(error);
+        dispatch({ type: "setError", error: error });
+      }
+    }
     fetchCourses();
   }, []);
 
@@ -96,6 +65,30 @@ const Courses = () => {
                 <Th>Name</Th>
                 <Th>
                   <Flex alignItems="center" justifyContent="end">
+                    <CreateCourse coursesStateDispatch={dispatch} />
+                  </Flex>
+                </Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {state.courses
+                .slice(
+                  (state.page - 1) * consts.coursesPageSize,
+                  state.page * consts.coursesPageSize
+                )
+                .map((course) => (
+                  <CourseTableRow
+                    key={course.id}
+                    course={course}
+                    coursesStateDispatch={dispatch}
+                  />
+                ))}
+            </Tbody>
+            <Tfoot>
+              <Tr>
+                <Th></Th>
+                <Th>
+                  <Flex alignItems="center" justifyContent="end">
                     <IconButton
                       variant="ghost"
                       disabled={state.page === 1}
@@ -120,14 +113,7 @@ const Courses = () => {
                   </Flex>
                 </Th>
               </Tr>
-            </Thead>
-            <Tbody>
-              {state.courses
-                .slice((state.page - 1) * pageSize, state.page * pageSize)
-                .map((course) => (
-                  <CourseTableRow course={course} />
-                ))}
-            </Tbody>
+            </Tfoot>
           </Table>
         )}
       </Flex>

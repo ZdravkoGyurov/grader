@@ -38,34 +38,34 @@ const Course = () => {
 
   let navigate = useNavigate();
 
-  const fetchAll = async () => {
-    if (state) {
-      setCourse(state.course);
-      setFetchedCourse(true);
-    } else {
+  useEffect(() => {
+    async function fetchAll() {
+      if (state) {
+        setCourse(state.course);
+        setFetchedCourse(true);
+      } else {
+        try {
+          const course = await courseApi.getCourse(courseId);
+          setCourse(course);
+        } catch (error) {
+          console.error(error);
+          setCourse(null);
+        }
+        setFetchedCourse(true);
+      }
+
       try {
-        const course = await courseApi.getCourse(courseId);
-        setCourse(course);
+        const assignments = await assignmentApi.getAssignments(courseId);
+        setAssignments(assignments);
       } catch (error) {
         console.error(error);
-        setCourse(null);
+        setAssignments(null);
       }
-      setFetchedCourse(true);
+      setFetchedAssignments(true);
+
+      setMaxPageSize(Math.ceil(assignments.length / pageSize));
     }
 
-    try {
-      const assignments = await assignmentApi.getAssignments(courseId);
-      setAssignments(assignments);
-    } catch (error) {
-      console.error(error);
-      setAssignments(null);
-    }
-    setFetchedAssignments(true);
-
-    setMaxPageSize(Math.ceil(assignments.length / pageSize));
-  };
-
-  useEffect(() => {
     fetchAll();
   }, []);
 

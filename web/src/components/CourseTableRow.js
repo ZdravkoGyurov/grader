@@ -6,7 +6,7 @@ import DeleteCourse from "./DeleteCourse";
 import EditCourse from "./EditCourse";
 import { useNavigate } from "react-router";
 
-export default function CourseTableRow({ course }) {
+export default function CourseTableRow({ course, coursesStateDispatch }) {
   const { styles } = useContext(ThemeContext);
   let navigate = useNavigate();
 
@@ -33,8 +33,14 @@ export default function CourseTableRow({ course }) {
       </Td>
       <Td>
         <Flex justifyContent="end">
-          <EditCourse course={course} />
-          <DeleteCourse course={course} />
+          <EditCourse
+            course={course}
+            coursesStateDispatch={coursesStateDispatch}
+          />
+          <DeleteCourse
+            course={course}
+            coursesStateDispatch={coursesStateDispatch}
+          />
         </Flex>
       </Td>
     </Tr>

@@ -3,7 +3,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  IconButton,
   Input,
   Modal,
   ModalBody,
@@ -15,11 +14,10 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { FiEdit } from "react-icons/fi";
 import { Field, Form, Formik } from "formik";
 import courseApi from "../api/course";
 
-export default function EditCourse({ course, coursesStateDispatch }) {
+export default function CreateCourse({ coursesStateDispatch }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
@@ -28,30 +26,34 @@ export default function EditCourse({ course, coursesStateDispatch }) {
       return "Name is required";
     }
   }
+
   function validateDescription(value) {
     if (!value) {
       return "Description is required";
     }
   }
 
-  async function updateCourse(updateCourseValues) {
+  function validateGitlabName(value) {
+    if (!value) {
+      return "Gitlab Name is required";
+    }
+  }
+
+  async function createCourse(createCourseValues) {
     try {
-      const updatedCourse = await courseApi.updateCourse(
-        course.id,
-        updateCourseValues
-      );
-      coursesStateDispatch({ type: "updateCourse", course: updatedCourse });
+      const createdCourse = await courseApi.createCourse(createCourseValues);
+      coursesStateDispatch({ type: "createCourse", course: createdCourse });
 
       toast({
-        title: "Update course successful.",
-        description: `Updated course '${course.name}'`,
+        title: "Create course successful.",
+        description: `Created course '${createCourseValues.name}'`,
         status: "success",
         duration: 3000,
         isClosable: true,
       });
     } catch (error) {
       toast({
-        title: "Update course failed.",
+        title: "Create course failed.",
         description: error.message,
         status: "error",
         duration: 3000,
@@ -62,31 +64,29 @@ export default function EditCourse({ course, coursesStateDispatch }) {
 
   return (
     <>
-      <IconButton
-        variant="ghost"
-        colorScheme="black"
-        _focus={{ boxShadow: "none" }}
-        icon={<FiEdit />}
-        onClick={onOpen}
-      ></IconButton>
+      <Button colorScheme="blue" onClick={onOpen}>
+        Create
+      </Button>
+
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Edit Course</ModalHeader>
-          <ModalCloseButton />
           <Formik
             initialValues={{
-              name: course.name,
-              description: course.description,
+              name: "",
+              description: "",
+              gitlabName: "",
             }}
             onSubmit={async (values, actions) => {
-              await updateCourse(values);
+              await createCourse(values);
               actions.setSubmitting(false);
               onClose();
             }}
           >
             {(props) => (
               <Form>
+                <ModalHeader>Create Course</ModalHeader>
+                <ModalCloseButton />
                 <ModalBody>
                   <Field name="name" validate={validateName}>
                     {({ field, form }) => (
@@ -114,6 +114,21 @@ export default function EditCourse({ course, coursesStateDispatch }) {
                       </FormControl>
                     )}
                   </Field>
+                  <Field name="gitlabName" validate={validateGitlabName}>
+                    {({ field, form }) => (
+                      <FormControl
+                        isInvalid={
+                          form.errors.gitlabName && form.touched.gitlabName
+                        }
+                      >
+                        <FormLabel htmlFor="gitlabName">Gitlab Name</FormLabel>
+                        <Input {...field} id="gitlabName" />
+                        <FormErrorMessage>
+                          {form.errors.gitlabName}
+                        </FormErrorMessage>
+                      </FormControl>
+                    )}
+                  </Field>
                 </ModalBody>
                 <ModalFooter>
                   <Button
@@ -122,7 +137,7 @@ export default function EditCourse({ course, coursesStateDispatch }) {
                     isLoading={props.isSubmitting}
                     type="submit"
                   >
-                    Edit
+                    Create
                   </Button>
                   <Button variant="ghost" onClick={onClose}>
                     Close

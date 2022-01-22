@@ -6,18 +6,6 @@ import {
 import { IconButton } from "@chakra-ui/button";
 import { Badge, Flex, Text } from "@chakra-ui/layout";
 import {
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
-  Link,
-  Code,
-  Divider,
-} from "@chakra-ui/react";
-import {
   Table,
   TableCaption,
   Tbody,
@@ -39,7 +27,6 @@ const Assignment = () => {
   const { styles } = useContext(ThemeContext);
   const { state } = useLocation();
   const { courseId, assignmentId } = useParams();
-  const { isOpen, onOpen, onClose } = useDisclosure();
   let navigate = useNavigate();
 
   const courseReducer = (state, action) => {
