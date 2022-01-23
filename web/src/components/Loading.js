@@ -3,7 +3,7 @@ import { Spinner } from "@chakra-ui/spinner";
 
 const Loading = () => {
   return (
-    <Flex justifyContent="center">
+    <Flex h="100%" alignItems="center" justifyContent="center">
       <Spinner size="xl" />
     </Flex>
   );

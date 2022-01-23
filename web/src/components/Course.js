@@ -4,177 +4,168 @@ import {
   BreadcrumbLink,
 } from "@chakra-ui/breadcrumb";
 import { IconButton } from "@chakra-ui/button";
-import Icon from "@chakra-ui/icon";
-import { Flex, Link, Text } from "@chakra-ui/layout";
+import { Flex, Text } from "@chakra-ui/layout";
 import {
   Table,
   TableCaption,
   Tbody,
-  Td,
-  Th,
   Thead,
+  Tfoot,
+  Th,
   Tr,
 } from "@chakra-ui/table";
-import { useContext, useEffect, useState } from "react";
-import { FiArrowLeft, FiArrowRight, FiCode } from "react-icons/fi";
+import { useContext, useEffect, useReducer } from "react";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { useLocation, useNavigate, useParams } from "react-router";
 import assignmentApi from "../api/assignment";
 import courseApi from "../api/course";
+import consts from "../consts/consts";
 import ThemeContext from "../contexts/ThemeContext";
+import assignmentsReducer from "../reducers/AssignmentsReducer";
+import AssignmentTableRow from "./AssignmentTableRow";
+import CreateAssignment from "./CreateAssignment";
+import Loading from "./Loading";
 
 const Course = () => {
   const { styles } = useContext(ThemeContext);
-  const { state } = useLocation();
-
-  const [course, setCourse] = useState(null);
-  const [fetchedCourse, setFetchedCourse] = useState(false);
-
-  const pageSize = 5;
-  const [assignments, setAssignments] = useState([]);
-  const [fetchedAssignments, setFetchedAssignments] = useState(false);
-  const [page, setPage] = useState(1);
-  const [maxPageSize, setMaxPageSize] = useState(1);
+  const { locationState } = useLocation();
   const { courseId } = useParams();
-
   let navigate = useNavigate();
+
+  const [state, dispatch] = useReducer(
+    assignmentsReducer.reducer,
+    assignmentsReducer.initialState
+  );
 
   useEffect(() => {
     async function fetchAll() {
-      if (state) {
-        setCourse(state.course);
-        setFetchedCourse(true);
+      if (locationState) {
+        dispatch({ type: "setCourse", course: locationState.course });
       } else {
         try {
           const course = await courseApi.getCourse(courseId);
-          setCourse(course);
+          dispatch({ type: "setCourse", course: course });
         } catch (error) {
           console.error(error);
-          setCourse(null);
+          dispatch({ type: "setCourseError", courseError: error });
         }
-        setFetchedCourse(true);
       }
 
       try {
         const assignments = await assignmentApi.getAssignments(courseId);
-        setAssignments(assignments);
+        dispatch({ type: "setAssignments", assignments: assignments });
       } catch (error) {
         console.error(error);
-        setAssignments(null);
+        dispatch({ type: "setAssignmentsError", assignmentsError: error });
       }
-      setFetchedAssignments(true);
-
-      setMaxPageSize(Math.ceil(assignments.length / pageSize));
     }
 
     fetchAll();
   }, []);
 
-  if (!fetchedCourse || !fetchedAssignments) {
-    return <Flex>fetching...</Flex>;
-  }
-
   return (
     <Flex flexDir="column" w="100%">
-      <Flex alignItems="center" marginBottom="1rem" fontSize="2xl">
-        <Breadcrumb separator="→">
-          <BreadcrumbItem>
-            <BreadcrumbLink onClick={() => navigate(`/courses`)}>
-              Courses
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbItem isCurrentPage>
-            <BreadcrumbLink>{course.name}</BreadcrumbLink>
-          </BreadcrumbItem>
-        </Breadcrumb>
-      </Flex>
-      <Flex m="0 5%" overflowY="auto" flexDir="column" p="0 2rem">
-        <Flex justifyContent="space-between">
-          <Flex flexDir="column">
-            <Text fontWeight="bold">GITLAB NAME</Text>
-            <Text>{course.gitlabName}</Text>
+      {!state.fetchedCourse || !state.fetchedAssignments ? (
+        <Loading />
+      ) : (
+        <Flex flexDir="column">
+          <Flex alignItems="center" marginBottom="1rem" fontSize="2xl">
+            <Breadcrumb separator="→">
+              <BreadcrumbItem>
+                <BreadcrumbLink onClick={() => navigate(`/courses`)}>
+                  Courses
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbItem isCurrentPage>
+                <BreadcrumbLink>{state.course.name}</BreadcrumbLink>
+              </BreadcrumbItem>
+            </Breadcrumb>
           </Flex>
-          <Flex flexDir="column">
-            <Text fontWeight="bold">CREATED BY</Text>
-            <Text>{course.creatorEmail}</Text>
+          <Flex m="0 5%" overflowY="auto" flexDir="column" p="0 2rem">
+            <Flex justifyContent="space-between">
+              <Flex flexDir="column">
+                <Text fontWeight="bold">GITLAB NAME</Text>
+                <Text>{state.course.gitlabName}</Text>
+              </Flex>
+              <Flex flexDir="column">
+                <Text fontWeight="bold">CREATED BY</Text>
+                <Text>{state.course.creatorEmail}</Text>
+              </Flex>
+            </Flex>
+            <Flex marginTop="1rem" flexDir="column">
+              <Text fontWeight="bold">DESCRIPTION</Text>
+              <Text>{state.course.description}</Text>
+            </Flex>
           </Flex>
-        </Flex>
-        <Flex marginTop="1rem" flexDir="column">
-          <Text fontWeight="bold">DESCRIPTION</Text>
-          <Text>{course.description}</Text>
-        </Flex>
-      </Flex>
-      <Flex m="0 5%" overflowY="auto" flexDir="column" p="2rem">
-        <Table variant="unstyled">
-          <TableCaption m={0} placement="top">
-            Assignments
-          </TableCaption>
-          <Thead borderBottom={`2px solid ${styles.colorPrimary}`}>
-            <Tr>
-              <Th>
-                <Flex alignItems="center" justifyContent="space-between">
-                  Name
-                  <Flex alignItems="center">
-                    <IconButton
-                      variant="ghost"
-                      disabled={page === 1}
-                      colorScheme="black"
-                      icon={<FiArrowLeft />}
-                      _focus={{ boxShadow: "none" }}
-                      onClick={() => {
-                        if (page > 1) setPage(page - 1);
-                      }}
-                    />
-                    <Text m="0.5rem">Page {page} </Text>
-                    <IconButton
-                      variant="ghost"
-                      disabled={page >= maxPageSize}
-                      colorScheme="black"
-                      icon={<FiArrowRight />}
-                      _focus={{ boxShadow: "none" }}
-                      onClick={() => {
-                        if (page < maxPageSize) setPage(page + 1);
-                      }}
-                    />
-                  </Flex>
-                </Flex>
-              </Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {assignments
-              .slice((page - 1) * pageSize, page * pageSize)
-              .map((assignment) => (
-                <Tr
-                  borderBottom={`1px solid ${styles.colorPrimary}`}
-                  key={assignment.id}
-                >
-                  <Td>
-                    <Flex>
-                      <Icon
-                        color={styles.accentLight}
-                        marginRight="1rem"
-                        fontSize="2xl"
-                        as={FiCode}
+          <Flex m="0 5%" overflowY="auto" flexDir="column" p="2rem">
+            <Table variant="unstyled">
+              <TableCaption m={0} placement="top">
+                Assignments
+              </TableCaption>
+              <Thead borderBottom={`2px solid ${styles.colorPrimary}`}>
+                <Tr>
+                  <Th>Name</Th>
+                  <Th>
+                    <Flex alignItems="center" justifyContent="end">
+                      <CreateAssignment
+                        assignmentsStateDispatch={dispatch}
+                        courseId={state.course.id}
                       />
-                      <Link
-                        onClick={() =>
-                          navigate(
-                            `/courses/${course.id}/assignments/${assignment.id}`,
-                            {
-                              state: { course: course, assignment: assignment },
-                            }
-                          )
-                        }
-                      >
-                        {assignment.name}
-                      </Link>
                     </Flex>
-                  </Td>
+                  </Th>
                 </Tr>
-              ))}
-          </Tbody>
-        </Table>
-      </Flex>
+              </Thead>
+              <Tbody>
+                {state.assignments
+                  .slice(
+                    (state.page - 1) * consts.assignmentsPageSize,
+                    state.page * consts.assignmentsPageSize
+                  )
+                  .map((assignment) => (
+                    <AssignmentTableRow
+                      key={assignment.id}
+                      course={state.course}
+                      assignment={assignment}
+                      assignmentsStateDispatch={dispatch}
+                    />
+                  ))}
+              </Tbody>
+              <Tfoot>
+                <Tr>
+                  <Th></Th>
+                  <Th>
+                    <Flex alignItems="center" justifyContent="end">
+                      <Flex alignItems="center">
+                        <IconButton
+                          variant="ghost"
+                          disabled={state.page === 1}
+                          colorScheme="black"
+                          icon={<FiArrowLeft />}
+                          _focus={{ boxShadow: "none" }}
+                          onClick={() => {
+                            dispatch({ type: "decrementPage" });
+                          }}
+                        />
+                        <Text m="0.5rem">Page {state.page} </Text>
+                        <IconButton
+                          variant="ghost"
+                          disabled={state.page >= state.lastPage}
+                          colorScheme="black"
+                          icon={<FiArrowRight />}
+                          _focus={{ boxShadow: "none" }}
+                          onClick={() => {
+                            dispatch({ type: "incrementPage" });
+                          }}
+                        />
+                      </Flex>
+                    </Flex>
+                  </Th>
+                </Tr>
+              </Tfoot>
+            </Table>
+          </Flex>
+        </Flex>
+      )}
     </Flex>
   );
 };

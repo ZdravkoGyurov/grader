@@ -45,78 +45,80 @@ const Courses = () => {
 
   return (
     <Flex flexDir="column" w="100%">
-      <Flex alignItems="center" marginBottom="1rem" fontSize="2xl">
-        <Breadcrumb separator="→">
-          <BreadcrumbItem isCurrentPage>
-            <BreadcrumbLink>Courses</BreadcrumbLink>
-          </BreadcrumbItem>
-        </Breadcrumb>
-      </Flex>
-      <Flex m="0 5%" overflowY="auto" flexDir="column" p="2rem">
-        {!state.fetched ? (
-          <Loading />
-        ) : (
-          <Table variant="unstyled">
-            <TableCaption m={0} placement="top">
-              Courses
-            </TableCaption>
-            <Thead borderBottom={`2px solid ${styles.colorPrimary}`}>
-              <Tr>
-                <Th>Name</Th>
-                <Th>
-                  <Flex alignItems="center" justifyContent="end">
-                    <CreateCourse coursesStateDispatch={dispatch} />
-                  </Flex>
-                </Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {state.courses
-                .slice(
-                  (state.page - 1) * consts.coursesPageSize,
-                  state.page * consts.coursesPageSize
-                )
-                .map((course) => (
-                  <CourseTableRow
-                    key={course.id}
-                    course={course}
-                    coursesStateDispatch={dispatch}
-                  />
-                ))}
-            </Tbody>
-            <Tfoot>
-              <Tr>
-                <Th></Th>
-                <Th>
-                  <Flex alignItems="center" justifyContent="end">
-                    <IconButton
-                      variant="ghost"
-                      disabled={state.page === 1}
-                      colorScheme="black"
-                      icon={<FiArrowLeft />}
-                      _focus={{ boxShadow: "none" }}
-                      onClick={() => {
-                        dispatch({ type: "decrementPage" });
-                      }}
+      {!state.fetched ? (
+        <Loading />
+      ) : (
+        <Flex flexDir="column">
+          <Flex alignItems="center" marginBottom="1rem" fontSize="2xl">
+            <Breadcrumb separator="→">
+              <BreadcrumbItem isCurrentPage>
+                <BreadcrumbLink>Courses</BreadcrumbLink>
+              </BreadcrumbItem>
+            </Breadcrumb>
+          </Flex>
+          <Flex m="0 5%" overflowY="auto" flexDir="column" p="2rem">
+            <Table variant="unstyled">
+              <TableCaption m={0} placement="top">
+                Courses
+              </TableCaption>
+              <Thead borderBottom={`2px solid ${styles.colorPrimary}`}>
+                <Tr>
+                  <Th>Name</Th>
+                  <Th>
+                    <Flex alignItems="center" justifyContent="end">
+                      <CreateCourse coursesStateDispatch={dispatch} />
+                    </Flex>
+                  </Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {state.courses
+                  .slice(
+                    (state.page - 1) * consts.coursesPageSize,
+                    state.page * consts.coursesPageSize
+                  )
+                  .map((course) => (
+                    <CourseTableRow
+                      key={course.id}
+                      course={course}
+                      coursesStateDispatch={dispatch}
                     />
-                    <Text m="0.5rem">Page {state.page} </Text>
-                    <IconButton
-                      variant="ghost"
-                      disabled={state.page >= state.lastPage}
-                      colorScheme="black"
-                      icon={<FiArrowRight />}
-                      _focus={{ boxShadow: "none" }}
-                      onClick={() => {
-                        dispatch({ type: "incrementPage" });
-                      }}
-                    />
-                  </Flex>
-                </Th>
-              </Tr>
-            </Tfoot>
-          </Table>
-        )}
-      </Flex>
+                  ))}
+              </Tbody>
+              <Tfoot>
+                <Tr>
+                  <Th></Th>
+                  <Th>
+                    <Flex alignItems="center" justifyContent="end">
+                      <IconButton
+                        variant="ghost"
+                        disabled={state.page === 1}
+                        colorScheme="black"
+                        icon={<FiArrowLeft />}
+                        _focus={{ boxShadow: "none" }}
+                        onClick={() => {
+                          dispatch({ type: "decrementPage" });
+                        }}
+                      />
+                      <Text m="0.5rem">Page {state.page} </Text>
+                      <IconButton
+                        variant="ghost"
+                        disabled={state.page >= state.lastPage}
+                        colorScheme="black"
+                        icon={<FiArrowRight />}
+                        _focus={{ boxShadow: "none" }}
+                        onClick={() => {
+                          dispatch({ type: "incrementPage" });
+                        }}
+                      />
+                    </Flex>
+                  </Th>
+                </Tr>
+              </Tfoot>
+            </Table>
+          </Flex>
+        </Flex>
+      )}
     </Flex>
   );
 };

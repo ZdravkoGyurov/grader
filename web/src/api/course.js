@@ -27,7 +27,7 @@ async function createCourse(course) {
   });
 
   if (response.status !== 201) {
-    throw new Error("Update failed.");
+    throw new Error("Create failed.");
   }
 
   return response.data;
