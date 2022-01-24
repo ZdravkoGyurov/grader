@@ -11,6 +11,7 @@ const (
 type Submission struct {
 	ID     string
 	Result string
+	Points int
 	Status SubmissionStatus
 }
 

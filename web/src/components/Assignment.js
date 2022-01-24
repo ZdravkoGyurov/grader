@@ -5,6 +5,7 @@ import {
 } from "@chakra-ui/breadcrumb";
 import { IconButton } from "@chakra-ui/button";
 import { Badge, Flex, Text } from "@chakra-ui/layout";
+import { Button } from "@chakra-ui/react";
 import {
   Table,
   TableCaption,
@@ -12,6 +13,7 @@ import {
   Td,
   Th,
   Thead,
+  Tfoot,
   Tr,
 } from "@chakra-ui/table";
 import { useContext, useEffect, useReducer } from "react";
@@ -21,6 +23,8 @@ import assignmentApi from "../api/assignment";
 import courseApi from "../api/course";
 import submissionApi from "../api/submission";
 import ThemeContext from "../contexts/ThemeContext";
+import AssignmentGitlabButton from "./AssignmentGitlabButton";
+import AssignmentInfoButton from "./AssignmentInfoButton";
 import SubmissionResultModal from "./SubmissionResultModal";
 
 const Assignment = () => {
@@ -224,61 +228,48 @@ const Assignment = () => {
         </Breadcrumb>
       </Flex>
       <Flex m="0 5%" overflowY="auto" flexDir="column" p="0 2rem">
-        <Flex justifyContent="space-between">
-          <Flex flexDir="column">
-            <Text fontWeight="bold">GITLAB NAME</Text>
-            <Text>{assignmentState.assignment.gitlabName}</Text>
+        <Flex alignItems="center" justifyContent="end">
+          <Flex>
+            <AssignmentInfoButton
+              assignmentName={assignmentState.assignment.name}
+              assignmentDescription={assignmentState.assignment.description}
+            />
+            <AssignmentGitlabButton
+              courseGitlabName={courseState.course.gitlabName}
+              assignmentGitlabName={assignmentState.assignment.gitlabName}
+            />
           </Flex>
-          <Flex flexDir="column">
-            <Text fontWeight="bold">AUTHOR</Text>
-            <Text>{assignmentState.assignment.authorEmail}</Text>
-          </Flex>
-        </Flex>
-        <Flex marginTop="1rem" flexDir="column">
-          <Text fontWeight="bold">DESCRIPTION</Text>
-          <Text>{assignmentState.assignment.description}</Text>
         </Flex>
       </Flex>
-      <Flex m="0 5%" overflowY="auto" flexDir="column" p="2rem">
+      <Flex m="0 5%" overflowY="auto" flexDir="column">
         <Table variant="unstyled">
           <TableCaption placement="top">Submissions</TableCaption>
           <Thead borderBottom={`2px solid ${styles.colorPrimary}`}>
             <Tr>
+              <Th>Points</Th>
+              <Th>Status</Th>
               <Th>Date</Th>
               <Th>
-                <Flex alignItems="center" justifyContent="space-between">
-                  Status
-                  <Flex alignItems="center">
-                    <IconButton
-                      variant="ghost"
-                      disabled={submissionsState.page === 1}
-                      colorScheme="black"
-                      icon={<FiArrowLeft />}
-                      _focus={{ boxShadow: "none" }}
-                      onClick={() => {
-                        submissionsDispatch({ type: "decrementPage" });
-                      }}
-                    />
-                    <Text m="0.5rem">Page {submissionsState.page} </Text>
-                    <IconButton
-                      variant="ghost"
-                      disabled={
-                        submissionsState.page >= submissionsState.lastPage
-                      }
-                      colorScheme="black"
-                      icon={<FiArrowRight />}
-                      _focus={{ boxShadow: "none" }}
-                      onClick={() => {
-                        submissionsDispatch({ type: "incrementPage" });
-                      }}
-                    />
-                  </Flex>
+                <Flex alignItems="center" justifyContent="end">
+                  <Button
+                    colorScheme="blue"
+                    onClick={() => {
+                      submissionApi.createSubmission(
+                        assignmentState.assignment.id
+                      );
+                    }}
+                  >
+                    Create
+                  </Button>
                 </Flex>
               </Th>
             </Tr>
           </Thead>
           <Tbody>
             {submissionsState.submissions
+              .sort(
+                (s1, s2) => new Date(s2.submittedOn) - new Date(s1.submittedOn)
+              )
               .slice(
                 (submissionsState.page - 1) * pageSize,
                 submissionsState.page * pageSize
@@ -300,9 +291,44 @@ const Assignment = () => {
                       {submission.submissionStatusName}
                     </Badge>
                   </Td>
+                  <Td>{new Date(submission.submittedOn).toLocaleString()}</Td>
                 </Tr>
               ))}
           </Tbody>
+          <Tfoot>
+            <Tr>
+              <Th></Th>
+              <Th></Th>
+              <Th></Th>
+              <Th>
+                <Flex alignItems="center" justifyContent="end">
+                  <IconButton
+                    variant="ghost"
+                    disabled={submissionsState.page === 1}
+                    colorScheme="black"
+                    icon={<FiArrowLeft />}
+                    _focus={{ boxShadow: "none" }}
+                    onClick={() => {
+                      submissionsDispatch({ type: "decrementPage" });
+                    }}
+                  />
+                  <Text m="0.5rem">Page {submissionsState.page} </Text>
+                  <IconButton
+                    variant="ghost"
+                    disabled={
+                      submissionsState.page >= submissionsState.lastPage
+                    }
+                    colorScheme="black"
+                    icon={<FiArrowRight />}
+                    _focus={{ boxShadow: "none" }}
+                    onClick={() => {
+                      submissionsDispatch({ type: "incrementPage" });
+                    }}
+                  />
+                </Flex>
+              </Th>
+            </Tr>
+          </Tfoot>
         </Table>
       </Flex>
     </Flex>

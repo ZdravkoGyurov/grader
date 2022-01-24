@@ -86,17 +86,17 @@ const Course = () => {
           <Flex m="0 5%" overflowY="auto" flexDir="column" p="0 2rem">
             <Flex alignItems="center" justifyContent="end">
               <Flex>
-                <CourseGitlabButton
-                  courseGitlabName={state.course.gitlabName}
-                />
                 <CourseInfoButton
                   courseName={state.course.name}
                   courseDescription={state.course.description}
                 />
+                <CourseGitlabButton
+                  courseGitlabName={state.course.gitlabName}
+                />
               </Flex>
             </Flex>
           </Flex>
-          <Flex m="0 5%" overflowY="auto" flexDir="column" p="2rem">
+          <Flex m="0 5%" overflowY="auto" flexDir="column">
             <Table variant="unstyled">
               <TableCaption m={0} placement="top">
                 Assignments

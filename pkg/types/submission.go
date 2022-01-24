@@ -1,6 +1,8 @@
 package types
 
 import (
+	"time"
+
 	"github.com/ZdravkoGyurov/grader/pkg/errors"
 
 	"github.com/google/uuid"
@@ -9,8 +11,10 @@ import (
 type Submission struct {
 	ID                   string           `json:"id"`
 	Result               string           `json:"result"`
+	Points               int              `json:"points"`
 	SubmissionStatusName SubmissionStatus `json:"submissionStatusName"`
 	SubmitterEmail       string           `json:"submitterEmail"`
+	SubmittedOn          time.Time        `json:"submittedOn"`
 	AssignmentID         string           `json:"assignmentId"`
 }
 
@@ -31,8 +35,10 @@ func (s Submission) Fields() []interface{} {
 	return []interface{}{
 		s.ID,
 		s.Result,
+		s.Points,
 		s.SubmissionStatusName,
 		s.SubmitterEmail,
+		s.SubmittedOn,
 		s.AssignmentID,
 	}
 }

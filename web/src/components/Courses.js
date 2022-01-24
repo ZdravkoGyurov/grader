@@ -19,6 +19,7 @@ import CourseTableRow from "./CourseTableRow";
 import CreateCourse from "./CreateCourse";
 import coursesReducer from "../reducers/CoursesReducer";
 import consts from "../consts/consts";
+import CoursesGitlabButton from "./CoursesGitlabButton";
 
 const Courses = () => {
   const { styles } = useContext(ThemeContext);
@@ -56,7 +57,14 @@ const Courses = () => {
               </BreadcrumbItem>
             </Breadcrumb>
           </Flex>
-          <Flex m="0 5%" overflowY="auto" flexDir="column" p="2rem">
+          <Flex m="0 5%" overflowY="auto" flexDir="column" p="0 2rem">
+            <Flex alignItems="center" justifyContent="end">
+              <Flex>
+                <CoursesGitlabButton />
+              </Flex>
+            </Flex>
+          </Flex>
+          <Flex m="0 5%" overflowY="auto" flexDir="column">
             <Table variant="unstyled">
               <TableCaption m={0} placement="top">
                 Courses

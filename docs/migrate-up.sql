@@ -32,8 +32,8 @@ CREATE TABLE IF NOT EXISTS course (
     description TEXT,
     gitlab_name TEXT NOT NULL,
     creator_email TEXT NOT NULL,
-	created_on DATE NOT NULL,
-	last_edited_on DATE NOT NULL,
+	created_on TIMESTAMP NOT NULL,
+	last_edited_on TIMESTAMP NOT NULL,
     PRIMARY KEY(id),
     CONSTRAINT fk_user_email FOREIGN KEY(creator_email) REFERENCES users(email)
 );
@@ -45,8 +45,8 @@ CREATE TABLE IF NOT EXISTS assignment (
     gitlab_name TEXT NOT NULL,
     author_email TEXT NOT NULL,
     course_id uuid NOT NULL,
-	created_on DATE NOT NULL,
-	last_edited_on DATE NOT NULL,
+	created_on TIMESTAMP NOT NULL,
+	last_edited_on TIMESTAMP NOT NULL,
     PRIMARY KEY(id),
     CONSTRAINT fk_user_email FOREIGN KEY(author_email) REFERENCES users(email),
     CONSTRAINT fk_course_id FOREIGN KEY(course_id) REFERENCES course(id)
@@ -55,8 +55,10 @@ CREATE TABLE IF NOT EXISTS assignment (
 CREATE TABLE IF NOT EXISTS submission (
     id uuid DEFAULT uuid_generate_v4(),
     result TEXT,
+    points SMALLINT,
     submission_status_name TEXT NOT NULL,
     submitter_email TEXT NOT NULL,
+	submitted_on TIMESTAMP NOT NULL,
     assignment_id uuid NOT NULL, 
     PRIMARY KEY(id),
     CONSTRAINT fk_submission_status_name FOREIGN KEY(submission_status_name) REFERENCES submission_status(name),

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"time"
 
 	"github.com/ZdravkoGyurov/grader/pkg/types"
 	"github.com/google/uuid"
@@ -11,6 +12,7 @@ func (c *Controller) CreateSubmission(ctx context.Context, submission *types.Sub
 	submission.ID = uuid.NewString()
 	submission.Result = ""
 	submission.SubmissionStatusName = types.SubmissionStatusPending
+	submission.SubmittedOn = time.Now()
 
 	if err := submission.ValidateCreate(); err != nil {
 		return nil, err

@@ -2,6 +2,8 @@ package controller
 
 import (
 	"context"
+	"math"
+	"strconv"
 	"strings"
 
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/dexec"
@@ -34,6 +36,11 @@ func (c *Controller) ExecJob(ctx context.Context, config dexec.TestsRunConfig) e
 			submission.Status = types.SubmissionStatusFail
 		} else {
 			submission.Result = result
+			points, err := parsePoints(result)
+			if err != nil {
+				logger.Err(err).Msg("setting points to 0")
+			}
+			submission.Points = points
 			submission.Status = parseResultStatus(result)
 		}
 
@@ -65,6 +72,22 @@ func (c *Controller) fillTestsRunConfig(ctx context.Context, config *dexec.Tests
 	config.TesterGitlabName = submissionInfo.TesterGitlabName
 
 	return nil
+}
+
+func parsePoints(result string) (int, error) {
+	resultTokens := strings.Split(result, "\n")
+
+	successful, err := strconv.ParseFloat(strings.Split(resultTokens[0], " ")[0], 32)
+	if err != nil {
+		return 0, errors.Newf("failed to parse successful number of tests: %w", err)
+	}
+	failed, err := strconv.ParseFloat(strings.Split(resultTokens[1], " ")[0], 32)
+	if err != nil {
+		return 0, errors.Newf("failed to parse failed number of tests: %w", err)
+	}
+
+	points := (successful / (successful + failed)) * 100
+	return int(math.Ceil(points)), nil
 }
 
 func parseResultStatus(result string) types.SubmissionStatus {

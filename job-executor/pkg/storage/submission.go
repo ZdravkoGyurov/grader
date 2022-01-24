@@ -19,8 +19,8 @@ func (s *Storage) UpdateSubmission(submission types.Submission) error {
 	ctx, cancel := context.WithTimeout(context.Background(), s.cfg.RequestTimeout)
 	defer cancel()
 
-	updateQuery := fmt.Sprintf(`UPDATE %s SET result=$1, submission_status_name=$2 WHERE id=$3`, submissionTable)
-	result, err := s.pool.Exec(ctx, updateQuery, submission.Result, submission.Status, submission.ID)
+	updateQuery := fmt.Sprintf(`UPDATE %s SET result=$1, points=$2, submission_status_name=$3 WHERE id=$4`, submissionTable)
+	result, err := s.pool.Exec(ctx, updateQuery, submission.Result, submission.Points, submission.Status, submission.ID)
 	if err != nil {
 		return dbError(errors.Newf("failed to update submission: %w", err))
 	}

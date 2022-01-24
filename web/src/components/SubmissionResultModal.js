@@ -29,7 +29,7 @@ export default function SubmissionResultModal({ submission }) {
 
   return (
     <>
-      <Link onClick={onOpen}>{submission.id}</Link>
+      <Link onClick={onOpen}>{submission.points}</Link>
       <Modal size="3xl" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
