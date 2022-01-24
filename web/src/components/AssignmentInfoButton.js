@@ -9,6 +9,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { FiInfo } from "react-icons/fi";
+import options from "../consts/markdown";
+import Markdown from "markdown-to-jsx";
 
 export default function AssignmentInfoButton({
   assignmentName,
@@ -26,12 +28,14 @@ export default function AssignmentInfoButton({
         onClick={onOpen}
       />
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal size="4xl" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{assignmentName}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>{assignmentDescription}</ModalBody>
+          <ModalBody>
+            <Markdown children={assignmentDescription} options={options} />
+          </ModalBody>
         </ModalContent>
       </Modal>
     </>

@@ -87,47 +87,40 @@ export default function CreateCourse({ coursesStateDispatch }) {
                 <ModalHeader>Create Course</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                  <Flex>
-                    <Flex
-                      w="100%"
-                      gridGap="1rem"
-                      justifyContent="space-between"
-                    >
-                      <Flex w="50%">
-                        <Field name="name" validate={validateName}>
-                          {({ field, form }) => (
-                            <FormControl
-                              isInvalid={form.errors.name && form.touched.name}
-                            >
-                              <FormLabel htmlFor="name">Name</FormLabel>
-                              <Input {...field} id="name" />
-                              <FormErrorMessage>
-                                {form.errors.name}
-                              </FormErrorMessage>
-                            </FormControl>
-                          )}
-                        </Field>
-                      </Flex>
-                      <Flex w="50%">
-                        <Field name="gitlabName" validate={validateGitlabName}>
-                          {({ field, form }) => (
-                            <FormControl
-                              isInvalid={
-                                form.errors.gitlabName &&
-                                form.touched.gitlabName
-                              }
-                            >
-                              <FormLabel htmlFor="gitlabName">
-                                Gitlab Name
-                              </FormLabel>
-                              <Input {...field} id="gitlabName" />
-                              <FormErrorMessage>
-                                {form.errors.gitlabName}
-                              </FormErrorMessage>
-                            </FormControl>
-                          )}
-                        </Field>
-                      </Flex>
+                  <Flex w="100%" gridGap="1rem" justifyContent="space-between">
+                    <Flex w="50%">
+                      <Field name="name" validate={validateName}>
+                        {({ field, form }) => (
+                          <FormControl
+                            isInvalid={form.errors.name && form.touched.name}
+                          >
+                            <FormLabel htmlFor="name">Name</FormLabel>
+                            <Input {...field} id="name" />
+                            <FormErrorMessage>
+                              {form.errors.name}
+                            </FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
+                    </Flex>
+                    <Flex w="50%" mb="1rem">
+                      <Field name="gitlabName" validate={validateGitlabName}>
+                        {({ field, form }) => (
+                          <FormControl
+                            isInvalid={
+                              form.errors.gitlabName && form.touched.gitlabName
+                            }
+                          >
+                            <FormLabel htmlFor="gitlabName">
+                              Gitlab Name
+                            </FormLabel>
+                            <Input {...field} id="gitlabName" />
+                            <FormErrorMessage>
+                              {form.errors.gitlabName}
+                            </FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
                     </Flex>
                   </Flex>
                   <Field name="description">

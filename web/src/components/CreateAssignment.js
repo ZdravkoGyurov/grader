@@ -1,5 +1,6 @@
 import {
   Button,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -16,6 +17,10 @@ import {
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import assignmentApi from "../api/assignment";
+import Markdown from "markdown-to-jsx";
+import options from "../consts/markdown";
+import AceEditor from "react-ace";
+import "ace-builds/src-noconflict/mode-markdown";
 
 export default function CreateAssignment({
   assignmentsStateDispatch,
@@ -27,12 +32,6 @@ export default function CreateAssignment({
   function validateName(value) {
     if (!value) {
       return "Name is required";
-    }
-  }
-
-  function validateDescription(value) {
-    if (!value) {
-      return "Description is required";
     }
   }
 
@@ -77,7 +76,7 @@ export default function CreateAssignment({
         Create
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal size="6xl" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <Formik
@@ -97,33 +96,43 @@ export default function CreateAssignment({
                 <ModalHeader>Create Assignment</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                  <Field name="name" validate={validateName}>
-                    {({ field, form }) => (
-                      <FormControl
-                        isInvalid={form.errors.name && form.touched.name}
-                      >
-                        <FormLabel htmlFor="name">Name</FormLabel>
-                        <Input {...field} id="name" />
-                        <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
-                  <Field name="gitlabName" validate={validateGitlabName}>
-                    {({ field, form }) => (
-                      <FormControl
-                        isInvalid={
-                          form.errors.gitlabName && form.touched.gitlabName
-                        }
-                      >
-                        <FormLabel htmlFor="gitlabName">Gitlab Name</FormLabel>
-                        <Input {...field} id="gitlabName" />
-                        <FormErrorMessage>
-                          {form.errors.gitlabName}
-                        </FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
-                  <Field name="description" validate={validateDescription}>
+                  <Flex w="100%" gridGap="1rem" justifyContent="space-between">
+                    <Flex w="50%">
+                      <Field name="name" validate={validateName}>
+                        {({ field, form }) => (
+                          <FormControl
+                            isInvalid={form.errors.name && form.touched.name}
+                          >
+                            <FormLabel htmlFor="name">Name</FormLabel>
+                            <Input {...field} id="name" />
+                            <FormErrorMessage>
+                              {form.errors.name}
+                            </FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
+                    </Flex>
+                    <Flex w="50%" mb="1rem">
+                      <Field name="gitlabName" validate={validateGitlabName}>
+                        {({ field, form }) => (
+                          <FormControl
+                            isInvalid={
+                              form.errors.gitlabName && form.touched.gitlabName
+                            }
+                          >
+                            <FormLabel htmlFor="gitlabName">
+                              Gitlab Name
+                            </FormLabel>
+                            <Input {...field} id="gitlabName" />
+                            <FormErrorMessage>
+                              {form.errors.gitlabName}
+                            </FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
+                    </Flex>
+                  </Flex>
+                  <Field name="description">
                     {({ field, form }) => (
                       <FormControl
                         isInvalid={
@@ -131,10 +140,39 @@ export default function CreateAssignment({
                         }
                       >
                         <FormLabel htmlFor="description">Description</FormLabel>
-                        <Input {...field} id="description" />
                         <FormErrorMessage>
                           {form.errors.description}
                         </FormErrorMessage>
+                        <Flex
+                          w="100%"
+                          gridGap="1rem"
+                          h="100%"
+                          justifyContent="space-between"
+                        >
+                          <AceEditor
+                            style={{ border: "1px solid lightgray" }}
+                            mode="markdown"
+                            id="description"
+                            height="30rem"
+                            width="50%"
+                            value={field.value}
+                            onChange={(value) => {
+                              field.onChange("description")(value);
+                            }}
+                          />
+                          <Flex
+                            w="50%"
+                            h="30rem"
+                            p="0.5rem"
+                            border="1px solid lightgray"
+                            overflow="auto"
+                          >
+                            <Markdown
+                              children={field.value}
+                              options={options}
+                            />
+                          </Flex>
+                        </Flex>
                       </FormControl>
                     )}
                   </Field>

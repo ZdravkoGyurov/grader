@@ -43,7 +43,7 @@ function reducer(state, action) {
       };
     case "deleteCourse":
       const newLastPageAfterDelete = Math.ceil(
-        state.courses.length - 1 / consts.coursesPageSize
+        (state.courses.length - 1) / consts.coursesPageSize
       );
       return {
         ...state,

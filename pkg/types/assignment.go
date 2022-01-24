@@ -26,9 +26,6 @@ func (a Assignment) ValidateCreate() error {
 	if a.Name == "" {
 		return errors.Newf("assignment name should not be empty: %w", errors.ErrInvalidEntity)
 	}
-	if a.Description == "" {
-		return errors.Newf("assignment description should not be empty: %w", errors.ErrInvalidEntity)
-	}
 	if a.GitlabName == "" {
 		return errors.Newf("assignment gitlab name should not be empty: %w", errors.ErrInvalidEntity)
 	}

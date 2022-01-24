@@ -25,9 +25,6 @@ func (c Course) ValidateCreate() error {
 	if c.Name == "" {
 		return errors.Newf("course name should not be empty: %w", errors.ErrInvalidEntity)
 	}
-	if c.Description == "" {
-		return errors.Newf("course description should not be empty: %w", errors.ErrInvalidEntity)
-	}
 	if c.GitlabName == "" {
 		return errors.Newf("course gitlab name should not be empty: %w", errors.ErrInvalidEntity)
 	}

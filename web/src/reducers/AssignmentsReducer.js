@@ -52,7 +52,7 @@ function reducer(state, action) {
       };
     case "deleteAssignment":
       const newLastPageAfterDelete = Math.ceil(
-        state.assignments.length - 1 / consts.assignmentsPageSize
+        (state.assignments.length - 1) / consts.assignmentsPageSize
       );
       return {
         ...state,

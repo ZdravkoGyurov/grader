@@ -9,6 +9,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { FiInfo } from "react-icons/fi";
+import options from "../consts/markdown";
+import Markdown from "markdown-to-jsx";
 
 export default function CourseInfoButton({ courseName, courseDescription }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -23,12 +25,14 @@ export default function CourseInfoButton({ courseName, courseDescription }) {
         onClick={onOpen}
       />
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal size="4xl" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{courseName}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>{courseDescription}</ModalBody>
+          <ModalBody>
+            <Markdown children={courseDescription} options={options} />
+          </ModalBody>
         </ModalContent>
       </Modal>
     </>
