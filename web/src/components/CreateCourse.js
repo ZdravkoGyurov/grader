@@ -99,21 +99,6 @@ export default function CreateCourse({ coursesStateDispatch }) {
                       </FormControl>
                     )}
                   </Field>
-                  <Field name="description" validate={validateDescription}>
-                    {({ field, form }) => (
-                      <FormControl
-                        isInvalid={
-                          form.errors.description && form.touched.description
-                        }
-                      >
-                        <FormLabel htmlFor="description">Description</FormLabel>
-                        <Input {...field} id="description" />
-                        <FormErrorMessage>
-                          {form.errors.description}
-                        </FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
                   <Field name="gitlabName" validate={validateGitlabName}>
                     {({ field, form }) => (
                       <FormControl
@@ -125,6 +110,21 @@ export default function CreateCourse({ coursesStateDispatch }) {
                         <Input {...field} id="gitlabName" />
                         <FormErrorMessage>
                           {form.errors.gitlabName}
+                        </FormErrorMessage>
+                      </FormControl>
+                    )}
+                  </Field>
+                  <Field name="description" validate={validateDescription}>
+                    {({ field, form }) => (
+                      <FormControl
+                        isInvalid={
+                          form.errors.description && form.touched.description
+                        }
+                      >
+                        <FormLabel htmlFor="description">Description</FormLabel>
+                        <Input {...field} id="description" />
+                        <FormErrorMessage>
+                          {form.errors.description}
                         </FormErrorMessage>
                       </FormControl>
                     )}

@@ -32,7 +32,10 @@ func (a *Authenticator) Authenticate(next http.Handler) http.Handler {
 		}
 
 		req.AddUserData(request, req.UserData{
-			Email: claims.Email,
+			Email:    claims.Email,
+			Name:     claims.Name,
+			GitlabID: claims.GitlabID,
+			RoleName: claims.RoleName,
 		})
 
 		next.ServeHTTP(writer, request)

@@ -23,23 +23,10 @@ func (a *Authorizer) Authorize(requiredRoleName types.Role) func(next http.Handl
 				return
 			}
 
-			user, err := a.Controller.GetUser(request.Context(), userData.Email)
-			if err != nil {
-				response.SendError(writer, request, err)
-				return
-			}
-
-			if comparableRole(user.RoleName) < comparableRole(requiredRoleName) {
+			if comparableRole(userData.RoleName) < comparableRole(requiredRoleName) {
 				response.SendError(writer, request, errors.ErrUnauthorized)
 				return
 			}
-
-			req.AddUserData(request, req.UserData{
-				Email:    user.Email,
-				Name:     user.Name,
-				GitlabID: user.GitlabID,
-				RoleName: user.RoleName,
-			})
 
 			next.ServeHTTP(writer, request)
 		})

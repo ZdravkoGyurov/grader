@@ -28,7 +28,7 @@ func (c *Controller) GenerateAccessToken(ctx context.Context, refreshToken strin
 		return "", errors.New("refresh token is invalid")
 	}
 
-	accessToken, err := c.createAccessToken(claims.Email)
+	accessToken, err := c.createAccessToken(user)
 	if err != nil {
 		return "", errors.Newf("failed create access token: %w", err)
 	}
@@ -96,6 +96,7 @@ func (c *Controller) Login(ctx context.Context, code string) (string, string, er
 		if err != nil {
 			return "", "", errors.Newf("failed to generate new user refresh token: %w", err)
 		}
+		user.RefreshToken = refreshToken
 		userWithRefreshToken := &types.User{
 			Email:        gitlabUser.Email,
 			RefreshToken: refreshToken,
@@ -105,7 +106,7 @@ func (c *Controller) Login(ctx context.Context, code string) (string, string, er
 		}
 	}
 
-	userAccessToken, err := c.createAccessToken(gitlabUser.Email)
+	userAccessToken, err := c.createAccessToken(user)
 	if err != nil {
 		return "", "", errors.Newf("failed to generate new user access token: %w", err)
 	}
@@ -130,10 +131,13 @@ func (c *Controller) DeleteUserRefreshToken(ctx context.Context, accessToken str
 	return nil
 }
 
-func (c *Controller) createAccessToken(email string) (string, error) {
+func (c *Controller) createAccessToken(user *types.User) (string, error) {
 	expiresAt := time.Now().Add(c.Config.Auth.AccessTokenExpirationTime)
 	claims := types.JWTClaims{
-		Email: email,
+		Email:    user.Email,
+		Name:     user.Name,
+		GitlabID: user.GitlabID,
+		RoleName: user.RoleName,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expiresAt.Unix(),
 		},

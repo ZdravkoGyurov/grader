@@ -23,6 +23,8 @@ import consts from "../consts/consts";
 import ThemeContext from "../contexts/ThemeContext";
 import assignmentsReducer from "../reducers/AssignmentsReducer";
 import AssignmentTableRow from "./AssignmentTableRow";
+import CourseGitlabButton from "./CourseGitlabButton";
+import CourseInfoButton from "./CourseInfoButton";
 import CreateAssignment from "./CreateAssignment";
 import Loading from "./Loading";
 
@@ -61,7 +63,7 @@ const Course = () => {
     }
 
     fetchAll();
-  }, []);
+  }, [locationState, courseId]);
 
   return (
     <Flex flexDir="column" w="100%">
@@ -82,19 +84,16 @@ const Course = () => {
             </Breadcrumb>
           </Flex>
           <Flex m="0 5%" overflowY="auto" flexDir="column" p="0 2rem">
-            <Flex justifyContent="space-between">
-              <Flex flexDir="column">
-                <Text fontWeight="bold">GITLAB NAME</Text>
-                <Text>{state.course.gitlabName}</Text>
+            <Flex alignItems="center" justifyContent="end">
+              <Flex>
+                <CourseGitlabButton
+                  courseGitlabName={state.course.gitlabName}
+                />
+                <CourseInfoButton
+                  courseName={state.course.name}
+                  courseDescription={state.course.description}
+                />
               </Flex>
-              <Flex flexDir="column">
-                <Text fontWeight="bold">CREATED BY</Text>
-                <Text>{state.course.creatorEmail}</Text>
-              </Flex>
-            </Flex>
-            <Flex marginTop="1rem" flexDir="column">
-              <Text fontWeight="bold">DESCRIPTION</Text>
-              <Text>{state.course.description}</Text>
             </Flex>
           </Flex>
           <Flex m="0 5%" overflowY="auto" flexDir="column" p="2rem">
