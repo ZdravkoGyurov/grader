@@ -26,13 +26,12 @@ const Header = () => {
 
   return (
     <Flex
-      borderBottomLeftRadius="8px"
       color={styles.colorPrimary}
       bg={styles.bg}
-      marginBottom="0.25rem"
       boxShadow="0 4px 12px 0 rgba(0, 0, 0, 0.05)"
       justifyContent="space-between"
       alignItems="center"
+      borderBottom={"2px solid " + styles.colorPrimary}
       p=".5rem 1rem"
     >
       <Text fontSize="3xl">{window.location.host}</Text>

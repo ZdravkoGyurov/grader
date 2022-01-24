@@ -18,7 +18,6 @@ const Main = () => {
       color={styles.colorPrimary}
       w="100%"
       boxShadow="0 4px 12px 0 rgba(0, 0, 0, 0.05)"
-      borderTopLeftRadius="8px"
       p=".5rem 1rem"
       h="100%"
     >
