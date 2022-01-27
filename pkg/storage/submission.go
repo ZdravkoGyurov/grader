@@ -39,9 +39,12 @@ func (s *Storage) CreateSubmission(ctx context.Context, submission *types.Submis
 		if _, err := readUserCourseRecord(row); err != nil {
 			return dbError(errors.Newf("user is not in the course: %w", err))
 		}
-		if _, err := tx.Exec(dbCtx, insertSubmissionQuery, submission.Fields()...); err != nil {
+		row = tx.QueryRow(dbCtx, insertSubmissionQuery, submission.Fields()...)
+		createdSubmission, err := readSubmissionRecord(row)
+		if err != nil {
 			return dbError(errors.Newf("failed to create submission: %w", err))
 		}
+		submission.SubmittedOn = createdSubmission.SubmittedOn
 		return nil
 	})
 

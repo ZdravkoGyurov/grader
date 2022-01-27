@@ -22,6 +22,7 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import assignmentApi from "../api/assignment";
 import courseApi from "../api/course";
 import submissionApi from "../api/submission";
+import consts from "../consts/consts";
 import ThemeContext from "../contexts/ThemeContext";
 import AssignmentGitlabButton from "./AssignmentGitlabButton";
 import AssignmentInfoButton from "./AssignmentInfoButton";
@@ -89,6 +90,19 @@ const Assignment = () => {
           lastPage: Math.ceil(action.submissions.length / pageSize),
           fetched: action.fetched,
           error: action.error,
+        };
+      case "create":
+        const newSubmissions = [...state.submissions];
+        newSubmissions.push(action.submission);
+        const newLastPageAfterCreate = Math.ceil(
+          newSubmissions.length / consts.coursesPageSize
+        );
+
+        return {
+          ...state,
+          submissions: newSubmissions,
+          page: 1,
+          lastPage: newLastPageAfterCreate,
         };
       default:
         throw new Error("Wrong reducer action type");
@@ -253,10 +267,15 @@ const Assignment = () => {
                 <Flex alignItems="center" justifyContent="end">
                   <Button
                     colorScheme="blue"
-                    onClick={() => {
-                      submissionApi.createSubmission(
-                        assignmentState.assignment.id
-                      );
+                    onClick={async () => {
+                      const createdSubmission =
+                        await submissionApi.createSubmission(
+                          assignmentState.assignment.id
+                        );
+                      submissionsDispatch({
+                        type: "create",
+                        submission: createdSubmission,
+                      });
                     }}
                   >
                     Create

@@ -7,6 +7,7 @@ import (
 	"github.com/ZdravkoGyurov/grader/pkg/api/middlewares"
 	"github.com/ZdravkoGyurov/grader/pkg/api/router/paths"
 	"github.com/ZdravkoGyurov/grader/pkg/controller"
+	"github.com/ZdravkoGyurov/grader/pkg/log"
 	"github.com/ZdravkoGyurov/grader/pkg/types"
 
 	"github.com/gorilla/mux"
@@ -18,10 +19,12 @@ type Router struct {
 }
 
 func New(ctrl controller.Controller) Router {
+	r := mux.NewRouter()
 	router := Router{
-		Router:     mux.NewRouter(),
+		Router:     r,
 		controller: ctrl,
 	}
+
 	router.Use(middlewares.PanicRecovery)
 	router.Use(middlewares.LoggerMiddleware)
 	router.Use(middlewares.CorrelationIDMiddleware)
@@ -30,7 +33,24 @@ func New(ctrl controller.Controller) Router {
 	router.mountAssignmentRoutes()
 	router.mountSubmissionRoutes()
 	router.mountUserCourseRoutes()
+
+	logRoutes(r)
 	return router
+}
+
+func logRoutes(router *mux.Router) {
+	logger := log.DefaultLogger()
+	err := router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+		path, _ := route.GetPathTemplate()
+		methods, _ := route.GetMethods()
+		if path != "" || len(methods) > 0 {
+			logger.Info().Msgf("%v %s", methods, path)
+		}
+		return nil
+	})
+	if err != nil {
+		logger.Err(err).Msg("could not list routes")
+	}
 }
 
 func (r Router) Role(requiredRole types.Role) Router {

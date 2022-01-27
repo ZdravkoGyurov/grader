@@ -9,6 +9,7 @@ import Header from "./components/Header";
 import UserContext from "./contexts/UserContext";
 import ThemeContext from "./contexts/ThemeContext";
 import authApi from "./api/auth";
+import Loading from "./components/Loading";
 
 const getTheme = () => {
   let theme = localStorage.getItem("theme");
@@ -47,8 +48,7 @@ const App = () => {
   }, []);
 
   if (fetchingUser) {
-    // add loading page
-    return <div>loading...</div>;
+    return <Loading />;
   }
 
   return (

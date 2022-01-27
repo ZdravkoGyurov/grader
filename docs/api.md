@@ -27,3 +27,12 @@
 - CREATE /submission - create submission, **assignment_id in body**
 - GET /submission - get all user submissions, **assignment_id in query**
 - GET /submission/{id} - get submission by id
+
+TODO UI for:
+
+[PATCH] /userInfo
+[POST] /token
+[GET] /submission/{id}
+[POST] /userCourse
+[PUT] /userCourse
+[DELETE] /userCourse
