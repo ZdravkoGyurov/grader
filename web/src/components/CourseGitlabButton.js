@@ -4,7 +4,7 @@ import { FiGitlab } from "react-icons/fi";
 export default function CourseGitlabButton({ courseGitlabName }) {
   return (
     <IconButton
-      colorScheme="blue"
+      colorScheme="teal"
       variant="ghost"
       _focus={{ boxShadow: "none" }}
       fontSize="1.25rem"

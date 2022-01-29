@@ -2,6 +2,7 @@ import { Flex, Text, Link } from "@chakra-ui/layout";
 import { Menu, MenuButton } from "@chakra-ui/react";
 import { Icon } from "@chakra-ui/icon";
 import { NavLink } from "react-router-dom";
+import themeStyles from "../theme";
 
 const NavItem = ({ navSize, title, icon, path, location }) => {
   return (
@@ -10,7 +11,11 @@ const NavItem = ({ navSize, title, icon, path, location }) => {
       flexDir="column"
       w="100%"
       alignItems={navSize === "small" ? "center" : "flex-start"}
-      borderLeft={path === location ? "2px solid #FFFFFF" : "2px solid #333333"}
+      borderLeft={
+        path === location
+          ? `2px solid ${themeStyles.color}`
+          : `2px solid ${themeStyles.bgSidebar}`
+      }
       paddingRight="2px"
     >
       <Menu placement="right">
@@ -18,15 +23,20 @@ const NavItem = ({ navSize, title, icon, path, location }) => {
           as={NavLink}
           p={3}
           borderRadius={8}
-          _hover={{ textDecor: "none", color: "#FFFFFF" }}
+          _hover={{ textDecor: "none", color: themeStyles.color }}
           _focus={{ boxShadow: "none" }}
           w={navSize === "large" && "100%"}
           to={path}
         >
           <MenuButton w="100%">
-            <Flex alignItems="center" color={path === location && "#FFFFFF"}>
+            <Flex alignItems="center">
               <Icon as={icon} fontSize="2xl" />
-              <Text ml={5} display={navSize === "small" ? "none" : "flex"}>
+              <Text
+                ml={5}
+                fontSize="md"
+                display={navSize === "small" ? "none" : "flex"}
+                fontWeight={path === location ? "bold" : "none"}
+              >
                 {title}
               </Text>
             </Flex>

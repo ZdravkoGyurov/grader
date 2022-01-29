@@ -1,23 +1,21 @@
 import { Flex, Icon, Link, Td, Tr } from "@chakra-ui/react";
-import { useContext } from "react";
 import { FiBook } from "react-icons/fi";
-import ThemeContext from "../contexts/ThemeContext";
 import DeleteCourse from "./DeleteCourse";
 import EditCourse from "./EditCourse";
 import { useNavigate } from "react-router";
+import themeStyles from "../theme";
 
 export default function CourseTableRow({ course, coursesStateDispatch }) {
-  const { styles } = useContext(ThemeContext);
   let navigate = useNavigate();
 
   return (
-    <Tr borderBottom={`1px solid ${styles.colorPrimary}`} key={course.id}>
+    <Tr borderBottom={`1px solid ${themeStyles.color}`} key={course.id}>
       <Td>
         <Flex>
           <Icon
-            color={styles.accentLight}
+            color={themeStyles.bgAccent}
             marginRight="1rem"
-            fontSize="2xl"
+            fontSize="xl"
             as={FiBook}
           />
           <Link

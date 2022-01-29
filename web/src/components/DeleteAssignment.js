@@ -50,7 +50,6 @@ export default function DeleteAssignment({
     <>
       <IconButton
         variant="ghost"
-        colorScheme="black"
         _focus={{ boxShadow: "none" }}
         icon={<FiTrash2 />}
         onClick={onOpen}
@@ -65,7 +64,7 @@ export default function DeleteAssignment({
           </ModalBody>
           <ModalFooter>
             <Button
-              colorScheme="blue"
+              colorScheme="teal"
               mr={3}
               onClick={() => {
                 deleteAssignment();

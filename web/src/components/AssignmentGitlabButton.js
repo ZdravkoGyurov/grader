@@ -10,7 +10,7 @@ export default function AssignmentGitlabButton({
   const { user } = useContext(UserContext);
   return (
     <IconButton
-      colorScheme="blue"
+      colorScheme="teal"
       variant="ghost"
       _focus={{ boxShadow: "none" }}
       fontSize="1.25rem"

@@ -16,20 +16,19 @@ import {
   Tfoot,
   Tr,
 } from "@chakra-ui/table";
-import { useContext, useEffect, useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { useLocation, useNavigate, useParams } from "react-router";
 import assignmentApi from "../api/assignment";
 import courseApi from "../api/course";
 import submissionApi from "../api/submission";
 import consts from "../consts/consts";
-import ThemeContext from "../contexts/ThemeContext";
+import themeStyles from "../theme";
 import AssignmentGitlabButton from "./AssignmentGitlabButton";
 import AssignmentInfoButton from "./AssignmentInfoButton";
 import SubmissionResultModal from "./SubmissionResultModal";
 
 const Assignment = () => {
-  const { styles } = useContext(ThemeContext);
   const { state } = useLocation();
   const { courseId, assignmentId } = useParams();
   let navigate = useNavigate();
@@ -206,7 +205,7 @@ const Assignment = () => {
       case "Fail":
         return "red";
       default:
-        return "blue";
+        return "teal";
     }
   };
 
@@ -258,7 +257,7 @@ const Assignment = () => {
       <Flex m="0 5%" overflowY="auto" flexDir="column">
         <Table variant="unstyled">
           <TableCaption placement="top">Submissions</TableCaption>
-          <Thead borderBottom={`2px solid ${styles.colorPrimary}`}>
+          <Thead borderBottom={`2px solid ${themeStyles.color}`}>
             <Tr>
               <Th>Points</Th>
               <Th>Status</Th>
@@ -266,7 +265,7 @@ const Assignment = () => {
               <Th>
                 <Flex alignItems="center" justifyContent="end">
                   <Button
-                    colorScheme="blue"
+                    colorScheme="teal"
                     onClick={async () => {
                       const createdSubmission =
                         await submissionApi.createSubmission(
@@ -295,7 +294,7 @@ const Assignment = () => {
               )
               .map((submission, index) => (
                 <Tr
-                  borderBottom={`1px solid ${styles.colorPrimary}`}
+                  borderBottom={`1px solid ${themeStyles.color}`}
                   key={submission.id}
                 >
                   <Td>
@@ -324,7 +323,6 @@ const Assignment = () => {
                   <IconButton
                     variant="ghost"
                     disabled={submissionsState.page === 1}
-                    colorScheme="black"
                     icon={<FiArrowLeft />}
                     _focus={{ boxShadow: "none" }}
                     onClick={() => {
@@ -337,7 +335,6 @@ const Assignment = () => {
                     disabled={
                       submissionsState.page >= submissionsState.lastPage
                     }
-                    colorScheme="black"
                     icon={<FiArrowRight />}
                     _focus={{ boxShadow: "none" }}
                     onClick={() => {

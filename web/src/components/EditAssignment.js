@@ -70,7 +70,6 @@ export default function EditAssignment({
     <>
       <IconButton
         variant="ghost"
-        colorScheme="black"
         _focus={{ boxShadow: "none" }}
         icon={<FiEdit />}
         onClick={onOpen}
@@ -152,7 +151,7 @@ export default function EditAssignment({
                 </ModalBody>
                 <ModalFooter>
                   <Button
-                    colorScheme="blue"
+                    colorScheme="teal"
                     mr={3}
                     isLoading={props.isSubmitting}
                     type="submit"

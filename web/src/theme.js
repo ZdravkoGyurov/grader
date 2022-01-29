@@ -1,9 +1,9 @@
-const themeStyles = (theme) => ({
-  colorPrimary: theme === "light" ? "#333333" : "#F3F3F3",
-  colorSecondary: "#858585",
-  bg: theme === "light" ? "#F3F3F3" : "#333333",
-  accentLight: "#007ACC",
-  accentDark: "#005B99",
-});
+const themeStyles = {
+  bgHeader: "#e29578",
+  bgSidebar: "#ffddd2",
+  bg: "#ffffff",
+  bgAccent: "#319795", // colorScheme teal
+  color: "#333333",
+};
 
 export default themeStyles;

@@ -64,7 +64,6 @@ export default function EditCourse({ course, coursesStateDispatch }) {
     <>
       <IconButton
         variant="ghost"
-        colorScheme="black"
         _focus={{ boxShadow: "none" }}
         icon={<FiEdit />}
         onClick={onOpen}
@@ -146,7 +145,7 @@ export default function EditCourse({ course, coursesStateDispatch }) {
                 </ModalBody>
                 <ModalFooter>
                   <Button
-                    colorScheme="blue"
+                    colorScheme="teal"
                     mr={3}
                     isLoading={props.isSubmitting}
                     type="submit"

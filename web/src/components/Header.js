@@ -1,15 +1,13 @@
 import { Button } from "@chakra-ui/button";
-import Icon from "@chakra-ui/icon";
 import { Flex, Text } from "@chakra-ui/layout";
 import { useContext } from "react";
-import { FiLogOut, FiMoon, FiSun } from "react-icons/fi";
+import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from "react-router";
 import authApi from "../api/auth";
-import ThemeContext from "../contexts/ThemeContext";
 import UserContext from "../contexts/UserContext";
+import themeStyles from "../theme";
 
 const Header = () => {
-  const { theme, setTheme, styles } = useContext(ThemeContext);
   const { setUser } = useContext(UserContext);
 
   let navigate = useNavigate();
@@ -26,34 +24,17 @@ const Header = () => {
 
   return (
     <Flex
-      color={styles.colorPrimary}
-      bg={styles.bg}
+      bg={themeStyles.bgHeader}
       boxShadow="0 4px 12px 0 rgba(0, 0, 0, 0.05)"
       justifyContent="space-between"
       alignItems="center"
-      borderBottom={"2px solid " + styles.colorPrimary}
       p=".5rem 1rem"
     >
       <Text fontSize="3xl">{window.location.host}</Text>
       <Flex alignItems="center">
-        <Icon
-          color={styles.colorSecondary}
-          _hover={{
-            background: "none",
-            color: styles.colorPrimary,
-            cursor: "pointer",
-          }}
-          _focus={{ boxShadow: "none" }}
-          _active={{ backgroundColor: styles.bg }}
-          as={theme === "light" ? FiMoon : FiSun}
-          fontSize="2xl"
-          onClick={() => {
-            theme === "light" ? setTheme("dark") : setTheme("light");
-          }}
-        />
         <Button
           marginLeft="1rem"
-          colorScheme="black"
+          colorScheme="-"
           _focus={{ boxShadow: "none" }}
           leftIcon={<FiLogOut />}
           variant="ghost"

@@ -44,7 +44,6 @@ export default function DeleteCourse({ course, coursesStateDispatch }) {
     <>
       <IconButton
         variant="ghost"
-        colorScheme="black"
         _focus={{ boxShadow: "none" }}
         icon={<FiTrash2 />}
         onClick={onOpen}
@@ -59,7 +58,7 @@ export default function DeleteCourse({ course, coursesStateDispatch }) {
           </ModalBody>
           <ModalFooter>
             <Button
-              colorScheme="blue"
+              colorScheme="teal"
               mr={3}
               onClick={() => {
                 deleteCourse();

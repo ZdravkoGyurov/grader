@@ -14,14 +14,14 @@ import {
   Th,
   Tr,
 } from "@chakra-ui/table";
-import { useContext, useEffect, useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { useLocation, useNavigate, useParams } from "react-router";
 import assignmentApi from "../api/assignment";
 import courseApi from "../api/course";
 import consts from "../consts/consts";
-import ThemeContext from "../contexts/ThemeContext";
 import assignmentsReducer from "../reducers/AssignmentsReducer";
+import themeStyles from "../theme";
 import AssignmentTableRow from "./AssignmentTableRow";
 import CourseGitlabButton from "./CourseGitlabButton";
 import CourseInfoButton from "./CourseInfoButton";
@@ -29,7 +29,6 @@ import CreateAssignment from "./CreateAssignment";
 import Loading from "./Loading";
 
 const Course = () => {
-  const { styles } = useContext(ThemeContext);
   const { locationState } = useLocation();
   const { courseId } = useParams();
   let navigate = useNavigate();
@@ -101,7 +100,7 @@ const Course = () => {
               <TableCaption m={0} placement="top">
                 Assignments
               </TableCaption>
-              <Thead borderBottom={`2px solid ${styles.colorPrimary}`}>
+              <Thead borderBottom={`2px solid ${themeStyles.color}`}>
                 <Tr>
                   <Th>Name</Th>
                   <Th>
@@ -138,7 +137,6 @@ const Course = () => {
                         <IconButton
                           variant="ghost"
                           disabled={state.page === 1}
-                          colorScheme="black"
                           icon={<FiArrowLeft />}
                           _focus={{ boxShadow: "none" }}
                           onClick={() => {
@@ -149,7 +147,6 @@ const Course = () => {
                         <IconButton
                           variant="ghost"
                           disabled={state.page >= state.lastPage}
-                          colorScheme="black"
                           icon={<FiArrowRight />}
                           _focus={{ boxShadow: "none" }}
                           onClick={() => {

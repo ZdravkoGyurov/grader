@@ -17,7 +17,7 @@ export default function CourseInfoButton({ courseName, courseDescription }) {
   return (
     <>
       <IconButton
-        colorScheme="blue"
+        colorScheme="teal"
         variant="ghost"
         _focus={{ boxShadow: "none" }}
         fontSize="1.25rem"

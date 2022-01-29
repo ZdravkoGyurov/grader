@@ -72,7 +72,7 @@ export default function CreateAssignment({
 
   return (
     <>
-      <Button colorScheme="blue" onClick={onOpen}>
+      <Button colorScheme="teal" onClick={onOpen}>
         Create
       </Button>
 
@@ -179,7 +179,7 @@ export default function CreateAssignment({
                 </ModalBody>
                 <ModalFooter>
                   <Button
-                    colorScheme="blue"
+                    colorScheme="teal"
                     mr={3}
                     isLoading={props.isSubmitting}
                     type="submit"

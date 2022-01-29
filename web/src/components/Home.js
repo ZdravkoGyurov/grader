@@ -4,12 +4,11 @@ import { FiGitlab } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import UserContext from "../contexts/UserContext";
-import ThemeContext from "../contexts/ThemeContext";
 import authApi from "../api/auth";
+import themeStyles from "../theme";
 
 const Home = () => {
   const { user } = useContext(UserContext);
-  const { styles } = useContext(ThemeContext);
   let navigate = useNavigate();
 
   useEffect(() => {
@@ -20,19 +19,14 @@ const Home = () => {
 
   return (
     <Flex
-      backgroundColor="#F3F3F3"
-      color="#FFFFFF"
+      backgroundColor={themeStyles.bg}
       alignItems="center"
       justifyContent="center"
       w="100%"
     >
       <Button
-        backgroundColor={styles.accentLight}
-        _hover={{ backgroundColor: "none", color: "#FFFFFF" }}
-        _focus={{ boxShadow: "none" }}
-        _active={{ backgroundColor: styles.accentDark }}
+        colorScheme="teal"
         leftIcon={<FiGitlab />}
-        variant="solid"
         onClick={() => {
           authApi.login();
         }}

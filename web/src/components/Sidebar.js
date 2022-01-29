@@ -1,16 +1,15 @@
 import { Avatar } from "@chakra-ui/avatar";
 import { IconButton } from "@chakra-ui/button";
-import { Badge, Divider, Flex, Heading } from "@chakra-ui/layout";
+import { Badge, Divider, Flex, Text } from "@chakra-ui/layout";
 import { useContext, useState } from "react";
 import { FiMenu, FiUsers, FiBook } from "react-icons/fi";
 import { useLocation } from "react-router";
-import ThemeContext from "../contexts/ThemeContext";
 import UserContext from "../contexts/UserContext";
+import themeStyles from "../theme";
 import NavItem from "./NavItem";
 
 const Sidebar = () => {
   const { user } = useContext(UserContext);
-  const { styles } = useContext(ThemeContext);
 
   const getNavSize = () => {
     let _navSize = localStorage.getItem("navSize");
@@ -32,13 +31,10 @@ const Sidebar = () => {
   return (
     <Flex
       position="sticky"
-      margin="0.25rem"
       boxShadow="0 4px 12px 0 rgba(0, 0, 0, 0.05)"
-      borderRadius="8px"
       flexDir="column"
       justifyContent="space-between"
-      backgroundColor="#333333"
-      color={styles.colorSecondary}
+      backgroundColor={themeStyles.bgSidebar}
     >
       <Flex
         paddingLeft="0.5rem"
@@ -56,16 +52,15 @@ const Sidebar = () => {
         >
           <IconButton
             background="none"
-            _hover={{ background: "none", color: "#FFFFFF" }}
+            _hover={{ background: "none" }}
             _focus={{ boxShadow: "none" }}
-            _active={{ backgroundColor: "#333333" }}
+            _active={{ background: "none" }}
             icon={<FiMenu />}
             onClick={() => {
               navSize === "small" ? _setNavSize("large") : _setNavSize("small");
             }}
             paddingLeft={navSize === "large" && "0.75rem"}
-            borderLeft="2px solid #333333"
-            borderRight="2px solid #333333"
+            border="none"
           ></IconButton>
         </Flex>
         <NavItem
@@ -94,20 +89,25 @@ const Sidebar = () => {
         w="100%"
         alignItems={navSize === "small" ? "center" : "flex-start"}
         mb={4}
-        color="#FFFFFF"
       >
-        <Divider display={navSize === "small" ? "none" : "flex"} />
+        <Divider
+          borderColor={themeStyles.bgHeader}
+          display={navSize === "small" ? "none" : "flex"}
+        />
         <Flex mt={4} alignItems="center" justifyContent="left">
-          <Avatar marginBottom="0.8rem" size="sm" src={user.avatarUrl} />
+          <Avatar
+            border={`1px solid ${themeStyles.bgHeader}`}
+            marginBottom="0.8rem"
+            size="sm"
+            src={user.avatarUrl}
+          />
           <Flex
             flexDir="column"
             ml={4}
             display={navSize === "small" ? "none" : "flex"}
           >
-            <Heading as="h3" size="sm">
-              {user.email}
-            </Heading>
-            <Badge marginTop="0.5rem" w="max-content" colorScheme="blue">
+            <Text fontSize="sm">{user.name}</Text>
+            <Badge marginTop="0.5rem" w="max-content">
               {user.roleName}
             </Badge>
           </Flex>

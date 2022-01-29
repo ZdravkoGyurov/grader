@@ -2,7 +2,7 @@ import { Flex, Icon, Link, Td, Tr } from "@chakra-ui/react";
 import { useContext } from "react";
 import { FiCode } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import ThemeContext from "../contexts/ThemeContext";
+import themeStyles from "../theme";
 import DeleteAssignment from "./DeleteAssignment";
 import EditAssignment from "./EditAssignment";
 
@@ -11,15 +11,14 @@ export default function AssignmentTableRow({
   course,
   assignment,
 }) {
-  const { styles } = useContext(ThemeContext);
   let navigate = useNavigate();
 
   return (
-    <Tr borderBottom={`1px solid ${styles.colorPrimary}`} key={assignment.id}>
+    <Tr borderBottom={`1px solid ${themeStyles.color}`} key={assignment.id}>
       <Td>
         <Flex>
           <Icon
-            color={styles.accentLight}
+            color={themeStyles.bgAccent}
             marginRight="1rem"
             fontSize="2xl"
             as={FiCode}

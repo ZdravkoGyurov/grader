@@ -1,6 +1,6 @@
 import { IconButton } from "@chakra-ui/button";
 import { Flex, Text } from "@chakra-ui/layout";
-import { useContext, useEffect, useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import {
   Table,
   Thead,
@@ -11,7 +11,6 @@ import {
   Tfoot,
 } from "@chakra-ui/react";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
-import ThemeContext from "../contexts/ThemeContext";
 import courseApi from "../api/course";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import Loading from "./Loading";
@@ -20,10 +19,9 @@ import CreateCourse from "./CreateCourse";
 import coursesReducer from "../reducers/CoursesReducer";
 import consts from "../consts/consts";
 import CoursesGitlabButton from "./CoursesGitlabButton";
+import themeStyles from "../theme";
 
 const Courses = () => {
-  const { styles } = useContext(ThemeContext);
-
   const [state, dispatch] = useReducer(
     coursesReducer.reducer,
     coursesReducer.initialState
@@ -69,7 +67,7 @@ const Courses = () => {
               <TableCaption m={0} placement="top">
                 Courses
               </TableCaption>
-              <Thead borderBottom={`2px solid ${styles.colorPrimary}`}>
+              <Thead borderBottom={`2px solid ${themeStyles.color}`}>
                 <Tr>
                   <Th>Name</Th>
                   <Th>
@@ -101,7 +99,6 @@ const Courses = () => {
                       <IconButton
                         variant="ghost"
                         disabled={state.page === 1}
-                        colorScheme="black"
                         icon={<FiArrowLeft />}
                         _focus={{ boxShadow: "none" }}
                         onClick={() => {
@@ -112,7 +109,6 @@ const Courses = () => {
                       <IconButton
                         variant="ghost"
                         disabled={state.page >= state.lastPage}
-                        colorScheme="black"
                         icon={<FiArrowRight />}
                         _focus={{ boxShadow: "none" }}
                         onClick={() => {

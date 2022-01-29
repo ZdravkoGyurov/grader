@@ -23,7 +23,7 @@ export default function SubmissionResultModal({ submission }) {
       case "Fail":
         return "red";
       default:
-        return "blue";
+        return "teal";
     }
   };
 

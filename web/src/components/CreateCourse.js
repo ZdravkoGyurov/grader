@@ -63,7 +63,7 @@ export default function CreateCourse({ coursesStateDispatch }) {
 
   return (
     <>
-      <Button colorScheme="blue" onClick={onOpen}>
+      <Button colorScheme="teal" onClick={onOpen}>
         Create
       </Button>
 
@@ -170,7 +170,7 @@ export default function CreateCourse({ coursesStateDispatch }) {
                 </ModalBody>
                 <ModalFooter>
                   <Button
-                    colorScheme="blue"
+                    colorScheme="teal"
                     mr={3}
                     isLoading={props.isSubmitting}
                     type="submit"
