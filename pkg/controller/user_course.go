@@ -10,6 +10,10 @@ func (c *Controller) CreateUserCourseMapping(ctx context.Context, userEmail stri
 	return c.storage.CreateUserCourse(ctx, userEmail, userCourse)
 }
 
+func (c *Controller) GetUserCourseMappings(ctx context.Context, courseID string) ([]types.UserCourse, error) {
+	return c.storage.GetUserCourses(ctx, courseID)
+}
+
 func (c *Controller) UpdateUserCourseMapping(ctx context.Context, userCourse *types.UserCourse) (*types.UserCourse, error) {
 	return c.storage.UpdateUserCourse(ctx, userCourse)
 }

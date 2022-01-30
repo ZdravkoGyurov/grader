@@ -14,16 +14,19 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useEffect, useReducer } from "react";
+import { useContext, useEffect, useReducer } from "react";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import authApi from "../api/auth";
 import consts from "../consts/consts";
+import UserContext from "../contexts/UserContext";
 import usersReducer from "../reducers/UsersReducer";
 import themeStyles from "../theme";
 import Loading from "./Loading";
+import Unauthorized from "./Unauthorized";
 import UserTableRow from "./UserTableRow";
 
 const Users = () => {
+  const { user } = useContext(UserContext);
   const [state, dispatch] = useReducer(
     usersReducer.reducer,
     usersReducer.initialState
@@ -53,69 +56,73 @@ const Users = () => {
           </BreadcrumbItem>
         </Breadcrumb>
       </Flex>
-      <Flex m="0 5%" overflowY="auto" flexDir="column" p="2rem">
-        {!state.fetched ? (
-          <Loading />
-        ) : (
-          <Table variant="unstyled">
-            <TableCaption m={0} placement="top">
-              Users
-            </TableCaption>
-            <Thead borderBottom={`2px solid ${themeStyles.color}`}>
-              <Tr>
-                <Th></Th>
-                <Th>Name</Th>
-                <Th>Email</Th>
-                <Th>Role</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {state.users
-                .slice(
-                  (state.page - 1) * consts.usersPageSize,
-                  state.page * consts.usersPageSize
-                )
-                .map((user) => (
-                  <UserTableRow
-                    key={user.email}
-                    user={user}
-                    usersStateDispatch={dispatch}
-                  />
-                ))}
-            </Tbody>
-            <Tfoot>
-              <Tr>
-                <Th></Th>
-                <Th></Th>
-                <Th></Th>
-                <Th>
-                  <Flex alignItems="center" justifyContent="end">
-                    <IconButton
-                      variant="ghost"
-                      disabled={state.page === 1}
-                      icon={<FiArrowLeft />}
-                      _focus={{ boxShadow: "none" }}
-                      onClick={() => {
-                        dispatch({ type: "decrementPage" });
-                      }}
+      {user.roleName !== "Admin" && user.roleName !== "Teacher" ? (
+        <Unauthorized />
+      ) : (
+        <Flex m="0 5%" overflowY="auto" flexDir="column" p="2rem">
+          {!state.fetched ? (
+            <Loading />
+          ) : (
+            <Table variant="unstyled">
+              <TableCaption m={0} placement="top">
+                Users
+              </TableCaption>
+              <Thead borderBottom={`2px solid ${themeStyles.color}`}>
+                <Tr>
+                  <Th></Th>
+                  <Th>Name</Th>
+                  <Th>Email</Th>
+                  <Th>Role</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {state.users
+                  .slice(
+                    (state.page - 1) * consts.usersPageSize,
+                    state.page * consts.usersPageSize
+                  )
+                  .map((user) => (
+                    <UserTableRow
+                      key={user.email}
+                      user={user}
+                      usersStateDispatch={dispatch}
                     />
-                    <Text m="0.5rem">Page {state.page} </Text>
-                    <IconButton
-                      variant="ghost"
-                      disabled={state.page >= state.lastPage}
-                      icon={<FiArrowRight />}
-                      _focus={{ boxShadow: "none" }}
-                      onClick={() => {
-                        dispatch({ type: "incrementPage" });
-                      }}
-                    />
-                  </Flex>
-                </Th>
-              </Tr>
-            </Tfoot>
-          </Table>
-        )}
-      </Flex>
+                  ))}
+              </Tbody>
+              <Tfoot>
+                <Tr>
+                  <Th></Th>
+                  <Th></Th>
+                  <Th></Th>
+                  <Th>
+                    <Flex alignItems="center" justifyContent="end">
+                      <IconButton
+                        variant="ghost"
+                        disabled={state.page === 1}
+                        icon={<FiArrowLeft />}
+                        _focus={{ boxShadow: "none" }}
+                        onClick={() => {
+                          dispatch({ type: "decrementPage" });
+                        }}
+                      />
+                      <Text m="0.5rem">Page {state.page} </Text>
+                      <IconButton
+                        variant="ghost"
+                        disabled={state.page >= state.lastPage}
+                        icon={<FiArrowRight />}
+                        _focus={{ boxShadow: "none" }}
+                        onClick={() => {
+                          dispatch({ type: "incrementPage" });
+                        }}
+                      />
+                    </Flex>
+                  </Th>
+                </Tr>
+              </Tfoot>
+            </Table>
+          )}
+        </Flex>
+      )}
     </Flex>
   );
 };

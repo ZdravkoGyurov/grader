@@ -17,6 +17,21 @@ async function createUserCourse(userCourse) {
   return response.data;
 }
 
+async function getUserCourses(courseId) {
+  const response = await axios(
+    `http://localhost:8080/userCourse?courseId=${courseId}`,
+    {
+      method: "GET",
+      withCredentials: true,
+      validateStatus: (status) => {
+        return true;
+      },
+    }
+  );
+
+  return response.data;
+}
+
 async function deleteUserCourse(userEmail, courseId) {
   const response = await axios(
     `http://localhost:8080/userCourse?userEmail=${userEmail}&courseId=${courseId}`,
@@ -36,6 +51,7 @@ async function deleteUserCourse(userEmail, courseId) {
 
 const userCourseApi = {
   createUserCourse,
+  getUserCourses,
   deleteUserCourse,
 };
 

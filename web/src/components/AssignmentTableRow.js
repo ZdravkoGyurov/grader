@@ -14,7 +14,7 @@ export default function AssignmentTableRow({
 
   return (
     <Tr borderBottom={`1px solid ${themeStyles.color}`} key={assignment.id}>
-      <Td>
+      <Td p="0.5rem">
         <Flex>
           <Icon
             color={themeStyles.bgAccent}
@@ -36,7 +36,7 @@ export default function AssignmentTableRow({
           </Link>
         </Flex>
       </Td>
-      <Td>
+      <Td p="0.5rem">
         <Flex justifyContent="end">
           <EditAssignment
             assignment={assignment}

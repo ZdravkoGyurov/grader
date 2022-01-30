@@ -69,7 +69,6 @@ const Assignment = () => {
     error: null,
   });
 
-  const pageSize = 5;
   const submissionsReducer = (state, action) => {
     switch (action.type) {
       case "incrementPage":
@@ -86,7 +85,9 @@ const Assignment = () => {
         return {
           ...state,
           submissions: action.submissions,
-          lastPage: Math.ceil(action.submissions.length / pageSize),
+          lastPage: Math.ceil(
+            action.submissions.length / consts.submissionsPageSize
+          ),
           fetched: action.fetched,
           error: action.error,
         };
@@ -289,18 +290,18 @@ const Assignment = () => {
                 (s1, s2) => new Date(s2.submittedOn) - new Date(s1.submittedOn)
               )
               .slice(
-                (submissionsState.page - 1) * pageSize,
-                submissionsState.page * pageSize
+                (submissionsState.page - 1) * consts.submissionsPageSize,
+                submissionsState.page * consts.submissionsPageSize
               )
               .map((submission, index) => (
                 <Tr
                   borderBottom={`1px solid ${themeStyles.color}`}
                   key={submission.id}
                 >
-                  <Td>
+                  <Td p="0.5rem">
                     <SubmissionResultModal submission={submission} />
                   </Td>
-                  <Td>
+                  <Td p="0.5rem">
                     <Badge
                       colorScheme={submissionStatusColor(
                         submission.submissionStatusName
@@ -309,7 +310,9 @@ const Assignment = () => {
                       {submission.submissionStatusName}
                     </Badge>
                   </Td>
-                  <Td>{new Date(submission.submittedOn).toLocaleString()}</Td>
+                  <Td p="0.5rem">
+                    {new Date(submission.submittedOn).toLocaleString()}
+                  </Td>
                 </Tr>
               ))}
           </Tbody>

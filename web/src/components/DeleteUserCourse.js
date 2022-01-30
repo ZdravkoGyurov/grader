@@ -58,8 +58,8 @@ export default function DeleteUserCourse({ courseId }) {
   return (
     <>
       <IconButton
-        _focus={{ boxShadow: "none" }}
         variant="ghost"
+        _focus={{ boxShadow: "none" }}
         icon={<FiUserMinus />}
         onClick={onOpen}
       />

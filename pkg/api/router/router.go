@@ -108,6 +108,7 @@ func (r Router) mountSubmissionRoutes() {
 func (r Router) mountUserCourseRoutes() {
 	userCourseHandler := handlers.UserCourse{Controller: r.controller}
 	r.Role(types.RoleTeacher).Methods(http.MethodPost).Path(paths.UserCoursePath).HandlerFunc(userCourseHandler.Post)
+	r.Role(types.RoleTeacher).Methods(http.MethodGet).Path(paths.UserCoursePath).HandlerFunc(userCourseHandler.Get)
 	r.Role(types.RoleTeacher).Methods(http.MethodPut).Path(paths.UserCoursePath).HandlerFunc(userCourseHandler.Put)
 	r.Role(types.RoleTeacher).Methods(http.MethodDelete).Path(paths.UserCoursePath).HandlerFunc(userCourseHandler.Delete)
 }

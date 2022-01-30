@@ -65,12 +65,9 @@ export default function CreateUserCourse({ courseId }) {
 
   return (
     <>
-      <IconButton
-        _focus={{ boxShadow: "none" }}
-        variant="ghost"
-        icon={<FiUserPlus />}
-        onClick={onOpen}
-      />
+      <Button colorScheme="teal" leftIcon={<FiUserPlus />} onClick={onOpen}>
+        Add User
+      </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

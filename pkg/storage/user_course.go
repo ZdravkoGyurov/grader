@@ -13,6 +13,8 @@ var (
 	(user_email, course_id, course_role_name)
 	VALUES ($1, $2, $3)`, userCourseTable)
 
+	readUserCoursesQuery = fmt.Sprintf(`SELECT * FROM %s WHERE course_id=$1`, userCourseTable)
+
 	updateUserCourseQuery = fmt.Sprintf(`UPDATE %s SET
 	course_role_name=$1
 	WHERE user_email=$2 AND course_id=$3
@@ -40,6 +42,30 @@ func (s *Storage) CreateUserCourse(ctx context.Context, userEmail string, userCo
 	}
 
 	return nil
+}
+
+func (s *Storage) GetUserCourses(ctx context.Context, courseID string) ([]types.UserCourse, error) {
+	dbCtx, cancel := context.WithTimeout(ctx, s.cfg.RequestTimeout)
+	defer cancel()
+
+	rows, err := s.pool.Query(dbCtx, readUserCoursesQuery, courseID)
+	if err != nil {
+		return nil, dbError(errors.Newf("failed to get user courses: %w", err))
+	}
+
+	userCourses := make([]types.UserCourse, 0)
+	for rows.Next() {
+		if err := rows.Err(); err != nil {
+			return nil, dbError(errors.Newf("failed to read user course row: %w", err))
+		}
+		userCourse, err := readUserCourseRecord(rows)
+		if err != nil {
+			return nil, dbError(errors.Newf("failed to deserialize user course row: %w", err))
+		}
+		userCourses = append(userCourses, *userCourse)
+	}
+
+	return userCourses, nil
 }
 
 func (s *Storage) UpdateUserCourse(ctx context.Context, userCourse *types.UserCourse) (*types.UserCourse, error) {

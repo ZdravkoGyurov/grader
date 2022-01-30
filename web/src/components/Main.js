@@ -7,6 +7,7 @@ import Courses from "./Courses";
 import Course from "./Course";
 import Assignment from "./Assignment";
 import Sidebar from "./Sidebar";
+import CourseUsers from "./CourseUsers";
 
 const Main = () => {
   return (
@@ -23,6 +24,12 @@ const Main = () => {
             element={<Assignment />}
           />
           <Route exact strict path="/users" element={<Users />} />
+          <Route
+            exact
+            strict
+            path="/users/:courseId"
+            element={<CourseUsers />}
+          />
           <Route exact strict path="/" element={<Home />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

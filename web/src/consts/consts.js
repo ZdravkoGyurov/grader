@@ -1,7 +1,9 @@
 const consts = {
-  coursesPageSize: 5,
-  assignmentsPageSize: 5,
-  usersPageSize: 5,
+  coursesPageSize: 10,
+  assignmentsPageSize: 10,
+  submissionsPageSize: 10,
+  usersPageSize: 10,
+  courseUsersPageSize: 10,
 };
 
 export default consts;

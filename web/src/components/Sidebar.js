@@ -78,7 +78,11 @@ const Sidebar = () => {
           navSize={navSize}
           icon={FiUsers}
           title="Users"
-          path="/users"
+          path={
+            location.pathname.startsWith("/users")
+              ? location.pathname
+              : "/users"
+          }
           location={location.pathname}
         ></NavItem>
       </Flex>

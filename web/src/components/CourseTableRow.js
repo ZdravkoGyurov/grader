@@ -1,18 +1,16 @@
-import { Flex, Icon, Link, Td, Tr } from "@chakra-ui/react";
-import { FiBook } from "react-icons/fi";
+import { Flex, Icon, IconButton, Link, Td, Tr } from "@chakra-ui/react";
+import { FiBook, FiUsers } from "react-icons/fi";
 import DeleteCourse from "./DeleteCourse";
 import EditCourse from "./EditCourse";
 import { useNavigate } from "react-router";
 import themeStyles from "../theme";
-import CreateUserCourse from "./CreateUserCourse";
-import DeleteUserCourse from "./DeleteUserCourse";
 
 export default function CourseTableRow({ course, coursesStateDispatch }) {
   let navigate = useNavigate();
 
   return (
     <Tr borderBottom={`1px solid ${themeStyles.color}`} key={course.id}>
-      <Td>
+      <Td p="0.5rem">
         <Flex>
           <Icon
             color={themeStyles.bgAccent}
@@ -31,10 +29,18 @@ export default function CourseTableRow({ course, coursesStateDispatch }) {
           </Link>
         </Flex>
       </Td>
-      <Td>
+      <Td p="0.5rem">
         <Flex justifyContent="end">
-          <CreateUserCourse courseId={course.id} />
-          <DeleteUserCourse courseId={course.id} />
+          <IconButton
+            variant="ghost"
+            _focus={{ boxShadow: "none" }}
+            icon={<FiUsers />}
+            onClick={() =>
+              navigate(`/users/${course.id}`, {
+                state: { course: course },
+              })
+            }
+          ></IconButton>
           <EditCourse
             course={course}
             coursesStateDispatch={coursesStateDispatch}
