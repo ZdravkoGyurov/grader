@@ -57,6 +57,10 @@ func (c *Controller) GetUser(ctx context.Context, email string) (*types.User, er
 	return c.storage.GetUser(ctx, email)
 }
 
+func (c *Controller) GetUsers(ctx context.Context) ([]types.User, error) {
+	return c.storage.GetUsers(ctx)
+}
+
 func (c *Controller) Login(ctx context.Context, code string) (string, string, error) {
 	accessToken, err := c.fetchGitlabAccessToken(ctx, code)
 	if err != nil {

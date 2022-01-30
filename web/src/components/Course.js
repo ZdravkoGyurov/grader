@@ -84,15 +84,11 @@ const Course = () => {
           </Flex>
           <Flex m="0 5%" overflowY="auto" flexDir="column" p="0 2rem">
             <Flex alignItems="center" justifyContent="end">
-              <Flex>
-                <CourseInfoButton
-                  courseName={state.course.name}
-                  courseDescription={state.course.description}
-                />
-                <CourseGitlabButton
-                  courseGitlabName={state.course.gitlabName}
-                />
-              </Flex>
+              <CourseInfoButton
+                courseName={state.course.name}
+                courseDescription={state.course.description}
+              />
+              <CourseGitlabButton courseGitlabName={state.course.gitlabName} />
             </Flex>
           </Flex>
           <Flex m="0 5%" overflowY="auto" flexDir="column">

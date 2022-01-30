@@ -81,6 +81,15 @@ func (a Auth) GetUserInfo(writer http.ResponseWriter, request *http.Request) {
 	response.SendData(writer, request, http.StatusOK, user)
 }
 
+func (a Auth) GetUsers(writer http.ResponseWriter, request *http.Request) {
+	users, err := a.Controller.GetUsers(request.Context())
+	if err != nil {
+		response.SendError(writer, request, err)
+		return
+	}
+	response.SendData(writer, request, http.StatusOK, users)
+}
+
 func (a Auth) PatchUserRole(writer http.ResponseWriter, request *http.Request) {
 	user := types.User{}
 	if err := json.NewDecoder(request.Body).Decode(&user); err != nil {

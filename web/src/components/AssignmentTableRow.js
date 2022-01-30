@@ -1,5 +1,4 @@
 import { Flex, Icon, Link, Td, Tr } from "@chakra-ui/react";
-import { useContext } from "react";
 import { FiCode } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import themeStyles from "../theme";

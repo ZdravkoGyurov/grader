@@ -53,7 +53,7 @@ func logRoutes(router *mux.Router) {
 	}
 }
 
-func (r Router) Role(requiredRole types.Role) Router {
+func (r *Router) Role(requiredRole types.Role) *Router {
 	authRouter := r.NewRoute().Subrouter()
 	authenticator := middlewares.Authenticator{
 		AuthConfig: r.controller.Config.Auth,
@@ -62,8 +62,8 @@ func (r Router) Role(requiredRole types.Role) Router {
 	authorizer := middlewares.Authorizer{
 		Controller: r.controller,
 	}
-	authorizer.Authorize(requiredRole)
-	return Router{
+	authRouter.Use(authorizer.Authorize(requiredRole))
+	return &Router{
 		Router:     authRouter,
 		controller: r.controller,
 	}
@@ -74,7 +74,8 @@ func (r Router) mountAuthRoutes() {
 	r.Methods(http.MethodGet).Path(paths.GitlabLoginPath).HandlerFunc(authHandler.Login)
 	r.Methods(http.MethodGet).Path(paths.GitlabLoginCallbackPath).HandlerFunc(authHandler.LoginCallback)
 	r.Methods(http.MethodGet).Path(paths.UserInfoPath).HandlerFunc(authHandler.GetUserInfo)
-	r.Methods(http.MethodPatch).Path(paths.UserInfoPath).HandlerFunc(authHandler.PatchUserRole)
+	r.Role(types.RoleAdmin).Methods(http.MethodGet).Path(paths.UserPath).HandlerFunc(authHandler.GetUsers)
+	r.Role(types.RoleAdmin).Methods(http.MethodPatch).Path(paths.UserInfoPath).HandlerFunc(authHandler.PatchUserRole)
 	r.Methods(http.MethodPost).Path(paths.TokenPath).HandlerFunc(authHandler.RefreshToken)
 	r.Methods(http.MethodDelete).Path(paths.LogoutPath).HandlerFunc(authHandler.Logout)
 }

@@ -15,6 +15,8 @@ var (
 
 	readUserQuery = fmt.Sprintf(`SELECT * FROM %s WHERE email=$1`, userTable)
 
+	readUsersQuery = fmt.Sprintf(`SELECT * FROM %s`, userTable)
+
 	updateUserRoleQuery = fmt.Sprintf(`UPDATE %s SET role_name=$1 WHERE email=$2 RETURNING *`, userTable)
 
 	updateUserRefreshTokenQuery = fmt.Sprintf(`UPDATE %s SET refresh_token=$1 WHERE email=$2 RETURNING *`, userTable)
@@ -43,6 +45,31 @@ func (s *Storage) GetUser(ctx context.Context, email string) (*types.User, error
 	}
 
 	return user, nil
+}
+
+func (s *Storage) GetUsers(ctx context.Context) ([]types.User, error) {
+	dbCtx, cancel := context.WithTimeout(ctx, s.cfg.RequestTimeout)
+	defer cancel()
+
+	rows, err := s.pool.Query(dbCtx, readUsersQuery)
+	if err != nil {
+		return nil, dbError(errors.Newf("failed to get users: %w", err))
+	}
+
+	users := make([]types.User, 0)
+	for rows.Next() {
+		if err := rows.Err(); err != nil {
+			return nil, dbError(errors.Newf("failed to read user row: %w", err))
+		}
+		user, err := readUserRecord(rows)
+		user.RefreshToken = ""
+		if err != nil {
+			return nil, dbError(errors.Newf("failed to deserialize user row: %w", err))
+		}
+		users = append(users, *user)
+	}
+
+	return users, nil
 }
 
 func (s *Storage) UpdateUserRole(ctx context.Context, user *types.User) (*types.User, error) {

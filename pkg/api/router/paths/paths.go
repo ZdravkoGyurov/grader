@@ -9,6 +9,7 @@ const (
 	TokenPath               = "/token"
 	LogoutPath              = "/logout"
 
+	UserPath             = "/user"
 	CoursePath           = "/course"
 	CourseWithIDPath     = "/course/{id}"
 	AssignmentPath       = "/assignment"
