@@ -98,8 +98,8 @@ const Course = () => {
               </TableCaption>
               <Thead borderBottom={`2px solid ${themeStyles.color}`}>
                 <Tr>
-                  <Th>Name</Th>
-                  <Th>
+                  <Th p="0.5rem">Name</Th>
+                  <Th p="0.5rem">
                     <Flex alignItems="center" justifyContent="end">
                       <CreateAssignment
                         assignmentsStateDispatch={dispatch}
@@ -126,8 +126,8 @@ const Course = () => {
               </Tbody>
               <Tfoot>
                 <Tr>
-                  <Th></Th>
-                  <Th>
+                  <Th p="0.5rem"></Th>
+                  <Th p="0.5rem">
                     <Flex alignItems="center" justifyContent="end">
                       <Flex alignItems="center">
                         <IconButton

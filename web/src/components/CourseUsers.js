@@ -7,7 +7,6 @@ import {
   Table,
   TableCaption,
   Tbody,
-  Td,
   Text,
   Tfoot,
   Th,
@@ -23,8 +22,8 @@ import consts from "../consts/consts";
 import UserContext from "../contexts/UserContext";
 import courseUsersReducer from "../reducers/CourseUsersReducer";
 import themeStyles from "../theme";
+import CourseUserTableRow from "./CourseUserTableRow";
 import CreateUserCourse from "./CreateUserCourse";
-import DeleteUserCourse from "./DeleteUserCourse";
 import Loading from "./Loading";
 import Unauthorized from "./Unauthorized";
 
@@ -135,11 +134,14 @@ export default function CourseUsers() {
                   </TableCaption>
                   <Thead borderBottom={`2px solid ${themeStyles.color}`}>
                     <Tr>
-                      <Th>Email</Th>
-                      <Th>Course Role</Th>
-                      <Th>
+                      <Th p="0.5rem">Email</Th>
+                      <Th p="0.5rem">Course Role</Th>
+                      <Th p="0.5rem">
                         <Flex justifyContent="end">
-                          <CreateUserCourse courseId={courseState.course.id} />
+                          <CreateUserCourse
+                            courseUsersDispatch={dispatch}
+                            courseId={courseState.course.id}
+                          />
                         </Flex>
                       </Th>
                     </Tr>
@@ -151,27 +153,18 @@ export default function CourseUsers() {
                         state.page * consts.courseUsersPageSize
                       )
                       .map((userCourse) => (
-                        <Tr
-                          borderBottom={`1px solid ${themeStyles.color}`}
+                        <CourseUserTableRow
                           key={userCourse.userEmail}
-                        >
-                          <Td p="0.5rem">{userCourse.userEmail}</Td>
-                          <Td p="0.5rem">{userCourse.courseRoleName}</Td>
-                          <Td p="0.5rem">
-                            <Flex justifyContent="end">
-                              <DeleteUserCourse
-                                userEmail={userCourse.userEmail}
-                                courseId={courseState.course.id}
-                              />
-                            </Flex>
-                          </Td>
-                        </Tr>
+                          courseUser={userCourse}
+                          courseUsersDispatch={dispatch}
+                        />
                       ))}
                   </Tbody>
                   <Tfoot>
                     <Tr>
-                      <Th></Th>
-                      <Th>
+                      <Th p="0.5rem"></Th>
+                      <Th p="0.5rem"></Th>
+                      <Th p="0.5rem">
                         <Flex alignItems="center" justifyContent="end">
                           <IconButton
                             variant="ghost"

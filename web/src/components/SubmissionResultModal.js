@@ -1,5 +1,6 @@
 import {
   Badge,
+  Flex,
   Link,
   Modal,
   ModalBody,
@@ -34,14 +35,19 @@ export default function SubmissionResultModal({ submission }) {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
-            <Badge
-              fontSize="1rem"
-              colorScheme={submissionStatusColor(
-                submission.submissionStatusName
-              )}
-            >
-              {submission.submissionStatusName}
-            </Badge>
+            <Flex alignItems="center">
+              <Badge
+                fontSize="1rem"
+                colorScheme={submissionStatusColor(
+                  submission.submissionStatusName
+                )}
+              >
+                {submission.submissionStatusName}
+              </Badge>
+              <Text ml="1rem">
+                {new Date(submission.submittedOn).toLocaleString()}
+              </Text>
+            </Flex>
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>

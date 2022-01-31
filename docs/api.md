@@ -30,9 +30,5 @@
 
 TODO UI for:
 
-[PATCH] /userInfo
 [POST] /token
-[GET] /submission/{id}
-[POST] /userCourse
-[PUT] /userCourse
-[DELETE] /userCourse
+[GET] /submission/{id} - remove this and add view for course assistants to view all submissions

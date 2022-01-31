@@ -4,7 +4,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  IconButton,
   Input,
   Modal,
   ModalBody,
@@ -20,8 +19,9 @@ import {
 import { Field, Form, Formik } from "formik";
 import { FiUserPlus } from "react-icons/fi";
 import userCourseApi from "../api/usercourse";
+import courseUsersReducer from "../reducers/CourseUsersReducer";
 
-export default function CreateUserCourse({ courseId }) {
+export default function CreateUserCourse({ courseUsersDispatch, courseId }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
@@ -43,7 +43,13 @@ export default function CreateUserCourse({ courseId }) {
   async function createUserCourse(createCourseValues) {
     try {
       createCourseValues.courseId = courseId;
-      await userCourseApi.createUserCourse(createCourseValues);
+      const userCourse = await userCourseApi.createUserCourse(
+        createCourseValues
+      );
+      courseUsersDispatch({
+        type: courseUsersReducer.createCourseUsersAction,
+        courseUser: userCourse,
+      });
 
       toast({
         title: "Added user.",

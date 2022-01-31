@@ -69,10 +69,10 @@ const Users = () => {
               </TableCaption>
               <Thead borderBottom={`2px solid ${themeStyles.color}`}>
                 <Tr>
-                  <Th></Th>
-                  <Th>Name</Th>
-                  <Th>Email</Th>
-                  <Th>Role</Th>
+                  <Th p="0.5rem"></Th>
+                  <Th p="0.5rem">Name</Th>
+                  <Th p="0.5rem">Email</Th>
+                  <Th p="0.5rem">Role</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -91,10 +91,10 @@ const Users = () => {
               </Tbody>
               <Tfoot>
                 <Tr>
-                  <Th></Th>
-                  <Th></Th>
-                  <Th></Th>
-                  <Th>
+                  <Th p="0.5rem"></Th>
+                  <Th p="0.5rem"></Th>
+                  <Th p="0.5rem"></Th>
+                  <Th p="0.5rem">
                     <Flex alignItems="center" justifyContent="end">
                       <IconButton
                         variant="ghost"

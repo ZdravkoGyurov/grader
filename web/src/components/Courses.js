@@ -69,8 +69,8 @@ const Courses = () => {
               </TableCaption>
               <Thead borderBottom={`2px solid ${themeStyles.color}`}>
                 <Tr>
-                  <Th>Name</Th>
-                  <Th>
+                  <Th p="0.5rem">Name</Th>
+                  <Th p="0.5rem">
                     <Flex alignItems="center" justifyContent="end">
                       <CreateCourse coursesStateDispatch={dispatch} />
                     </Flex>
@@ -93,8 +93,8 @@ const Courses = () => {
               </Tbody>
               <Tfoot>
                 <Tr>
-                  <Th></Th>
-                  <Th>
+                  <Th p="0.5rem"></Th>
+                  <Th p="0.5rem">
                     <Flex alignItems="center" justifyContent="end">
                       <IconButton
                         variant="ghost"

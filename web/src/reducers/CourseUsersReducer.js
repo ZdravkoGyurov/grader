@@ -3,6 +3,9 @@ import consts from "../consts/consts";
 const incrementPageAction = "incrementPage";
 const decrementPageAction = "decrementPage";
 const setCourseUsersAction = "setCourseUsers";
+const createCourseUsersAction = "createCourseUsers";
+const updateCourseUsersAction = "updateCourseUsers";
+const deleteCourseUsersAction = "deleteCourseUsers";
 const setErrorAction = "setError";
 
 function reducer(state, action) {
@@ -26,6 +29,41 @@ function reducer(state, action) {
         ),
         fetched: true,
         error: null,
+      };
+    case createCourseUsersAction:
+      const newCourseUsers = [...state.courseUsers];
+      newCourseUsers.push(action.courseUser);
+      const newLastPageAfterCreate = Math.ceil(
+        newCourseUsers.length / consts.courseUsersPageSize
+      );
+
+      return {
+        ...state,
+        courseUsers: newCourseUsers,
+        page:
+          newLastPageAfterCreate > state.lastPage ? state.page + 1 : state.page,
+        lastPage: newLastPageAfterCreate,
+      };
+    case updateCourseUsersAction:
+      return {
+        ...state,
+        courseUsers: [...state.courseUsers].map((uc) =>
+          uc.userEmail === action.courseUser.userEmail ? action.courseUser : uc
+        ),
+      };
+    case deleteCourseUsersAction:
+      const newLastPageAfterDelete = Math.ceil(
+        (state.courseUsers.length - 1) / consts.coursesPageSize
+      );
+
+      return {
+        ...state,
+        courseUsers: [...state.courseUsers].filter(
+          (uc) => uc.userEmail !== action.userEmail
+        ),
+        page:
+          newLastPageAfterDelete < state.lastPage ? state.page - 1 : state.page,
+        lastPage: newLastPageAfterDelete,
       };
     case setErrorAction:
       return {
@@ -54,6 +92,9 @@ const courseUsersReducer = {
   incrementPageAction,
   decrementPageAction,
   setCourseUsersAction,
+  createCourseUsersAction,
+  updateCourseUsersAction,
+  deleteCourseUsersAction,
   setErrorAction,
 };
 

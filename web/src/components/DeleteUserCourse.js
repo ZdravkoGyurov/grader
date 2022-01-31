@@ -1,11 +1,6 @@
 import {
   Button,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
   IconButton,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -16,30 +11,32 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { Field, Form, Formik } from "formik";
+import { useState } from "react";
 import { FiUserMinus } from "react-icons/fi";
 import userCourseApi from "../api/usercourse";
+import courseUsersReducer from "../reducers/CourseUsersReducer";
 
-export default function DeleteUserCourse({ courseId }) {
+export default function DeleteUserCourse({
+  courseUsersDispatch,
+  userEmail,
+  courseId,
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
+  const [fetching, setFetching] = useState(false);
 
-  function validateUserEmail(value) {
-    if (!value) {
-      return "User email is required";
-    }
-  }
-
-  async function createUserCourse(createCourseValues) {
+  async function deleteUserCourse() {
+    setFetching(true);
     try {
-      await userCourseApi.deleteUserCourse(
-        createCourseValues.userEmail,
-        courseId
-      );
+      await userCourseApi.deleteUserCourse(userEmail, courseId);
+      courseUsersDispatch({
+        type: courseUsersReducer.deleteCourseUsersAction,
+        userEmail: userEmail,
+      });
 
       toast({
         title: "Removed user.",
-        description: `Removed user '${createCourseValues.userEmail}'`,
+        description: `Removed user '${userEmail}'`,
         status: "success",
         duration: 3000,
         isClosable: true,
@@ -53,6 +50,8 @@ export default function DeleteUserCourse({ courseId }) {
         isClosable: true,
       });
     }
+    setFetching(false);
+    onClose();
   }
 
   return (
@@ -67,55 +66,25 @@ export default function DeleteUserCourse({ courseId }) {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <Formik
-            initialValues={{
-              userEmail: "",
-            }}
-            onSubmit={async (values, actions) => {
-              await createUserCourse(values);
-              actions.setSubmitting(false);
-              onClose();
-            }}
-          >
-            {(props) => (
-              <Form>
-                <ModalHeader>Remove User</ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>
-                  <Flex flexDir="column" justifyContent="space-between">
-                    <Field name="userEmail" validate={validateUserEmail}>
-                      {({ field, form }) => (
-                        <FormControl
-                          isInvalid={
-                            form.errors.userEmail && form.touched.userEmail
-                          }
-                        >
-                          <FormLabel htmlFor="userEmail">User Email</FormLabel>
-                          <Input {...field} id="userEmail" />
-                          <FormErrorMessage>
-                            {form.errors.userEmail}
-                          </FormErrorMessage>
-                        </FormControl>
-                      )}
-                    </Field>
-                  </Flex>
-                </ModalBody>
-                <ModalFooter>
-                  <Button
-                    colorScheme="teal"
-                    mr={3}
-                    isLoading={props.isSubmitting}
-                    type="submit"
-                  >
-                    Create
-                  </Button>
-                  <Button variant="ghost" onClick={onClose}>
-                    Close
-                  </Button>
-                </ModalFooter>
-              </Form>
-            )}
-          </Formik>
+          <ModalHeader>Remove User</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>Remove user {userEmail}?</ModalBody>
+          <ModalFooter>
+            <Button
+              isLoading={fetching}
+              colorScheme="teal"
+              mr={3}
+              type="submit"
+              onClick={() => {
+                deleteUserCourse();
+              }}
+            >
+              Remove
+            </Button>
+            <Button variant="ghost" onClick={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </>

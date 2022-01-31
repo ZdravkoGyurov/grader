@@ -17,6 +17,23 @@ async function createUserCourse(userCourse) {
   return response.data;
 }
 
+async function putUserCourse(userCourse) {
+  const response = await axios(`http://localhost:8080/userCourse`, {
+    method: "PUT",
+    withCredentials: true,
+    validateStatus: (status) => {
+      return true;
+    },
+    data: userCourse,
+  });
+
+  if (response.status !== 200) {
+    throw new Error("Update failed.");
+  }
+
+  return response.data;
+}
+
 async function getUserCourses(courseId) {
   const response = await axios(
     `http://localhost:8080/userCourse?courseId=${courseId}`,
@@ -51,6 +68,7 @@ async function deleteUserCourse(userEmail, courseId) {
 
 const userCourseApi = {
   createUserCourse,
+  putUserCourse,
   getUserCourses,
   deleteUserCourse,
 };

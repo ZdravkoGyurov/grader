@@ -260,10 +260,10 @@ const Assignment = () => {
           <TableCaption placement="top">Submissions</TableCaption>
           <Thead borderBottom={`2px solid ${themeStyles.color}`}>
             <Tr>
-              <Th>Points</Th>
-              <Th>Status</Th>
-              <Th>Date</Th>
-              <Th>
+              <Th p="0.5rem">Points</Th>
+              <Th p="0.5rem">Status</Th>
+              <Th p="0.5rem">Date</Th>
+              <Th p="0.5rem">
                 <Flex alignItems="center" justifyContent="end">
                   <Button
                     colorScheme="teal"
@@ -318,10 +318,10 @@ const Assignment = () => {
           </Tbody>
           <Tfoot>
             <Tr>
-              <Th></Th>
-              <Th></Th>
-              <Th></Th>
-              <Th>
+              <Th p="0.5rem"></Th>
+              <Th p="0.5rem"></Th>
+              <Th p="0.5rem"></Th>
+              <Th p="0.5rem">
                 <Flex alignItems="center" justifyContent="end">
                   <IconButton
                     variant="ghost"
