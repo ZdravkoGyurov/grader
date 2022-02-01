@@ -16,7 +16,10 @@ function reducer(state, action) {
       return {
         ...state,
         courses: action.courses,
-        lastPage: Math.ceil(action.courses.length / consts.coursesPageSize),
+        lastPage:
+          action.courses.length > 0
+            ? Math.ceil(action.courses.length / consts.coursesPageSize)
+            : 1,
         fetched: true,
         error: null,
       };
@@ -42,9 +45,10 @@ function reducer(state, action) {
         ),
       };
     case "deleteCourse":
-      const newLastPageAfterDelete = Math.ceil(
-        (state.courses.length - 1) / consts.coursesPageSize
-      );
+      const newLastPageAfterDelete =
+        state.courses.length - 1 === 0
+          ? 1
+          : Math.ceil((state.courses.length - 1) / consts.coursesPageSize);
       return {
         ...state,
         courses: [...state.courses].filter((c) => c.id !== action.courseId),

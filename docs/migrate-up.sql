@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS course (
     id uuid DEFAULT uuid_generate_v4(),
     name TEXT NOT NULL,
     description TEXT,
+    gitlab_id TEXT NOT NULL,
     gitlab_name TEXT NOT NULL,
     creator_email TEXT NOT NULL,
 	created_on TIMESTAMP NOT NULL,

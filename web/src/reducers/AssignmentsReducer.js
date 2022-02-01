@@ -25,9 +25,10 @@ function reducer(state, action) {
         assignments: action.assignments,
         fetchedAssignments: true,
         assignmentsError: null,
-        lastPage: Math.ceil(
-          action.assignments.length / consts.assignmentsPageSize
-        ),
+        lastPage:
+          action.assignments.length > 0
+            ? Math.ceil(action.assignments.length / consts.assignmentsPageSize)
+            : 1,
       };
     case "createAssignment":
       const newAssignments = [...state.assignments];
@@ -51,9 +52,13 @@ function reducer(state, action) {
         ),
       };
     case "deleteAssignment":
-      const newLastPageAfterDelete = Math.ceil(
-        (state.assignments.length - 1) / consts.assignmentsPageSize
-      );
+      const newLastPageAfterDelete =
+        state.assignments.length - 1 === 0
+          ? 1
+          : Math.ceil(
+              (state.assignments.length - 1) / consts.assignmentsPageSize
+            );
+
       return {
         ...state,
         assignments: [...state.assignments].filter(

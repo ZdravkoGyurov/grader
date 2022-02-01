@@ -12,6 +12,7 @@ type Course struct {
 	ID           string    `json:"id"`
 	Name         string    `json:"name"`
 	Description  string    `json:"description"`
+	GitlabID     string    `json:"gitlabId"`
 	GitlabName   string    `json:"gitlabName"`
 	CreatorEmail string    `json:"creatorEmail"`
 	CreatedOn    time.Time `json:"createdOn"`
@@ -49,6 +50,7 @@ func (c Course) Fields() []interface{} {
 		c.ID,
 		c.Name,
 		c.Description,
+		c.GitlabID,
 		c.GitlabName,
 		c.CreatorEmail,
 		c.CreatedOn,

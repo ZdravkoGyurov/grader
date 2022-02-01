@@ -6,13 +6,23 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/ZdravkoGyurov/grader/pkg/errors"
 )
 
 const (
-	gitlabTokenPath = "/oauth/token"
-	gitlabUserPath  = "/api/v4/user"
+	gitlabTokenPath          = "/oauth/token"
+	gitlabUserPath           = "/api/v4/user"
+	gitlabGroupsPath         = "/api/v4/groups"
+	gitlabProjectsPath       = "/api/v4/projects"
+	gitlabProjectMembersPath = "/api/v4/projects/%s/members"
+
+	privateVisibility          = "private"
+	developerAccessLevel       = 30
+	gitlabPrivateTokenHeader   = "PRIVATE-TOKEN"
+	contentTypeHeader          = "Content-Type"
+	contentTypeApplicationJSON = "application/json"
 )
 
 type submissionReqBody struct {
@@ -31,6 +41,33 @@ type gitlabUser struct {
 	Name      string `json:"name"`
 	Email     string `json:"email"`
 	AvatarURL string `json:"avatar_url"`
+}
+
+type subgroupReqBody struct {
+	Name       string `json:"name"`
+	Path       string `json:"path"`
+	ParentID   string `json:"parent_id"`
+	Visibility string `json:"visibility"`
+}
+
+type subgroupResponseBody struct {
+	ID int `json:"id"`
+}
+
+type projectReqBody struct {
+	Name        string `json:"name"`
+	Path        string `json:"path"`
+	NamespaceID string `json:"namespace_id"`
+	Visibility  string `json:"visibility"`
+}
+
+type projectResponseBody struct {
+	ID int `json:"id"`
+}
+
+type projectMembersReqBody struct {
+	UserID      string `json:"user_id"`
+	AccessLevel int    `json:"access_level"`
 }
 
 type gitlabAccessToken struct {
@@ -56,6 +93,7 @@ func (c *Controller) createJobRun(ctx context.Context, submissionID string) erro
 	if err != nil {
 		return errors.Newf("failed to call job executor:%w", err)
 	}
+	defer response.Body.Close()
 
 	if response.StatusCode != http.StatusAccepted {
 		return errors.Newf("failed to call job executor, status: %d", response.StatusCode)
@@ -79,6 +117,7 @@ func (c *Controller) getGitlabAccessToken(ctx context.Context, accessTokenReqBod
 	if err != nil {
 		return "", errors.Newf("failed to call gitlab: %w", err)
 	}
+	defer response.Body.Close()
 
 	if response.StatusCode != http.StatusOK {
 		return "", errors.Newf("failed to call gitlab, status: %d", response.StatusCode)
@@ -104,6 +143,7 @@ func (c *Controller) getGitlabUserInfo(ctx context.Context, accessToken string) 
 	if err != nil {
 		return gitlabUser{}, errors.Newf("failed to call gitlab user endpoint: %w", err)
 	}
+	defer response.Body.Close()
 
 	if response.StatusCode != http.StatusOK {
 		return gitlabUser{}, errors.Newf("failed to call gitlab user endpoint, status: %d", response.StatusCode)
@@ -115,6 +155,117 @@ func (c *Controller) getGitlabUserInfo(ctx context.Context, accessToken string) 
 	}
 
 	return gitlabUser, nil
+}
+
+func (c *Controller) createGitlabGroup(ctx context.Context, name, gitlabName string) (string, error) {
+	subgroupReqBody := subgroupReqBody{
+		Name:       name,
+		Path:       gitlabName,
+		ParentID:   c.Config.Gitlab.GroupParentID,
+		Visibility: privateVisibility,
+	}
+	subgroupReqJSON, err := json.Marshal(subgroupReqBody)
+	if err != nil {
+		return "", errors.Newf("failed to marshal course subgroup request body:%w", err)
+	}
+
+	gitlabGroupsEndpoint := fmt.Sprintf("https://%s%s", c.Config.Gitlab.Host, gitlabGroupsPath)
+	body := bytes.NewBuffer(subgroupReqJSON)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, gitlabGroupsEndpoint, body)
+	if err != nil {
+		return "", errors.Newf("failed to create course subgroup post request :%w", err)
+	}
+	req.Header.Add(gitlabPrivateTokenHeader, c.Config.Gitlab.PAT)
+	req.Header.Add(contentTypeHeader, contentTypeApplicationJSON)
+
+	response, err := c.client.Do(req)
+	if err != nil {
+		return "", errors.Newf("failed to call gitlab groups endpoint: %w", err)
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusCreated {
+		return "", errors.Newf("failed to call gitlab groups endpoint, status: %d", response.StatusCode)
+	}
+
+	subgroup := subgroupResponseBody{}
+	if err := json.NewDecoder(response.Body).Decode(&subgroup); err != nil {
+		return "", errors.Newf("failed to decode gitlab subgroup: %w", err)
+	}
+
+	return strconv.Itoa(subgroup.ID), nil
+}
+
+func (c *Controller) createGitlabProject(ctx context.Context, user, groupID string) (string, error) {
+	projectReqBody := projectReqBody{
+		Name:        user,
+		Path:        user,
+		NamespaceID: groupID,
+		Visibility:  privateVisibility,
+	}
+	projectReqJSON, err := json.Marshal(projectReqBody)
+	if err != nil {
+		return "", errors.Newf("failed to marshal course user project request body:%w", err)
+	}
+
+	gitlabProjectsEndpoint := fmt.Sprintf("https://%s%s", c.Config.Gitlab.Host, gitlabProjectsPath)
+	body := bytes.NewBuffer(projectReqJSON)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, gitlabProjectsEndpoint, body)
+	if err != nil {
+		return "", errors.Newf("failed to create course user project post request :%w", err)
+	}
+	req.Header.Add(gitlabPrivateTokenHeader, c.Config.Gitlab.PAT)
+	req.Header.Add(contentTypeHeader, contentTypeApplicationJSON)
+
+	response, err := c.client.Do(req)
+	if err != nil {
+		return "", errors.Newf("failed to call gitlab projects endpoint: %w", err)
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusCreated {
+		return "", errors.Newf("failed to call gitlab projects endpoint, status: %d", response.StatusCode)
+	}
+
+	project := projectResponseBody{}
+	if err := json.NewDecoder(response.Body).Decode(&project); err != nil {
+		return "", errors.Newf("failed to decode gitlab project: %w", err)
+	}
+
+	return strconv.Itoa(project.ID), nil
+}
+
+func (c *Controller) addUserInGitlabProject(ctx context.Context, userID, projectID string) error {
+	projectMembersReqBody := projectMembersReqBody{
+		UserID:      userID,
+		AccessLevel: developerAccessLevel,
+	}
+	projectMembersReqJSON, err := json.Marshal(projectMembersReqBody)
+	if err != nil {
+		return errors.Newf("failed to marshal project members request body:%w", err)
+	}
+
+	path := fmt.Sprintf(gitlabProjectMembersPath, projectID)
+	gitlabProjectMembersEndpoint := fmt.Sprintf("https://%s%s", c.Config.Gitlab.Host, path)
+	body := bytes.NewBuffer(projectMembersReqJSON)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, gitlabProjectMembersEndpoint, body)
+	if err != nil {
+		return errors.Newf("failed to create project members post request :%w", err)
+	}
+	req.Header.Add(gitlabPrivateTokenHeader, c.Config.Gitlab.PAT)
+	req.Header.Add(contentTypeHeader, contentTypeApplicationJSON)
+
+	response, err := c.client.Do(req)
+	if err != nil {
+		return errors.Newf("failed to call gitlab projects endpoint: %w", err)
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusCreated {
+		return errors.Newf("failed to call gitlab project members endpoint, status: %d", response.StatusCode)
+	}
+
+	return nil
 }
 
 func setGitlabHeaders(req *http.Request, accessToken string) {

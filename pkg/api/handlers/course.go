@@ -30,7 +30,7 @@ func (c *Course) Post(writer http.ResponseWriter, request *http.Request) {
 	}
 	course.CreatorEmail = userData.Email
 
-	createdCourse, err := c.Controller.CreateCourse(request.Context(), &course)
+	createdCourse, err := c.Controller.CreateCourse(request.Context(), &course, userData.GitlabID, userData.Name)
 	if err != nil {
 		response.SendError(writer, request, err)
 		return

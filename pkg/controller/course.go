@@ -8,12 +8,27 @@ import (
 	"github.com/google/uuid"
 )
 
-func (c *Controller) CreateCourse(ctx context.Context, course *types.Course) (*types.Course, error) {
+func (c *Controller) CreateCourse(ctx context.Context, course *types.Course, userID, userName string) (*types.Course, error) {
 	course.ID = uuid.NewString()
 	course.CreatedOn = time.Now()
 	course.LastEditedOn = time.Now()
 
 	if err := course.ValidateCreate(); err != nil {
+		return nil, err
+	}
+
+	courseGitlabID, err := c.createGitlabGroup(ctx, course.Name, course.GitlabName)
+	if err != nil {
+		return nil, err
+	}
+	course.GitlabID = courseGitlabID
+
+	userProjectID, err := c.createGitlabProject(ctx, userName, courseGitlabID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := c.addUserInGitlabProject(ctx, userID, userProjectID); err != nil {
 		return nil, err
 	}
 
