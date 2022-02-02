@@ -32,3 +32,25 @@ TODO UI for:
 
 [POST] /token
 [GET] /submission/{id} - remove this and add view for course assistants to view all submissions
+
+create course:
+create group in gitlab
+create project for course creator
+add course creator as member in this project
+
+delete course:
+forbidden?
+
+add user in course:
+create project for the added user
+add user as memeber in his project
+
+remove user from course:
+don't delete the gitlab project
+remove user from course
+
+change course user to assistant/student:
+add/remove user as member of the course group
+
+forbid giving admin role
+forbid removing admin role from admin

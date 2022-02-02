@@ -7,6 +7,25 @@ import (
 )
 
 func (c *Controller) CreateUserCourseMapping(ctx context.Context, userEmail string, userCourse *types.UserCourse) error {
+	course, err := c.GetCourse(ctx, userCourse.CourseID, userEmail)
+	if err != nil {
+		return err
+	}
+
+	user, err := c.GetUser(ctx, userCourse.UserEmail)
+	if err != nil {
+		return err
+	}
+
+	userProjectID, err := c.createGitlabProject(ctx, user.Name, course.GitlabID)
+	if err != nil {
+		return err
+	}
+
+	if err := c.addUserInGitlabProject(ctx, user.GitlabID, userProjectID); err != nil {
+		return err
+	}
+
 	return c.storage.CreateUserCourse(ctx, userEmail, userCourse)
 }
 
