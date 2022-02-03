@@ -17,15 +17,27 @@ func (c *Controller) CreateCourse(ctx context.Context, course *types.Course, use
 		return nil, err
 	}
 
-	courseGitlabID, err := c.createGitlabGroup(ctx, course.Name, course.GitlabName)
+	courseGitlabID, found, err := c.getGitlabGroup(ctx, course.GitlabName)
 	if err != nil {
 		return nil, err
 	}
+	if !found {
+		courseGitlabID, err = c.createGitlabGroup(ctx, course.Name, course.GitlabName)
+		if err != nil {
+			return nil, err
+		}
+	}
 	course.GitlabID = courseGitlabID
 
-	userProjectID, err := c.createGitlabProject(ctx, userName, courseGitlabID)
+	userProjectID, found, err := c.getGitlabProject(ctx, userName, course.GitlabID)
 	if err != nil {
 		return nil, err
+	}
+	if !found {
+		userProjectID, err = c.createGitlabProject(ctx, userName, course.GitlabID)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	if err := c.addUserInGitlabProject(ctx, userID, userProjectID); err != nil {

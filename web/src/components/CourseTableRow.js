@@ -45,10 +45,6 @@ export default function CourseTableRow({ course, coursesStateDispatch }) {
             course={course}
             coursesStateDispatch={coursesStateDispatch}
           />
-          <DeleteCourse
-            course={course}
-            coursesStateDispatch={coursesStateDispatch}
-          />
         </Flex>
       </Td>
     </Tr>

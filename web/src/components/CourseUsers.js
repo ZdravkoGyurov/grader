@@ -156,6 +156,7 @@ export default function CourseUsers() {
                         <CourseUserTableRow
                           key={userCourse.userEmail}
                           courseUser={userCourse}
+                          creatorEmail={courseState.course.creatorEmail}
                           courseUsersDispatch={dispatch}
                         />
                       ))}

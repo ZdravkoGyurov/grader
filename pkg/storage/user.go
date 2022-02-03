@@ -26,7 +26,6 @@ func (s *Storage) CreateUser(ctx context.Context, user *types.User) error {
 	dbCtx, cancel := context.WithTimeout(ctx, s.cfg.RequestTimeout)
 	defer cancel()
 
-	user.RoleName = types.RoleStudent
 	if _, err := s.pool.Exec(dbCtx, insertUserQuery, user.Fields()...); err != nil {
 		return dbError(errors.Newf("failed to create user: %w", err))
 	}

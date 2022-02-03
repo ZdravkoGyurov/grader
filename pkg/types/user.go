@@ -13,10 +13,13 @@ type User struct {
 
 func (u User) ValidateUpdateRole() error {
 	if u.Email == "" {
-		return errors.Newf("user email should not be empty: %w", errors.ErrInvalidEntity)
+		return errors.Newf("email should not be empty: %w", errors.ErrInvalidEntity)
 	}
 	if u.RoleName == "" {
-		return errors.Newf("user role name should not be empty: %w", errors.ErrInvalidEntity)
+		return errors.Newf("roleName should not be empty: %w", errors.ErrInvalidEntity)
+	}
+	if u.RoleName != RoleTeacher && u.RoleName != RoleStudent {
+		return errors.Newf("roleName can only be 'Teacher' and 'Student': %w", errors.ErrInvalidEntity)
 	}
 	return nil
 }

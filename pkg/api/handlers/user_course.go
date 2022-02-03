@@ -55,6 +55,12 @@ func (uc UserCourse) Get(writer http.ResponseWriter, request *http.Request) {
 }
 
 func (uc UserCourse) Put(writer http.ResponseWriter, request *http.Request) {
+	userData, ok := req.GetUserData(request)
+	if !ok {
+		response.SendError(writer, request, errors.New("failed to get request user data"))
+		return
+	}
+
 	userCourse := types.UserCourse{}
 	if err := json.NewDecoder(request.Body).Decode(&userCourse); err != nil {
 		err = errors.Newf("%s: %w", err, errors.ErrInvalidEntity)
@@ -62,7 +68,7 @@ func (uc UserCourse) Put(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	updatedUserCourse, err := uc.Controller.UpdateUserCourseMapping(request.Context(), &userCourse)
+	updatedUserCourse, err := uc.Controller.UpdateUserCourseMapping(request.Context(), &userCourse, userData.Email)
 	if err != nil {
 		response.SendError(writer, request, err)
 		return
@@ -72,6 +78,12 @@ func (uc UserCourse) Put(writer http.ResponseWriter, request *http.Request) {
 }
 
 func (uc UserCourse) Delete(writer http.ResponseWriter, request *http.Request) {
+	userData, ok := req.GetUserData(request)
+	if !ok {
+		response.SendError(writer, request, errors.New("failed to get request user data"))
+		return
+	}
+
 	userEmail := request.URL.Query().Get("userEmail")
 	if userEmail == "" {
 		err := errors.Newf("userEmail query parameter should not be empty: %w", errors.ErrInvalidEntity)
@@ -89,7 +101,8 @@ func (uc UserCourse) Delete(writer http.ResponseWriter, request *http.Request) {
 		UserEmail: userEmail,
 		CourseID:  courseID,
 	}
-	if err := uc.Controller.DeleteUserCourseMapping(request.Context(), &userCourse); err != nil {
+
+	if err := uc.Controller.DeleteUserCourseMapping(request.Context(), &userCourse, userData.Email); err != nil {
 		response.SendError(writer, request, err)
 		return
 	}

@@ -21,8 +21,8 @@ export default function UserTableRow({ user, usersStateDispatch }) {
     if (!value) {
       return;
     }
-    if (value !== "Admin" && value !== "Teacher" && value !== "Student") {
-      return "Role can be either Admin, Teacher or Student";
+    if (value !== "Teacher" && value !== "Student") {
+      return "Role can be either Teacher or Student";
     }
 
     if (user.roleName === value) {
@@ -89,8 +89,11 @@ export default function UserTableRow({ user, usersStateDispatch }) {
                       id="courseRoleName"
                       {...field}
                       variant="filled"
+                      disabled={user.roleName === "Admin"}
                     >
-                      <option value="Admin">Admin</option>
+                      <option disabled value="Admin">
+                        Admin
+                      </option>
                       <option value="Teacher">Teacher</option>
                       <option value="Student">Student</option>
                     </Select>

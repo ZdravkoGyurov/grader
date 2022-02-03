@@ -15,6 +15,7 @@ import DeleteUserCourse from "./DeleteUserCourse";
 
 export default function CourseUserTableRow({
   courseUser,
+  creatorEmail,
   courseUsersDispatch,
 }) {
   const toast = useToast();
@@ -57,6 +58,7 @@ export default function CourseUserTableRow({
         duration: 3000,
         isClosable: true,
       });
+      value = "asd";
     }
   }
 
@@ -90,6 +92,7 @@ export default function CourseUserTableRow({
                       id="courseRoleName"
                       {...field}
                       variant="filled"
+                      disabled={creatorEmail === courseUser.userEmail}
                     >
                       <option value="Assistant">Assistant</option>
                       <option value="Student">Student</option>

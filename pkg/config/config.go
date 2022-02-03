@@ -46,6 +46,7 @@ type Gitlab struct {
 	RequiredScope   string `yaml:"required_scope"`
 	ClientID        string `yaml:"client_id"`
 	ClientSecret    string `yaml:"client_secret"`
+	AdminUserID     string `yaml:"admin_user_id"`
 	GroupParentID   string `yaml:"group_parent_id"`
 	GroupParentName string `yaml:"group_parent_name"`
 	PAT             string `yaml:"pat"`

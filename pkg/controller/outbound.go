@@ -5,8 +5,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/ZdravkoGyurov/grader/pkg/errors"
 )
@@ -157,6 +159,38 @@ func (c *Controller) getGitlabUserInfo(ctx context.Context, accessToken string) 
 	return gitlabUser, nil
 }
 
+func (c *Controller) getGitlabGroup(ctx context.Context, gitlabName string) (string, bool, error) {
+	gitlabGroupsEndpoint := fmt.Sprintf("https://%s%s/%s/subgroups?search=%s",
+		c.Config.Gitlab.Host, gitlabGroupsPath, c.Config.Gitlab.GroupParentID, gitlabName)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, gitlabGroupsEndpoint, nil)
+	if err != nil {
+		return "", false, errors.Newf("failed to create course subgroup get request :%w", err)
+	}
+	req.Header.Add(gitlabPrivateTokenHeader, c.Config.Gitlab.PAT)
+	req.Header.Add(contentTypeHeader, contentTypeApplicationJSON)
+
+	response, err := c.client.Do(req)
+	if err != nil {
+		return "", false, errors.Newf("failed to call gitlab groups endpoint: %w", err)
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusOK {
+		return "", false, errors.Newf("failed to call gitlab groups endpoint, status: %d", response.StatusCode)
+	}
+
+	subgroups := []subgroupResponseBody{}
+	if err := json.NewDecoder(response.Body).Decode(&subgroups); err != nil {
+		return "", false, errors.Newf("failed to decode gitlab subgroup: %w", err)
+	}
+
+	if len(subgroups) != 1 {
+		return "", false, nil
+	}
+
+	return strconv.Itoa(subgroups[0].ID), true, nil
+}
+
 func (c *Controller) createGitlabGroup(ctx context.Context, name, gitlabName string) (string, error) {
 	subgroupReqBody := subgroupReqBody{
 		Name:       name,
@@ -194,6 +228,38 @@ func (c *Controller) createGitlabGroup(ctx context.Context, name, gitlabName str
 	}
 
 	return strconv.Itoa(subgroup.ID), nil
+}
+
+func (c *Controller) getGitlabProject(ctx context.Context, user, groupID string) (string, bool, error) {
+	gitlabGroupsEndpoint := fmt.Sprintf("https://%s%s/%s/projects?search=%s",
+		c.Config.Gitlab.Host, gitlabGroupsPath, groupID, user)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, gitlabGroupsEndpoint, nil)
+	if err != nil {
+		return "", false, errors.Newf("failed to create course subgroup get request :%w", err)
+	}
+	req.Header.Add(gitlabPrivateTokenHeader, c.Config.Gitlab.PAT)
+	req.Header.Add(contentTypeHeader, contentTypeApplicationJSON)
+
+	response, err := c.client.Do(req)
+	if err != nil {
+		return "", false, errors.Newf("failed to call gitlab groups endpoint: %w", err)
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusOK {
+		return "", false, errors.Newf("failed to call gitlab groups endpoint, status: %d", response.StatusCode)
+	}
+
+	projects := []projectResponseBody{}
+	if err := json.NewDecoder(response.Body).Decode(&projects); err != nil {
+		return "", false, errors.Newf("failed to decode gitlab subgroup: %w", err)
+	}
+
+	if len(projects) != 1 {
+		return "", false, nil
+	}
+
+	return strconv.Itoa(projects[0].ID), true, nil
 }
 
 func (c *Controller) createGitlabProject(ctx context.Context, user, groupID string) (string, error) {
@@ -257,15 +323,26 @@ func (c *Controller) addUserInGitlabProject(ctx context.Context, userID, project
 
 	response, err := c.client.Do(req)
 	if err != nil {
-		return errors.Newf("failed to call gitlab projects endpoint: %w", err)
+		return errors.Newf("failed to call gitlab project members endpoint: %w", err)
 	}
 	defer response.Body.Close()
 
-	if response.StatusCode != http.StatusCreated {
+	responseBytes, err := io.ReadAll(response.Body)
+	if err != nil {
+		return errors.Newf("failed to read gitlab project members response: %w", err)
+	}
+
+	fmt.Printf("\n\n response: %s\n", string(responseBytes))
+	if response.StatusCode != http.StatusCreated && !alreadyMember(response.StatusCode, string(responseBytes)) {
 		return errors.Newf("failed to call gitlab project members endpoint, status: %d", response.StatusCode)
 	}
 
 	return nil
+}
+
+func alreadyMember(status int, response string) bool {
+	return (status == http.StatusBadRequest && strings.Contains(response, "inherited membership")) ||
+		(status == http.StatusConflict && strings.Contains(response, "Member already exists"))
 }
 
 func setGitlabHeaders(req *http.Request, accessToken string) {

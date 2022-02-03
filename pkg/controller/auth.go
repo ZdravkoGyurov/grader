@@ -50,6 +50,15 @@ func (c *Controller) UpdateUserRole(ctx context.Context, user *types.User) (*typ
 		return nil, err
 	}
 
+	user, err := c.GetUser(ctx, user.Email)
+	if err != nil {
+		return nil, errors.Newf("failed to get user: %w", err)
+	}
+
+	if user.RoleName == types.RoleAdmin {
+		return nil, errors.Newf("cannot remove admin role: %w", errors.ErrInvalidEntity)
+	}
+
 	return c.storage.UpdateUserRole(ctx, user)
 }
 
@@ -82,13 +91,14 @@ func (c *Controller) Login(ctx context.Context, code string) (string, string, er
 		if err != nil {
 			return "", "", errors.Newf("failed to create refresh token: %w", err)
 		}
+		gitlabID := strconv.Itoa(gitlabUser.ID)
 		user = &types.User{
 			Email:        gitlabUser.Email,
 			Name:         gitlabUser.Name,
 			AvatarURL:    gitlabUser.AvatarURL,
-			GitlabID:     strconv.Itoa(gitlabUser.ID),
+			GitlabID:     gitlabID,
 			RefreshToken: refreshToken,
-			RoleName:     types.RoleStudent,
+			RoleName:     c.roleName(gitlabID),
 		}
 		if err := c.storage.CreateUser(ctx, user); err != nil {
 			return "", "", errors.Newf("failed to create user: %w", err)
@@ -170,4 +180,11 @@ func (c *Controller) fetchGitlabAccessToken(ctx context.Context, code string) (s
 		RedirectURI:  fmt.Sprintf("http://%s:%d%s", c.Config.Host, c.Config.Port, paths.GitlabLoginCallbackPath),
 	}
 	return c.getGitlabAccessToken(ctx, accessTokenReqBody)
+}
+
+func (c *Controller) roleName(gitlabID string) types.Role {
+	if gitlabID == c.Config.Gitlab.AdminUserID {
+		return types.RoleAdmin
+	}
+	return types.RoleStudent
 }
