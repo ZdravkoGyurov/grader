@@ -17,8 +17,7 @@ func buildCreateAssignmentsImage(cfg CreateAssignmentConfig, dockerfile string) 
 		"--build-arg", fmt.Sprintf("gitlabHost=%s", cfg.GitlabHost),
 		"--build-arg", fmt.Sprintf("rootGroup=%s", cfg.RootGroup),
 		"--build-arg", fmt.Sprintf("courseGroup=%s", cfg.CourseGroup),
-		"--build-arg", fmt.Sprintf("assignmentPath=%s", cfg.AssignmentPath),
-		"--build-arg", fmt.Sprintf("assignmentName=%s", cfg.AssignmentName),
+		"--build-arg", fmt.Sprintf("assignmentPaths=%s", cfg.AssignmentPaths),
 		"--build-arg", fmt.Sprintf("gitlabUsernames=%s", cfg.GitlabUsernames),
 		dockerfile,
 	}

@@ -29,8 +29,8 @@ func (c *Controller) CreateAssignment(ctx context.Context, assignment *types.Ass
 		return nil, err
 	}
 
-	if err := c.createGitlabAssignments(ctx, course.GitlabName,
-		assignment.GitlabName, assignment.Name, strings.Join(usernames, ";")); err != nil {
+	if err := c.createGitlabAssignments(ctx, course.GitlabName, assignment.GitlabName,
+		strings.Join(usernames, ";")); err != nil {
 
 		return nil, err
 	}

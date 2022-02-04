@@ -36,8 +36,7 @@ type CreateAssignmentConfig struct {
 	GitlabHost      string
 	RootGroup       string
 	CourseGroup     string `json:"courseGroup"`
-	AssignmentPath  string `json:"assignmentPath"`
-	AssignmentName  string `json:"assignmentName"`
+	AssignmentPaths string `json:"assignmentPaths"`
 	GitlabUsernames string `json:"gitlabUsernames"`
 }
 
@@ -45,11 +44,8 @@ func (c *CreateAssignmentConfig) Validate() error {
 	if c.CourseGroup == "" {
 		return errors.Newf("courseGroup cannot be empty: %w", errors.ErrInvalidEntity)
 	}
-	if c.AssignmentPath == "" {
-		return errors.Newf("assignmentPath cannot be empty: %w", errors.ErrInvalidEntity)
-	}
-	if c.AssignmentName == "" {
-		return errors.Newf("assignmentName cannot be empty: %w", errors.ErrInvalidEntity)
+	if c.AssignmentPaths == "" {
+		return errors.Newf("assignmentPaths cannot be empty: %w", errors.ErrInvalidEntity)
 	}
 	if c.GitlabUsernames == "" {
 		return errors.Newf("gitlabUsernames cannot be empty: %w", errors.ErrInvalidEntity)

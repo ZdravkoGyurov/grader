@@ -6,8 +6,7 @@ ARG pat
 ARG gitlabHost
 ARG rootGroup
 ARG courseGroup
-ARG assignmentPath
-ARG assignmentName
+ARG assignmentPaths
 ARG gitlabUsernames
 
 ENV USER=${user}
@@ -16,8 +15,7 @@ ENV PAT=${pat}
 ENV GITLAB_HOST=${gitlabHost}
 ENV ROOT_GROUP=${rootGroup}
 ENV COURSE_GROUP=${courseGroup}
-ENV ASSIGNMENT_PATH=${assignmentPath}
-ENV ASSIGNMENT_NAME=${assignmentName}
+ENV ASSIGNMENT_PATHS=${assignmentPaths}
 ENV GITLAB_USERNAMES=${gitlabUsernames}
 
 WORKDIR /work

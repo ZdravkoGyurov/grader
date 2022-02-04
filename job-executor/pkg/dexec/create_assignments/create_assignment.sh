@@ -1,6 +1,10 @@
 create_assignments_readme () {
-  mkdir $ASSIGNMENT_PATH
-  echo $ASSIGNMENT_NAME > ./$ASSIGNMENT_PATH/README.md
+  for assignment_path in $(echo $ASSIGNMENT_PATHS | tr ";" "\n")
+  do
+    echo "creating README.md for assignment $assignment_path"
+    mkdir $assignment_path
+    echo $assignment_path > ./$assignment_path/README.md
+  done
 }
 
 push_assignment () {
@@ -8,17 +12,26 @@ push_assignment () {
 
   rm -rf .git
   git clone https://$USER:$PAT@$GITLAB_HOST/$ROOT_GROUP/$COURSE_GROUP/$gitlab_username.git
-  cp -r ./$ASSIGNMENT_PATH $gitlab_username
+
+  for assignment_path in $(echo $ASSIGNMENT_PATHS | tr ";" "\n")
+  do
+    cp -r ./$assignment_path $gitlab_username
+  done
+
   cd $gitlab_username
   git checkout -b master
-  git add ./$ASSIGNMENT_PATH
-  git commit -m "add assignment $ASSIGNMENT_NAME"
+
+  for assignment_path in $(echo $ASSIGNMENT_PATHS | tr ";" "\n")
+  do
+    git add ./$assignment_path
+  done
+
+  git commit -m "add assignment(s)"
   git push origin master
   cd ..
   rm -rf $gitlab_username
 }
 
-echo "creating README.md for assignment $ASSIGNMENT_NAME"
 create_assignments_readme || exit 1
 
 git config --global user.email $USER_EMAIL

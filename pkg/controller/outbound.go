@@ -33,8 +33,7 @@ type submissionReqBody struct {
 
 type createAssignmentReqBody struct {
 	CourseGroup     string `json:"courseGroup"`
-	AssignmentPath  string `json:"assignmentPath"`
-	AssignmentName  string `json:"assignmentName"`
+	AssignmentPaths string `json:"assignmentPaths"`
 	GitlabUsernames string `json:"gitlabUsernames"`
 }
 
@@ -112,13 +111,11 @@ func (c *Controller) createJobRun(ctx context.Context, submissionID string) erro
 	return nil
 }
 
-func (c *Controller) createGitlabAssignments(ctx context.Context, courseGroup, assignmentPath, assignmentName,
-	gitlabUsernames string) error {
+func (c *Controller) createGitlabAssignments(ctx context.Context, courseGroup, assignmentPaths, gitlabUsernames string) error {
 
 	createAssignmentReqBody := createAssignmentReqBody{
 		CourseGroup:     courseGroup,
-		AssignmentPath:  assignmentPath,
-		AssignmentName:  assignmentName,
+		AssignmentPaths: assignmentPaths,
 		GitlabUsernames: gitlabUsernames,
 	}
 	createAssignmentReqJSON, err := json.Marshal(createAssignmentReqBody)
@@ -374,7 +371,6 @@ func (c *Controller) addUserInGitlabProject(ctx context.Context, userID, project
 		return errors.Newf("failed to read gitlab project members response: %w", err)
 	}
 
-	fmt.Printf("\n\n response: %s\n", string(responseBytes))
 	if response.StatusCode != http.StatusCreated && !alreadyMember(response.StatusCode, string(responseBytes)) {
 		return errors.Newf("failed to call gitlab project members endpoint, status: %d", response.StatusCode)
 	}

@@ -19,9 +19,9 @@ func (c *Controller) CreateAssignment(ctx context.Context, cfg dexec.CreateAssig
 	c.fillCreateAssignmentConfig(&cfg)
 
 	err := c.executor.QueueJob(ctx, func() {
-		logger.Info().Msgf("creating gitlab assignment '%s'", cfg.AssignmentPath)
+		logger.Info().Msgf("creating gitlab assignment(s) '%s'", cfg.AssignmentPaths)
 		result, err := dexec.CreateAssignment(ctx, cfg)
-		logger.Info().Msgf("finished creating gitlab assignment '%s'", cfg.AssignmentPath)
+		logger.Info().Msgf("finished creating gitlab assignment(s) '%s'", cfg.AssignmentPaths)
 		if err != nil {
 			logger.Err(err).Msgf("result: %s", result)
 		}

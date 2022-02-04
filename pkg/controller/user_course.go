@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"strings"
 
 	"github.com/ZdravkoGyurov/grader/pkg/errors"
 	"github.com/ZdravkoGyurov/grader/pkg/types"
@@ -9,6 +10,11 @@ import (
 
 func (c *Controller) CreateUserCourseMapping(ctx context.Context, userEmail string, userCourse *types.UserCourse) error {
 	course, err := c.GetCourse(ctx, userCourse.CourseID, userEmail)
+	if err != nil {
+		return err
+	}
+
+	assignments, err := c.GetAssignmentsByCourseID(ctx, userEmail, userCourse.CourseID)
 	if err != nil {
 		return err
 	}
@@ -33,7 +39,19 @@ func (c *Controller) CreateUserCourseMapping(ctx context.Context, userEmail stri
 		return err
 	}
 
-	return c.storage.CreateUserCourse(ctx, userEmail, userCourse)
+	if err := c.storage.CreateUserCourse(ctx, userEmail, userCourse); err != nil {
+		return err
+	}
+
+	assignmentPaths := []string{}
+	for _, assignment := range assignments {
+		assignmentPaths = append(assignmentPaths, assignment.GitlabName)
+	}
+	if err := c.createGitlabAssignments(ctx, course.GitlabName, strings.Join(assignmentPaths, ";"), user.Name); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (c *Controller) GetUserCourseMappings(ctx context.Context, courseID string) ([]types.UserCourse, error) {
