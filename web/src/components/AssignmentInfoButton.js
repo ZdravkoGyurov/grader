@@ -28,12 +28,12 @@ export default function AssignmentInfoButton({
         onClick={onOpen}
       />
 
-      <Modal size="4xl" isOpen={isOpen} onClose={onClose}>
+      <Modal size="5xl" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{assignmentName}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody overflow="auto">
             <Markdown children={assignmentDescription} options={options} />
           </ModalBody>
         </ModalContent>

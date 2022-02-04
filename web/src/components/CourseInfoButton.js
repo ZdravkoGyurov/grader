@@ -25,12 +25,12 @@ export default function CourseInfoButton({ courseName, courseDescription }) {
         onClick={onOpen}
       />
 
-      <Modal size="4xl" isOpen={isOpen} onClose={onClose}>
+      <Modal size="5xl" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{courseName}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody overflow="auto">
             <Markdown children={courseDescription} options={options} />
           </ModalBody>
         </ModalContent>
