@@ -1,6 +1,6 @@
 ### Setup postgres
 
-docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
+docker run --name grader-postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
 
 ### Connect to postgres
 

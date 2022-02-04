@@ -15,6 +15,10 @@ var (
 
 	readUserCoursesQuery = fmt.Sprintf(`SELECT * FROM %s WHERE course_id=$1`, userCourseTable)
 
+	readCourseUserNamesQuery = fmt.Sprintf(`SELECT %[2]s.name 
+	FROM %[1]s join %[2]s on %[1]s.user_email = %[2]s.email 
+	WHERE %[1]s.course_id=$1`, userCourseTable, userTable)
+
 	updateUserCourseQuery = fmt.Sprintf(`UPDATE %s SET
 	course_role_name=$1
 	WHERE user_email=$2 AND course_id=$3
@@ -68,6 +72,30 @@ func (s *Storage) GetUserCourses(ctx context.Context, courseID string) ([]types.
 	return userCourses, nil
 }
 
+func (s *Storage) GetCoruseUserNames(ctx context.Context, courseID string) ([]string, error) {
+	dbCtx, cancel := context.WithTimeout(ctx, s.cfg.RequestTimeout)
+	defer cancel()
+
+	rows, err := s.pool.Query(dbCtx, readCourseUserNamesQuery, courseID)
+	if err != nil {
+		return nil, dbError(errors.Newf("failed to get course usernames: %w", err))
+	}
+
+	usernames := make([]string, 0)
+	for rows.Next() {
+		if err := rows.Err(); err != nil {
+			return nil, dbError(errors.Newf("failed to read username row: %w", err))
+		}
+		username, err := readUserNameRecord(rows)
+		if err != nil {
+			return nil, dbError(errors.Newf("failed to deserialize username row: %w", err))
+		}
+		usernames = append(usernames, username)
+	}
+
+	return usernames, nil
+}
+
 func (s *Storage) UpdateUserCourse(ctx context.Context, userCourse *types.UserCourse) (*types.UserCourse, error) {
 	dbCtx, cancel := context.WithTimeout(ctx, s.cfg.RequestTimeout)
 	defer cancel()
@@ -95,6 +123,16 @@ func (s *Storage) DeleteUserCourse(ctx context.Context, userCourse *types.UserCo
 	}
 
 	return nil
+}
+
+func readUserNameRecord(row dbRecord) (string, error) {
+	var username string
+
+	if err := row.Scan(&username); err != nil {
+		return "", err
+	}
+
+	return username, nil
 }
 
 func readUserCourseRecord(row dbRecord) (*types.UserCourse, error) {

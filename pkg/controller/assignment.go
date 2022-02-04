@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/ZdravkoGyurov/grader/pkg/types"
@@ -15,6 +16,22 @@ func (c *Controller) CreateAssignment(ctx context.Context, assignment *types.Ass
 	assignment.LastEditedOn = time.Now()
 
 	if err := assignment.ValidateCreate(); err != nil {
+		return nil, err
+	}
+
+	course, err := c.storage.GetCourse(ctx, assignment.CourseID, assignment.AuthorEmail)
+	if err != nil {
+		return nil, err
+	}
+
+	usernames, err := c.storage.GetCoruseUserNames(ctx, assignment.CourseID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := c.createGitlabAssignments(ctx, course.GitlabName,
+		assignment.GitlabName, assignment.Name, strings.Join(usernames, ";")); err != nil {
+
 		return nil, err
 	}
 

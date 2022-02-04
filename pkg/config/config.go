@@ -38,7 +38,7 @@ type DB struct {
 }
 
 type JobExecutor struct {
-	URL string `yaml:"url"`
+	Host string `yaml:"host"`
 }
 
 type Gitlab struct {

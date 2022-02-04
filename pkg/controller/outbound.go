@@ -31,6 +31,13 @@ type submissionReqBody struct {
 	ID string `json:"submissionId"`
 }
 
+type createAssignmentReqBody struct {
+	CourseGroup     string `json:"courseGroup"`
+	AssignmentPath  string `json:"assignmentPath"`
+	AssignmentName  string `json:"assignmentName"`
+	GitlabUsernames string `json:"gitlabUsernames"`
+}
+
 type accessTokenReqBody struct {
 	ClientID     string `json:"client_id"`
 	ClientSecret string `json:"client_secret"`
@@ -86,9 +93,44 @@ func (c *Controller) createJobRun(ctx context.Context, submissionID string) erro
 	}
 
 	body := bytes.NewBuffer(submissionReqJSON)
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.Config.JobExecutor.URL, body)
+	url := fmt.Sprintf("%s%s", c.Config.JobExecutor.Host, "/job")
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, body)
 	if err != nil {
 		return errors.Newf("failed to create job executor request :%w", err)
+	}
+
+	response, err := c.client.Do(req)
+	if err != nil {
+		return errors.Newf("failed to call job executor:%w", err)
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusAccepted {
+		return errors.Newf("failed to call job executor, status: %d", response.StatusCode)
+	}
+
+	return nil
+}
+
+func (c *Controller) createGitlabAssignments(ctx context.Context, courseGroup, assignmentPath, assignmentName,
+	gitlabUsernames string) error {
+
+	createAssignmentReqBody := createAssignmentReqBody{
+		CourseGroup:     courseGroup,
+		AssignmentPath:  assignmentPath,
+		AssignmentName:  assignmentName,
+		GitlabUsernames: gitlabUsernames,
+	}
+	createAssignmentReqJSON, err := json.Marshal(createAssignmentReqBody)
+	if err != nil {
+		return errors.Newf("failed to marshal create gitlab assignment request body:%w", err)
+	}
+
+	body := bytes.NewBuffer(createAssignmentReqJSON)
+	url := fmt.Sprintf("%s%s", c.Config.JobExecutor.Host, "/assignment")
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, body)
+	if err != nil {
+		return errors.Newf("failed to create gitlab assignment request :%w", err)
 	}
 
 	response, err := c.client.Do(req)

@@ -43,6 +43,8 @@ type Executor struct {
 type Gitlab struct {
 	Host            string `yaml:"host"`
 	GroupParentName string `yaml:"group_parent_name"`
+	User            string `yaml:"user"`
+	UserEmail       string `yaml:"user_email"`
 	PAT             string `yaml:"pat"`
 }
 

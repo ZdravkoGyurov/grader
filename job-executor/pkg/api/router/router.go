@@ -15,10 +15,16 @@ func New(ctrl *controller.Controller) *mux.Router {
 	router.Use(middlewares.LoggerMiddleware)
 	router.Use(middlewares.CorrelationIDMiddleware)
 	setupJobRoutes(router, ctrl)
+	setupAssignmentRoutes(router, ctrl)
 	return router
 }
 
 func setupJobRoutes(router *mux.Router, ctrl *controller.Controller) {
 	jobHandler := &handlers.Job{Controller: ctrl}
 	router.HandleFunc(JobPath, jobHandler.Post).Methods(http.MethodPost)
+}
+
+func setupAssignmentRoutes(router *mux.Router, ctrl *controller.Controller) {
+	assignmentHandler := &handlers.Assignment{Controller: ctrl}
+	router.HandleFunc(AssignmentPath, assignmentHandler.Post).Methods(http.MethodPost)
 }

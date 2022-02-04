@@ -278,7 +278,7 @@ const Assignment = () => {
                       });
                     }}
                   >
-                    Create
+                    Submit
                   </Button>
                 </Flex>
               </Th>

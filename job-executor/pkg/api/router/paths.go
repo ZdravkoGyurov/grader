@@ -1,3 +1,6 @@
 package router
 
-const JobPath = "/job"
+const (
+	JobPath        = "/job"
+	AssignmentPath = "/assignment"
+)
