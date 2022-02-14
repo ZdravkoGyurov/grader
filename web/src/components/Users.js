@@ -56,7 +56,7 @@ const Users = () => {
           </BreadcrumbItem>
         </Breadcrumb>
       </Flex>
-      {user.roleName !== "Admin" && user.roleName !== "Teacher" ? (
+      {user.roleName !== "Admin" ? (
         <Unauthorized />
       ) : (
         <Flex m="0 5%" overflowY="auto" flexDir="column" p="2rem">

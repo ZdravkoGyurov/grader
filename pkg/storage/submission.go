@@ -20,7 +20,7 @@ var (
 	RETURNING *`, submissionTable)
 
 	readSubmissionsQuery = fmt.Sprintf(`SELECT * FROM %s WHERE assignment_id=$1 AND 
-	(submitter_email=$2 OR assignment_id IN (SELECT id FROM %s WHERE course_id IN 
+	(submitter_email=$2 AND assignment_id IN (SELECT id FROM %s WHERE course_id IN 
 		(SELECT course_id FROM %s WHERE user_email=$2)))`,
 		submissionTable, assignmentTable, userCourseTable)
 

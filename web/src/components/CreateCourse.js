@@ -21,8 +21,11 @@ import Markdown from "markdown-to-jsx";
 import options from "../consts/markdown";
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-markdown";
+import { useContext } from "react";
+import UserContext from "../contexts/UserContext";
 
 export default function CreateCourse({ coursesStateDispatch }) {
+  const { user } = useContext(UserContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
@@ -63,7 +66,11 @@ export default function CreateCourse({ coursesStateDispatch }) {
 
   return (
     <>
-      <Button colorScheme="teal" onClick={onOpen}>
+      <Button
+        hidden={user.roleName !== "Teacher"}
+        colorScheme="teal"
+        onClick={onOpen}
+      >
         Create
       </Button>
 

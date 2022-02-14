@@ -45,12 +45,12 @@ func (c *Controller) GetUserInfo(ctx context.Context, accessToken string) (*type
 	return c.storage.GetUser(ctx, claims.Email)
 }
 
-func (c *Controller) UpdateUserRole(ctx context.Context, user *types.User) (*types.User, error) {
-	if err := user.ValidateUpdateRole(); err != nil {
+func (c *Controller) UpdateUserRole(ctx context.Context, updateUser *types.User) (*types.User, error) {
+	if err := updateUser.ValidateUpdateRole(); err != nil {
 		return nil, err
 	}
 
-	user, err := c.GetUser(ctx, user.Email)
+	user, err := c.GetUser(ctx, updateUser.Email)
 	if err != nil {
 		return nil, errors.Newf("failed to get user: %w", err)
 	}
@@ -59,7 +59,7 @@ func (c *Controller) UpdateUserRole(ctx context.Context, user *types.User) (*typ
 		return nil, errors.Newf("cannot remove admin role: %w", errors.ErrInvalidEntity)
 	}
 
-	return c.storage.UpdateUserRole(ctx, user)
+	return c.storage.UpdateUserRole(ctx, updateUser)
 }
 
 func (c *Controller) GetUser(ctx context.Context, email string) (*types.User, error) {
