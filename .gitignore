@@ -1,3 +1,5 @@
 /.vscode
 /vendor
 /tests
+/demo
+deployments/helm_charts/grader/charts
