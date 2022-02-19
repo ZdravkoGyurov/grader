@@ -5,11 +5,10 @@ WORKDIR /app
 ENV PATH=/app/node_modules/.bin:$PATH
 
 COPY package.json package-lock.json ./
+RUN npm ci --silent && npm install react-scripts@3.4.1 -g --silent
+
 COPY public ./public
 COPY src ./src
-COPY .env ./.env
-
-RUN npm ci --silent && npm install react-scripts@3.4.1 -g --silent
 
 RUN npm run build
 

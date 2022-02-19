@@ -49,20 +49,18 @@ func (a Auth) LoginCallback(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	fmt.Printf("\n\n >>> a.Controller.Config.UIIngressHost %s\n", a.Controller.Config.UIIngressHost)
-
 	http.SetCookie(writer, &http.Cookie{
 		Name:     "jid1",
 		Value:    accessToken,
 		HttpOnly: true,
-		Domain:   a.Controller.Config.UIIngressHost,
+		Domain:   request.Host,
 		Path:     "/",
 	})
 	http.SetCookie(writer, &http.Cookie{
 		Name:     "jid2",
 		Value:    refreshToken,
 		HttpOnly: true,
-		Domain:   a.Controller.Config.UIIngressHost,
+		Domain:   request.Host,
 		Path:     "/",
 	})
 
@@ -133,7 +131,7 @@ func (a Auth) RefreshToken(writer http.ResponseWriter, request *http.Request) {
 		Name:     "jid1",
 		Value:    accessToken,
 		HttpOnly: true,
-		Domain:   a.Controller.Config.UIIngressHost,
+		Domain:   request.Host,
 		Path:     "/",
 	})
 
@@ -157,7 +155,7 @@ func (a Auth) Logout(writer http.ResponseWriter, request *http.Request) {
 		Name:     "jid1",
 		Value:    "",
 		HttpOnly: true,
-		Domain:   a.Controller.Config.UIIngressHost,
+		Domain:   request.Host,
 		Path:     "/",
 		Expires:  time.Unix(0, 0),
 	})
@@ -165,7 +163,7 @@ func (a Auth) Logout(writer http.ResponseWriter, request *http.Request) {
 		Name:     "jid2",
 		Value:    "",
 		HttpOnly: true,
-		Domain:   a.Controller.Config.UIIngressHost,
+		Domain:   request.Host,
 		Path:     "/",
 		Expires:  time.Unix(0, 0),
 	})

@@ -41,10 +41,6 @@ grader
 {{ template "grader.name" . }}-ingress
 {{- end -}}
 
-{{- define "grader.ui.ingress.name" -}}
-{{ template "grader.name" . }}-ui-ingress
-{{- end -}}
-
 # NetworkPolicy
 
 {{- define "grader.grader.networkpolicy.name" -}}

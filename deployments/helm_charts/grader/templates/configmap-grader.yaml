@@ -6,8 +6,8 @@ data:
   config.yaml: |
     host: 0.0.0.0
     port: 8080
-    ingress_host: localhost
-    ui_ingress_host: web.localhost
+    ingress_host: localhost/api/v1
+    ui_ingress_host: localhost
     server:
       read_timeout: 30s
       write_timeout: 30s

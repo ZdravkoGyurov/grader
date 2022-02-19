@@ -12,10 +12,17 @@ spec:
     - host: localhost
       http:
         paths:
-          - path: /(.*)
+          - path: /api/v1/(.*)
             pathType: Prefix
             backend:
               service:
                 name: {{ template "grader.grader.service.name" . }}
+                port:
+                  number: 80
+          - path: /(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "grader.ui.service.name" . }}
                 port:
                   number: 80

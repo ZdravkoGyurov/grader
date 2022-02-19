@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const login = () => {
-  window.location.href = `http://localhost/login/oauth/gitlab`;
+  window.location.href = `http://${window._env_.GRADER_HOST}/login/oauth/gitlab`;
 };
 
 const getUser = async () => {
