@@ -2,7 +2,7 @@ import axios from "axios";
 
 const getSubmissions = async (assignmentId) => {
   const result = await axios.get(
-    `http://localhost:8080/submission?assignmentId=${assignmentId}`,
+    `http://${window._env_.GRADER_HOST}/submission?assignmentId=${assignmentId}`,
     {
       withCredentials: true,
     }
@@ -12,7 +12,7 @@ const getSubmissions = async (assignmentId) => {
 };
 
 async function createSubmission(assignmentId) {
-  const response = await axios(`http://localhost:8080/submission`, {
+  const response = await axios(`http://${window._env_.GRADER_HOST}/submission`, {
     method: "POST",
     withCredentials: true,
     validateStatus: (status) => {

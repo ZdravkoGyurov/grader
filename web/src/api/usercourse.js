@@ -1,7 +1,7 @@
 import axios from "axios";
 
 async function createUserCourse(userCourse) {
-  const response = await axios(`http://localhost:8080/userCourse`, {
+  const response = await axios(`http://${window._env_.GRADER_HOST}/userCourse`, {
     method: "POST",
     withCredentials: true,
     validateStatus: (status) => {
@@ -18,7 +18,7 @@ async function createUserCourse(userCourse) {
 }
 
 async function putUserCourse(userCourse) {
-  const response = await axios(`http://localhost:8080/userCourse`, {
+  const response = await axios(`http://${window._env_.GRADER_HOST}/userCourse`, {
     method: "PUT",
     withCredentials: true,
     validateStatus: (status) => {
@@ -36,7 +36,7 @@ async function putUserCourse(userCourse) {
 
 async function getUserCourses(courseId) {
   const response = await axios(
-    `http://localhost:8080/userCourse?courseId=${courseId}`,
+    `http://${window._env_.GRADER_HOST}/userCourse?courseId=${courseId}`,
     {
       method: "GET",
       withCredentials: true,
@@ -51,7 +51,7 @@ async function getUserCourses(courseId) {
 
 async function deleteUserCourse(userEmail, courseId) {
   const response = await axios(
-    `http://localhost:8080/userCourse?userEmail=${userEmail}&courseId=${courseId}`,
+    `http://${window._env_.GRADER_HOST}/userCourse?userEmail=${userEmail}&courseId=${courseId}`,
     {
       method: "DELETE",
       withCredentials: true,

@@ -11,7 +11,7 @@ export default function CourseGitlabButton({ courseGitlabName }) {
       icon={<FiGitlab />}
       onClick={() => {
         window.open(
-          `https://${process.env.REACT_APP_GITLAB_HOST}/${process.env.REACT_APP_GROUP_PARENT_NAME}/${courseGitlabName}`,
+          `https://${window._env_.REACT_APP_GITLAB_HOST}/${window._env_.REACT_APP_GROUP_PARENT_NAME}/${courseGitlabName}`,
           "_blank"
         );
       }}

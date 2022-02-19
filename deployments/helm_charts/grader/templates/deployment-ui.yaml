@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "grader.ui.deployment.name" . }}
+  labels:
+    app: grader-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grader-ui
+  template:
+    metadata:
+      labels:
+        app: grader-ui
+    spec:
+      containers:
+        - name: grader-ui
+          image: grader-ui:latest
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: app-config
+              mountPath: "/usr/share/nginx/html/config"
+              readOnly: true
+          ports:
+            - containerPort: 80
+      volumes:
+        - name: app-config
+          configMap:
+            name: grader-ui-config

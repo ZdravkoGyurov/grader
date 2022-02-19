@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ template "grader.ui.ingress.name" . }}
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/limit-rps: "150"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: web.localhost
+      http:
+        paths:
+          - path: /(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "grader.ui.service.name" . }}
+                port:
+                  number: 80

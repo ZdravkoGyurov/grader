@@ -1,5 +1,7 @@
 host: localhost
 port: 8080
+ingress_host: localhost:8080
+ui_ingress_host: localhost:3000
 server:
   read_timeout: 30s
   write_timeout: 30s
@@ -7,21 +9,15 @@ server:
 outbound:
   timeout: 30s
 db:
-  uri: postgresql://postgres:postgres@localhost:5432?connect_timeout=10
   connect_timeout: 30s
   request_timeout: 30s
 job_executor:
-  url: http://localhost:8081/job
+  host: http://localhost:8081
 gitlab:
   host: gitlab.com
-  required_scope: read_user
-  client_id: client_id
-  client_secret: client_secret
+  admin_user_id: 10687808
   group_parent_id: 15645391
   group_parent_name: demo-grader-123
-  pat: pat
 auth:
-  access_token_secret: accesstokensecret
   access_token_expiration_time: 24h
-  refresh_token_secret: refreshtokensecret
   refresh_token_expiration_time: 24h

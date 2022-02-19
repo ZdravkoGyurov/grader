@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/ZdravkoGyurov/grader/pkg/errors"
+	"github.com/ZdravkoGyurov/grader/pkg/log"
 )
 
 const (
@@ -161,6 +162,13 @@ func (c *Controller) getGitlabAccessToken(ctx context.Context, accessTokenReqBod
 	defer response.Body.Close()
 
 	if response.StatusCode != http.StatusOK {
+		logger := log.CtxLogger(ctx)
+		respBodyBytes, err := io.ReadAll(response.Body)
+		if err != nil {
+			logger.Err(err)
+		} else {
+			logger.Error().Msg(string(respBodyBytes))
+		}
 		return "", errors.Newf("failed to call gitlab, status: %d", response.StatusCode)
 	}
 
@@ -187,6 +195,14 @@ func (c *Controller) getGitlabUserInfo(ctx context.Context, accessToken string) 
 	defer response.Body.Close()
 
 	if response.StatusCode != http.StatusOK {
+		logger := log.CtxLogger(ctx)
+		respBodyBytes, err := io.ReadAll(response.Body)
+		if err != nil {
+			logger.Err(err)
+		} else {
+			logger.Error().Msg(string(respBodyBytes))
+		}
+
 		return gitlabUser{}, errors.Newf("failed to call gitlab user endpoint, status: %d", response.StatusCode)
 	}
 

@@ -14,18 +14,20 @@ import (
 	"github.com/google/uuid"
 )
 
+const requiredScope = "read_user"
+
 type Auth struct {
 	Controller controller.Controller
 }
 
 func (a Auth) Login(writer http.ResponseWriter, request *http.Request) {
 	gitlabOauthURL := fmt.Sprintf("https://%s/oauth/authorize", a.Controller.Config.Gitlab.Host)
-	redirectURI := fmt.Sprintf(`http://%s:%d%s`, a.Controller.Config.Host, a.Controller.Config.Port, paths.GitlabLoginCallbackPath)
+	redirectURI := fmt.Sprintf(`http://%s%s`, a.Controller.Config.IngressHost, paths.GitlabLoginCallbackPath)
 	url := fmt.Sprintf(
 		"%s?client_id=%s&scope=%s&redirect_uri=%s&response_type=code&state=%s",
 		gitlabOauthURL,
 		a.Controller.Config.Gitlab.ClientID,
-		a.Controller.Config.Gitlab.RequiredScope,
+		requiredScope,
 		redirectURI,
 		uuid.NewString(),
 	)
@@ -47,20 +49,25 @@ func (a Auth) LoginCallback(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
+	fmt.Printf("\n\n >>> a.Controller.Config.UIIngressHost %s\n", a.Controller.Config.UIIngressHost)
+
 	http.SetCookie(writer, &http.Cookie{
 		Name:     "jid1",
 		Value:    accessToken,
 		HttpOnly: true,
+		Domain:   a.Controller.Config.UIIngressHost,
 		Path:     "/",
 	})
 	http.SetCookie(writer, &http.Cookie{
 		Name:     "jid2",
 		Value:    refreshToken,
 		HttpOnly: true,
+		Domain:   a.Controller.Config.UIIngressHost,
 		Path:     "/",
 	})
 
-	http.Redirect(writer, request, "http://localhost:3000", http.StatusFound)
+	uiURL := fmt.Sprintf("http://%s", a.Controller.Config.UIIngressHost)
+	http.Redirect(writer, request, uiURL, http.StatusFound)
 }
 
 func (a Auth) GetUserInfo(writer http.ResponseWriter, request *http.Request) {
@@ -126,6 +133,7 @@ func (a Auth) RefreshToken(writer http.ResponseWriter, request *http.Request) {
 		Name:     "jid1",
 		Value:    accessToken,
 		HttpOnly: true,
+		Domain:   a.Controller.Config.UIIngressHost,
 		Path:     "/",
 	})
 
@@ -149,6 +157,7 @@ func (a Auth) Logout(writer http.ResponseWriter, request *http.Request) {
 		Name:     "jid1",
 		Value:    "",
 		HttpOnly: true,
+		Domain:   a.Controller.Config.UIIngressHost,
 		Path:     "/",
 		Expires:  time.Unix(0, 0),
 	})
@@ -156,6 +165,7 @@ func (a Auth) Logout(writer http.ResponseWriter, request *http.Request) {
 		Name:     "jid2",
 		Value:    "",
 		HttpOnly: true,
+		Domain:   a.Controller.Config.UIIngressHost,
 		Path:     "/",
 		Expires:  time.Unix(0, 0),
 	})

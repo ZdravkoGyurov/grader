@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "grader.dockerexecutor.deployment.name" . }}
+  labels:
+    app: grader-docker-executor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grader-docker-executor
+  template:
+    metadata:
+      labels:
+        app: grader-docker-executor
+    spec:
+      containers:
+        - name: grader-docker-executor
+          image: grader-docker-executor:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: CONFIG_DIR
+              value: /etc/app
+          ports:
+            - containerPort: 8081
+          volumeMounts:
+            - name: app-config-secret
+              mountPath: "/etc/app"
+              readOnly: true
+      volumes:
+        - name: app-config-secret
+          projected:
+            sources:
+              - configMap:
+                  name: {{ template "grader.dockerexecutor.configmap.name" . }}
+              - secret:
+                  name: {{ template "grader.dockerexecutor.secret.name" . }}

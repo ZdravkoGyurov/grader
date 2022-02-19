@@ -1,12 +1,12 @@
 import axios from "axios";
 
 const login = () => {
-  window.location.href = "http://localhost:8080/login/oauth/gitlab";
+  window.location.href = `http://localhost/login/oauth/gitlab`;
 };
 
 const getUser = async () => {
   return (
-    await axios.get("http://localhost:8080/userInfo", {
+    await axios.get(`http://${window._env_.GRADER_HOST}/userInfo`, {
       withCredentials: true,
     })
   ).data;
@@ -14,14 +14,14 @@ const getUser = async () => {
 
 const getUsers = async () => {
   return (
-    await axios.get("http://localhost:8080/user", {
+    await axios.get(`http://${window._env_.GRADER_HOST}/user`, {
       withCredentials: true,
     })
   ).data;
 };
 
 const patchUserRole = async (userEmail, userRoleName) => {
-  const response = await axios(`http://localhost:8080/userInfo`, {
+  const response = await axios(`http://${window._env_.GRADER_HOST}/userInfo`, {
     method: "PATCH",
     withCredentials: true,
     validateStatus: (status) => {
@@ -41,7 +41,7 @@ const patchUserRole = async (userEmail, userRoleName) => {
 };
 
 const logout = async () => {
-  await axios.delete("http://localhost:8080/logout", {
+  await axios.delete(`http://${window._env_.GRADER_HOST}/logout`, {
     withCredentials: true,
   });
 };

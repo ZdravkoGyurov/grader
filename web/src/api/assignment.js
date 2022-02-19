@@ -2,7 +2,7 @@ import axios from "axios";
 
 const getAssignments = async (courseId) => {
   const result = await axios.get(
-    `http://localhost:8080/assignment?courseId=${courseId}`,
+    `http://${window._env_.GRADER_HOST}/assignment?courseId=${courseId}`,
     {
       withCredentials: true,
     }
@@ -13,7 +13,7 @@ const getAssignments = async (courseId) => {
 
 const getAssignment = async (assignmentId) => {
   const result = await axios.get(
-    `http://localhost:8080/assignment/${assignmentId}`,
+    `http://${window._env_.GRADER_HOST}/assignment/${assignmentId}`,
     {
       withCredentials: true,
     }
@@ -23,7 +23,7 @@ const getAssignment = async (assignmentId) => {
 };
 
 async function createAssignment(assignment) {
-  const response = await axios(`http://localhost:8080/assignment`, {
+  const response = await axios(`http://${window._env_.GRADER_HOST}/assignment`, {
     method: "POST",
     withCredentials: true,
     validateStatus: (status) => {
@@ -41,7 +41,7 @@ async function createAssignment(assignment) {
 
 async function updateAssignment(assignmentId, assignment) {
   const response = await axios(
-    `http://localhost:8080/assignment/${assignmentId}`,
+    `http://${window._env_.GRADER_HOST}/assignment/${assignmentId}`,
     {
       method: "PATCH",
       withCredentials: true,
@@ -61,7 +61,7 @@ async function updateAssignment(assignmentId, assignment) {
 
 async function deleteAssignment(assignmentId) {
   const response = await axios(
-    `http://localhost:8080/assignment/${assignmentId}`,
+    `http://${window._env_.GRADER_HOST}/assignment/${assignmentId}`,
     {
       method: "DELETE",
       withCredentials: true,

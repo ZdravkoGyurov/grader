@@ -177,7 +177,7 @@ func (c *Controller) fetchGitlabAccessToken(ctx context.Context, code string) (s
 		ClientID:     c.Config.Gitlab.ClientID,
 		ClientSecret: c.Config.Gitlab.ClientSecret,
 		Code:         code,
-		RedirectURI:  fmt.Sprintf("http://%s:%d%s", c.Config.Host, c.Config.Port, paths.GitlabLoginCallbackPath),
+		RedirectURI:  fmt.Sprintf("http://%s%s", c.Config.IngressHost, paths.GitlabLoginCallbackPath),
 	}
 	return c.getGitlabAccessToken(ctx, accessTokenReqBody)
 }

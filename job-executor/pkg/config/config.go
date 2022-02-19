@@ -5,13 +5,17 @@ import (
 	"path"
 	"time"
 
+	"github.com/ZdravkoGyurov/grader/job-executor/pkg/log"
+
 	"gopkg.in/yaml.v2"
 )
 
 const (
-	configDir         = "config"
-	appConfigFileName = "app_config.yaml"
+	configFileName = "config.yaml"
+	secretFileName = "secret.yaml"
 )
+
+var configDir = os.Getenv("CONFIG_DIR")
 
 // Config for application properties
 type Config struct {
@@ -51,15 +55,24 @@ type Gitlab struct {
 func Load() (Config, error) {
 	cfg := Config{}
 
-	appConfigFile, err := os.ReadFile(path.Join(configDir, appConfigFileName))
+	configFile, err := os.ReadFile(path.Join(configDir, configFileName))
+	if err != nil {
+		return cfg, err
+	}
+	secretFile, err := os.ReadFile(path.Join(configDir, secretFileName))
 	if err != nil {
 		return cfg, err
 	}
 
-	err = yaml.Unmarshal(appConfigFile, &cfg)
+	err = yaml.Unmarshal(configFile, &cfg)
+	if err != nil {
+		return cfg, err
+	}
+	err = yaml.Unmarshal(secretFile, &cfg)
 	if err != nil {
 		return cfg, err
 	}
 
+	log.DefaultLogger().Info().Msgf("loaded config: %+v", cfg)
 	return cfg, nil
 }

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "grader.grader.deployment.name" . }}
+  labels:
+    app: grader
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grader
+  template:
+    metadata:
+      labels:
+        app: grader
+    spec:
+      containers:
+        - name: grader
+          image: grader:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: CONFIG_DIR
+              value: /etc/app
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: app-config-secret
+              mountPath: "/etc/app"
+              readOnly: true
+      volumes:
+        - name: app-config-secret
+          projected:
+            sources:
+              - configMap:
+                  name: {{ template "grader.grader.configmap.name" . }}
+              - secret:
+                  name: {{ template "grader.grader.secret.name" . }}

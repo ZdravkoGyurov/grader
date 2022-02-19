@@ -2,14 +2,14 @@ import axios from "axios";
 
 async function getCourses() {
   return (
-    await axios.get("http://localhost:8080/course", {
+    await axios.get(`http://${window._env_.GRADER_HOST}/course`, {
       withCredentials: true,
     })
   ).data;
 }
 
 async function getCourse(courseId) {
-  const result = await axios.get(`http://localhost:8080/course/${courseId}`, {
+  const result = await axios.get(`http://${window._env_.GRADER_HOST}/course/${courseId}`, {
     withCredentials: true,
   });
 
@@ -17,7 +17,7 @@ async function getCourse(courseId) {
 }
 
 async function createCourse(course) {
-  const response = await axios(`http://localhost:8080/course`, {
+  const response = await axios(`http://${window._env_.GRADER_HOST}/course`, {
     method: "POST",
     withCredentials: true,
     validateStatus: (status) => {
@@ -34,7 +34,7 @@ async function createCourse(course) {
 }
 
 async function updateCourse(courseId, course) {
-  const response = await axios(`http://localhost:8080/course/${courseId}`, {
+  const response = await axios(`http://${window._env_.GRADER_HOST}/course/${courseId}`, {
     method: "PATCH",
     withCredentials: true,
     validateStatus: (status) => {
@@ -51,7 +51,7 @@ async function updateCourse(courseId, course) {
 }
 
 async function deleteCourse(courseId) {
-  const response = await axios(`http://localhost:8080/course/${courseId}`, {
+  const response = await axios(`http://${window._env_.GRADER_HOST}/course/${courseId}`, {
     method: "DELETE",
     withCredentials: true,
     validateStatus: (status) => {

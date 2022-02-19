@@ -5,24 +5,30 @@ import (
 	"path"
 	"time"
 
+	"github.com/ZdravkoGyurov/grader/pkg/log"
+
 	"gopkg.in/yaml.v2"
 )
 
 const (
-	configDir         = "config"
-	appConfigFileName = "app_config.yaml"
+	configFileName = "config.yaml"
+	secretFileName = "secret.yaml"
 )
+
+var configDir = os.Getenv("CONFIG_DIR")
 
 // Config for application properties
 type Config struct {
-	Host        string `yaml:"host"`
-	Port        int    `yaml:"port"`
-	Server      `yaml:"server"`
-	Outbound    `yaml:"outbound"`
-	DB          `yaml:"db"`
-	JobExecutor `yaml:"job_executor"`
-	Gitlab      `yaml:"gitlab"`
-	Auth        `yaml:"auth"`
+	Host          string `yaml:"host"`
+	Port          int    `yaml:"port"`
+	IngressHost   string `yaml:"ingress_host"`
+	UIIngressHost string `yaml:"ui_ingress_host"`
+	Server        `yaml:"server"`
+	Outbound      `yaml:"outbound"`
+	DB            `yaml:"db"`
+	JobExecutor   `yaml:"job_executor"`
+	Gitlab        `yaml:"gitlab"`
+	Auth          `yaml:"auth"`
 }
 
 type Server struct {
@@ -43,7 +49,6 @@ type JobExecutor struct {
 
 type Gitlab struct {
 	Host            string `yaml:"host"`
-	RequiredScope   string `yaml:"required_scope"`
 	ClientID        string `yaml:"client_id"`
 	ClientSecret    string `yaml:"client_secret"`
 	AdminUserID     string `yaml:"admin_user_id"`
@@ -66,15 +71,24 @@ type Outbound struct {
 func Load() (Config, error) {
 	cfg := Config{}
 
-	appConfigFile, err := os.ReadFile(path.Join(configDir, appConfigFileName))
+	configFile, err := os.ReadFile(path.Join(configDir, configFileName))
+	if err != nil {
+		return cfg, err
+	}
+	secretFile, err := os.ReadFile(path.Join(configDir, secretFileName))
 	if err != nil {
 		return cfg, err
 	}
 
-	err = yaml.Unmarshal(appConfigFile, &cfg)
+	err = yaml.Unmarshal(configFile, &cfg)
+	if err != nil {
+		return cfg, err
+	}
+	err = yaml.Unmarshal(secretFile, &cfg)
 	if err != nil {
 		return cfg, err
 	}
 
+	log.DefaultLogger().Info().Msgf("loaded config: %+v", cfg)
 	return cfg, nil
 }
