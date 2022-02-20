@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "grader.dockerexecutor.configmap.name" . }}
+  name: {{ template "grader.jobexecutor.configmap.name" . }}
 data:
   config.yaml: |
     host: 0.0.0.0

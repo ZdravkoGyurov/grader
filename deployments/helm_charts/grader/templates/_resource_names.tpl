@@ -13,8 +13,8 @@ grader
 {{ template "grader.name" . }}-config
 {{- end -}}
 
-{{- define "grader.dockerexecutor.configmap.name" -}}
-{{ template "grader.name" . }}-docker-executor-config
+{{- define "grader.jobexecutor.configmap.name" -}}
+{{ template "grader.name" . }}-job-executor-config
 {{- end -}}
 
 {{- define "grader.ui.configmap.name" -}}
@@ -27,8 +27,8 @@ grader
 {{ template "grader.name" . }}-deployment
 {{- end -}}
 
-{{- define "grader.dockerexecutor.deployment.name" -}}
-{{ template "grader.name" . }}-docker-executor-deployment
+{{- define "grader.jobexecutor.deployment.name" -}}
+{{ template "grader.name" . }}-job-executor-deployment
 {{- end -}}
 
 {{- define "grader.ui.deployment.name" -}}
@@ -47,8 +47,8 @@ grader
 {{ template "grader.name" . }}-networkpolicy
 {{- end -}}
 
-{{- define "grader.dockerexecutor.networkpolicy.name" -}}
-{{ template "grader.name" . }}-docker-executor-networkpolicy
+{{- define "grader.jobexecutor.networkpolicy.name" -}}
+{{ template "grader.name" . }}-job-executor-networkpolicy
 {{- end -}}
 
 {{- define "grader.ui.networkpolicy.name" -}}
@@ -61,8 +61,8 @@ grader
 {{ template "grader.name" . }}-secret
 {{- end -}}
 
-{{- define "grader.dockerexecutor.secret.name" -}}
-{{ template "grader.name" . }}-docker-executor-secret
+{{- define "grader.jobexecutor.secret.name" -}}
+{{ template "grader.name" . }}-job-executor-secret
 {{- end -}}
 
 # Service
@@ -71,8 +71,8 @@ grader
 {{ template "grader.name" . }}-service
 {{- end -}}
 
-{{- define "grader.dockerexecutor.service.name" -}}
-{{ template "grader.name" . }}-docker-executor-service
+{{- define "grader.jobexecutor.service.name" -}}
+{{ template "grader.name" . }}-job-executor-service
 {{- end -}}
 
 {{- define "grader.ui.service.name" -}}

@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "grader.dockerexecutor.deployment.name" . }}
+  name: {{ template "grader.jobexecutor.deployment.name" . }}
   labels:
-    app: grader-docker-executor
+    app: grader-job-executor
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: grader-docker-executor
+      app: grader-job-executor
   template:
     metadata:
       labels:
-        app: grader-docker-executor
+        app: grader-job-executor
     spec:
       containers:
-        - name: grader-docker-executor
-          image: grader-docker-executor:latest
+        - name: grader-job-executor
+          image: grader-job-executor:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: CONFIG_DIR
@@ -35,9 +35,9 @@ spec:
             sources:
               - configMap:
                   name:
-                    {{ template "grader.dockerexecutor.configmap.name" . }}
+                    {{ template "grader.jobexecutor.configmap.name" . }}
               - secret:
-                  name: {{ template "grader.dockerexecutor.secret.name" . }}
+                  name: {{ template "grader.jobexecutor.secret.name" . }}
         - name: dockersock
           hostPath:
             path: /var/run/docker.sock
