@@ -12,11 +12,11 @@ FROM alpine:3.15.0 as runtime
 
 WORKDIR /app
 
+RUN apk update && apk add --no-cache docker-cli
+
 COPY --from=builder /main /app/
-
-RUN adduser --system --no-create-home --uid 1000 robot
-
-USER 1000
+COPY pkg/dexec/create_assignments ./pkg/dexec/create_assignments
+COPY pkg/dexec/run_tests ./pkg/dexec/run_tests
 
 EXPOSE 8081
 

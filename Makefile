@@ -19,7 +19,7 @@ remove-all-images:
 	docker image rm -f grader grader-docker-executor grader-ui
 
 install-on-k8s:
-	helm upgrade --install --create-namespace -n grader grader deployments/helm_charts/grader
+	helm upgrade --install --wait --create-namespace -n grader grader deployments/helm_charts/grader
 
 uninstall-from-k8s:
 	helm uninstall -n grader grader

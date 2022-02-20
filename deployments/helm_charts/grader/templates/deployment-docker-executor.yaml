@@ -27,11 +27,17 @@ spec:
             - name: app-config-secret
               mountPath: "/etc/app"
               readOnly: true
+            - name: dockersock
+              mountPath: "/var/run/docker.sock"
       volumes:
         - name: app-config-secret
           projected:
             sources:
               - configMap:
-                  name: {{ template "grader.dockerexecutor.configmap.name" . }}
+                  name:
+                    {{ template "grader.dockerexecutor.configmap.name" . }}
               - secret:
                   name: {{ template "grader.dockerexecutor.secret.name" . }}
+        - name: dockersock
+          hostPath:
+            path: /var/run/docker.sock
