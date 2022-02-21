@@ -4,8 +4,9 @@ postgresql:
     postgresPassword: postgres
   volumePermissions:
     enabled: true
-  persistence:
-    size: 1Gi
+  primary:
+    persistence:
+      size: 1Gi
 
 ingress-nginx:
   controller:
@@ -13,7 +14,7 @@ ingress-nginx:
       enabled: true
       minReplicas: 1
       maxReplicas: 2
-      targetCPUUtilizationPercentage: 50
+      targetCPUUtilizationPercentage: 50  
       targetMemoryUtilizationPercentage: 50
     resources:
       requests:
