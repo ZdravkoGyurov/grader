@@ -14,6 +14,7 @@ spec:
       labels:
         app: grader-job-executor
     spec:
+      serviceAccountName: {{ template "grader.jobexecutor.serviceaccount.name" . }}
       containers:
         - name: grader-job-executor
           image: grader-job-executor:latest

@@ -78,3 +78,27 @@ grader
 {{- define "grader.ui.service.name" -}}
 {{ template "grader.name" . }}-ui-service
 {{- end -}}
+
+# Namespace
+
+{{- define "grader.jobs.namespace.name" -}}
+{{ template "grader.name" . }}-jobs
+{{- end -}}
+
+# ServiceAccount
+
+{{- define "grader.jobexecutor.serviceaccount.name" -}}
+{{ template "grader.name" . }}-job-executor-serviceaccount
+{{- end -}}
+
+# Role
+
+{{- define "grader.jobs.role.name" -}}
+{{ template "grader.name" . }}-pod-creator-role
+{{- end -}}
+
+# RoleBinding
+
+{{- define "grader.jobs.rolebinding.name" -}}
+{{ template "grader.name" . }}-job-executor-pod-creator-rolebinding
+{{- end -}}

@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ template "grader.jobs.rolebinding.name" . }}
+  namespace: {{ template "grader.jobs.namespace.name" . }}
+subjects:
+- kind: ServiceAccount
+  name: {{ template "grader.jobexecutor.serviceaccount.name" . }}
+roleRef:
+  kind: Role
+  name: {{ template "grader.jobs.role.name" . }}
+  apiGroup: rbac.authorization.k8s.io
