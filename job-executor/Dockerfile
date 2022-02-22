@@ -15,8 +15,10 @@ WORKDIR /app
 RUN apk update && apk add --no-cache docker-cli
 
 COPY --from=builder /main /app/
-COPY pkg/dexec/create_assignments ./pkg/dexec/create_assignments
-COPY pkg/dexec/run_tests ./pkg/dexec/run_tests
+
+RUN adduser --system --no-create-home --uid 1000 robot
+
+USER 1000
 
 EXPOSE 8081
 

@@ -13,10 +13,16 @@ build-grader-job-executor-image:
 build-grader-ui-image:
 	docker build ./web -t grader-ui
 
-build-all-images: build-grader-image build-grader-job-executor-image build-grader-ui-image
+build-grader-java-tests-runner-image:
+	docker build ./job-executor/jobs/java_tests_runner -t grader-java-tests-runner
+
+build-grader-assignments-creator-image:
+	docker build ./job-executor/jobs/assignments_creator -t grader-assignments-creator
+
+build-all-images: build-grader-image build-grader-job-executor-image build-grader-ui-image build-grader-java-tests-runner-image build-grader-assignments-creator-image
 
 remove-all-images:
-	docker image rm -f grader grader-job-executor grader-ui
+	docker image rm -f grader grader-job-executor grader-ui grader-java-tests-runner grader-assignments-creator
 
 install-on-k8s:
 	helm upgrade --install --wait --create-namespace -n grader grader deployments/helm_charts/grader

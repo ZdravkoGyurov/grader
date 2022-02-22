@@ -12,9 +12,8 @@ import (
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/config"
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/controller"
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/executor"
-	"github.com/ZdravkoGyurov/grader/job-executor/pkg/storage"
-
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/log"
+	"github.com/ZdravkoGyurov/grader/job-executor/pkg/storage"
 )
 
 type GlobalContext struct {
@@ -38,14 +37,17 @@ type Application struct {
 	executor   *executor.Executor
 }
 
-func New(cfg config.Config) *Application {
+func New(cfg config.Config) (*Application, error) {
 	globalContext := NewGlobalContext()
 
 	storage := storage.New(cfg.DB)
 
 	executor := executor.New(cfg.Executor)
 
-	ctrl := controller.New(cfg, storage, executor)
+	ctrl, err := controller.New(cfg, storage, executor)
+	if err != nil {
+		return nil, err
+	}
 	r := router.New(ctrl)
 
 	server := &http.Server{
@@ -61,7 +63,7 @@ func New(cfg config.Config) *Application {
 		server:     server,
 		storage:    storage,
 		executor:   executor,
-	}
+	}, nil
 }
 
 func (a *Application) Start() error {

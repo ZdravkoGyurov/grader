@@ -21,3 +21,7 @@ type SubmissionInfo struct {
 	SubmitterGitlabName  string
 	TesterGitlabName     string
 }
+
+type SubmissionBody struct {
+	ID string `json:"submissionId"`
+}

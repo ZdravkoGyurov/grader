@@ -15,7 +15,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	app := app.New(config)
+	app, err := app.New(config)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
 	if err := app.Start(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

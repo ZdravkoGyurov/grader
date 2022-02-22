@@ -6,30 +6,30 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/ZdravkoGyurov/grader/job-executor/pkg/dexec"
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/errors"
+	"github.com/ZdravkoGyurov/grader/job-executor/pkg/kexec"
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/log"
-	"github.com/ZdravkoGyurov/grader/job-executor/pkg/random"
 	"github.com/ZdravkoGyurov/grader/job-executor/pkg/types"
 )
 
-func (c *Controller) ExecJob(ctx context.Context, config dexec.TestsRunConfig) error {
+func (c *Controller) RunTests(ctx context.Context, submissionID string) error {
 	logger := log.CtxLogger(ctx)
 
-	if err := config.Validate(); err != nil {
-		return errors.Newf("invalid tests config: %s: %w", err, errors.ErrInvalidEntity)
+	if submissionID == "" {
+		return errors.Newf("invalid submissionId: %w", errors.ErrInvalidEntity)
 	}
 
-	if err := c.fillTestsRunConfig(ctx, &config); err != nil {
+	config, err := c.generateTestsRunnerConfig(ctx, submissionID)
+	if err != nil {
 		return err
 	}
 
-	err := c.executor.QueueJob(ctx, func() {
-		submission := types.Submission{ID: config.SubmissionID}
+	err = c.executor.QueueJob(ctx, func() {
+		submission := types.Submission{ID: submissionID}
 
-		logger.Info().Msgf("executing tests for submission '%s'", config.SubmissionID)
-		result, err := dexec.RunTests(ctx, config)
-		logger.Info().Msgf("finished executing tests for submission '%s'", config.SubmissionID)
+		logger.Info().Msgf("executing tests for submission '%s'", submissionID)
+		result, err := kexec.RunTests(c.k8sClient, config)
+		logger.Info().Msgf("finished executing tests for submission '%s'", submissionID)
 		if err != nil {
 			logger.Err(err).Msgf("result: %s", result)
 			submission.Result = "An error occurred. Contact administrator for more information."
@@ -55,14 +55,15 @@ func (c *Controller) ExecJob(ctx context.Context, config dexec.TestsRunConfig) e
 	return nil
 }
 
-func (c *Controller) fillTestsRunConfig(ctx context.Context, config *dexec.TestsRunConfig) error {
-	submissionInfo, err := c.storage.GetSubmissionInfo(ctx, config.SubmissionID)
+func (c *Controller) generateTestsRunnerConfig(ctx context.Context, submissionID string) (kexec.TestsRunnerConfig, error) {
+	config := kexec.TestsRunnerConfig{}
+
+	submissionInfo, err := c.storage.GetSubmissionInfo(ctx, submissionID)
 	if err != nil {
-		return err
+		return config, err
 	}
 
-	config.ImageName = random.LowercaseString(10)
-	config.ContainerName = random.LowercaseString(10)
+	config.TestsRunnerImage = "grader-java-tests-runner:latest" // only works for java tests currently
 	config.GraderGitlabPAT = c.Config.Gitlab.PAT
 	config.GraderGitlabHost = c.Config.Gitlab.Host
 	config.GraderGitlabName = c.Config.Gitlab.GroupParentName
@@ -71,7 +72,7 @@ func (c *Controller) fillTestsRunConfig(ctx context.Context, config *dexec.Tests
 	config.SubmitterGitlabName = submissionInfo.SubmitterGitlabName
 	config.TesterGitlabName = submissionInfo.TesterGitlabName
 
-	return nil
+	return config, nil
 }
 
 func parsePoints(result string) (int, error) {
