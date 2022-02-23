@@ -6,7 +6,8 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: {{ template "grader.jobexecutor.serviceaccount.name" . }}
+  namespace: {{ .Release.Name }}
 roleRef:
+  apiGroup: rbac.authorization.k8s.io
   kind: Role
   name: {{ template "grader.jobs.role.name" . }}
-  apiGroup: rbac.authorization.k8s.io
