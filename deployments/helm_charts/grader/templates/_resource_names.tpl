@@ -65,6 +65,10 @@ grader
 {{ template "grader.name" . }}-job-executor-secret
 {{- end -}}
 
+{{- define "grader.dbmigrator.secret.name" -}}
+{{ template "grader.name" . }}-db-migrator-secret
+{{- end -}}
+
 # Service
 
 {{- define "grader.grader.service.name" -}}
@@ -101,4 +105,10 @@ grader
 
 {{- define "grader.jobs.rolebinding.name" -}}
 {{ template "grader.name" . }}-job-executor-pod-creator-rolebinding
+{{- end -}}
+
+# Job
+
+{{- define "grader.dbmigrator.job.name" -}}
+{{ template "grader.name" . }}-db-migrator-job
 {{- end -}}

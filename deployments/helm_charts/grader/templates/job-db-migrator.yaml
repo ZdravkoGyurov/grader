@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "grader.dbmigrator.job.name" . }}
+  annotations:
+    "helm.sh/hook-weight": "5"
+    "helm.sh/hook": "pre-install,pre-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+spec:
+  template:
+    spec:
+      containers:
+      - name: grader-db-migrator
+        image: grader-db-migrator:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: DB_URL
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "grader.dbmigrator.secret.name" . }}
+              key: DB_URL
+      restartPolicy: OnFailure
+      terminationGracePeriodSeconds: 0
+  backoffLimit: 3
+  completions: 1
+  parallelism: 1

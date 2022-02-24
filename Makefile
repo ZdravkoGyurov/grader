@@ -19,10 +19,13 @@ build-grader-java-tests-runner-image:
 build-grader-assignments-creator-image:
 	docker build ./job-executor/jobs/assignments_creator -t grader-assignments-creator
 
-build-all-images: build-grader-image build-grader-job-executor-image build-grader-ui-image build-grader-java-tests-runner-image build-grader-assignments-creator-image
+build-grader-db-migrator-image:
+	docker build ./db-migrator -t grader-db-migrator
+
+build-all-images: build-grader-image build-grader-job-executor-image build-grader-ui-image build-grader-java-tests-runner-image build-grader-assignments-creator-image build-grader-db-migrator-image
 
 remove-all-images:
-	docker image rm -f grader grader-job-executor grader-ui grader-java-tests-runner grader-assignments-creator
+	docker image rm -f grader grader-job-executor grader-ui grader-java-tests-runner grader-assignments-creator grader-db-migrator
 
 install-db-on-k8s:
 	helm upgrade --install grader-db bitnami/postgresql --wait \
