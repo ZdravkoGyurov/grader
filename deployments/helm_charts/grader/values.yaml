@@ -1,13 +1,3 @@
-postgresql:
-  fullnameOverride: postgresql
-  auth:
-    postgresPassword: postgres
-  volumePermissions:
-    enabled: true
-  primary:
-    persistence:
-      size: 1Gi
-
 ingress-nginx:
   controller:
     autoscaling:

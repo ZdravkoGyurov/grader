@@ -24,8 +24,21 @@ build-all-images: build-grader-image build-grader-job-executor-image build-grade
 remove-all-images:
 	docker image rm -f grader grader-job-executor grader-ui grader-java-tests-runner grader-assignments-creator
 
+install-db-on-k8s:
+	helm upgrade --install grader-db bitnami/postgresql --wait \
+		-n grader --create-namespace \
+		--version=11.0.3 \
+		--set fullnameOverride=postgresql \
+		--set auth.postgresPassword=postgres \
+		--set volumePermissions.enabled=true \
+		--set primary.persistence.size=1Gi
+
+uninstall-db-from-k8s:
+	helm uninstall -n grader grader-db
+
 install-on-k8s:
-	helm upgrade --install --wait --create-namespace -n grader grader deployments/helm_charts/grader
+	helm upgrade --install grader deployments/helm_charts/grader --wait \
+		 -n grader --create-namespace
 
 uninstall-from-k8s:
 	helm uninstall -n grader grader
