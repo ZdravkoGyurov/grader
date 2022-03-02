@@ -4,6 +4,7 @@
 \usepackage[bulgarian,english]{babel}
 \usepackage{graphicx}
 \usepackage{subfiles}
+\usepackage{url}
 
 \graphicspath{ {./images/} }
 \renewcommand{\baselinestretch}{1.5} 
@@ -52,6 +53,8 @@
 \section{TODOs}
 \subfile{sections/todo.tex}
 
+\cleardoublepage
+\addcontentsline{toc}{section}{\begin{otherlanguage*}{bulgarian}{Използвана литература}\end{otherlanguage*}}
 \bibliographystyle{plain}
 \bibliography{./refs.bib}
 
