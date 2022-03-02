@@ -3,7 +3,3 @@
 /tests
 /demo
 deployments/helm_charts/grader/charts
-docs/masters_thesis/*
-!docs/masters_thesis/*.pdf
-!docs/masters_thesis/*.tex
-!docs/masters_thesis/images
