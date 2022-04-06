@@ -17,7 +17,7 @@ var (
 	RETURNING *`, courseTable)
 
 	insertCourseAssistantQuery = fmt.Sprintf(`INSERT INTO %s 
-	(user_email, course_id, course_role_name)
+	(user_email, course_id, course_role)
 	VALUES ($1, $2, $3)`, userCourseTable)
 
 	readCoursesQuery = fmt.Sprintf(`SELECT * FROM %s WHERE id IN 

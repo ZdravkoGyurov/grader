@@ -10,14 +10,14 @@ import (
 
 var (
 	insertUserQuery = fmt.Sprintf(`INSERT INTO %s 
-	(email, name, avatar_url, gitlab_id, refresh_token, role_name)
+	(email, name, avatar_url, gitlab_id, refresh_token, role)
 	VALUES ($1, $2, $3, $4, $5, $6)`, userTable)
 
 	readUserQuery = fmt.Sprintf(`SELECT * FROM %s WHERE email=$1`, userTable)
 
 	readUsersQuery = fmt.Sprintf(`SELECT * FROM %s`, userTable)
 
-	updateUserRoleQuery = fmt.Sprintf(`UPDATE %s SET role_name=$1 WHERE email=$2 RETURNING *`, userTable)
+	updateUserRoleQuery = fmt.Sprintf(`UPDATE %s SET role=$1 WHERE email=$2 RETURNING *`, userTable)
 
 	updateUserRefreshTokenQuery = fmt.Sprintf(`UPDATE %s SET refresh_token=$1 WHERE email=$2 RETURNING *`, userTable)
 )

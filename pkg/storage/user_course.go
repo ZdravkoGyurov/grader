@@ -10,7 +10,7 @@ import (
 
 var (
 	insertUserCourseQuery = fmt.Sprintf(`INSERT INTO %s 
-	(user_email, course_id, course_role_name)
+	(user_email, course_id, course_role)
 	VALUES ($1, $2, $3)`, userCourseTable)
 
 	readUserCoursesQuery = fmt.Sprintf(`SELECT * FROM %s WHERE course_id=$1`, userCourseTable)
@@ -20,7 +20,7 @@ var (
 	WHERE %[1]s.course_id=$1`, userCourseTable, userTable)
 
 	updateUserCourseQuery = fmt.Sprintf(`UPDATE %s SET
-	course_role_name=$1
+	course_role=$1
 	WHERE user_email=$2 AND course_id=$3
 	RETURNING *`, userCourseTable)
 

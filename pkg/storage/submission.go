@@ -26,7 +26,7 @@ var (
 
 	readSubmissionQuery = fmt.Sprintf(`SELECT * FROM %s WHERE id=$1 AND 
 	(submitter_email=$2 OR assignment_id IN (SELECT id FROM %s WHERE course_id IN 
-	(SELECT course_id FROM %s WHERE user_email=$2 AND course_role_name='%s')))`,
+	(SELECT course_id FROM %s WHERE user_email=$2 AND course_role='%s')))`,
 		submissionTable, assignmentTable, userCourseTable, types.CourseRoleAssistant)
 )
 
