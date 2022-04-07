@@ -1,19 +1,19 @@
 <mxfile host="65bd71144e">
     <diagram id="AtMXo_AA94An8IUpxGle" name="Page-1">
-        <mxGraphModel dx="1113" dy="758" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1558" dy="782" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
                 <mxCell id="0DWIBbG_RWGKzucQFfgm-1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;" parent="1" vertex="1">
                     <mxGeometry x="55" y="100" width="745" height="690" as="geometry"/>
                 </mxCell>
-                <mxCell id="0DWIBbG_RWGKzucQFfgm-35" value="Go Job Executor" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;fillColor=none;labelPosition=center;verticalLabelPosition=top;align=left;verticalAlign=bottom;fontSize=14;strokeColor=#000000;" parent="1" vertex="1">
+                <mxCell id="0DWIBbG_RWGKzucQFfgm-35" value="Golang Job Executor" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;fillColor=none;labelPosition=center;verticalLabelPosition=top;align=left;verticalAlign=bottom;fontSize=14;strokeColor=#000000;" parent="1" vertex="1">
                     <mxGeometry x="525" y="400" width="245" height="180" as="geometry"/>
                 </mxCell>
-                <mxCell id="0DWIBbG_RWGKzucQFfgm-34" value="Node.js Backend" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;fillColor=none;labelPosition=center;verticalLabelPosition=top;align=left;verticalAlign=bottom;fontSize=14;strokeColor=#000000;" parent="1" vertex="1">
+                <mxCell id="0DWIBbG_RWGKzucQFfgm-34" value="Golang&amp;nbsp;Backend" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;fillColor=none;labelPosition=center;verticalLabelPosition=top;align=left;verticalAlign=bottom;fontSize=14;strokeColor=#000000;" parent="1" vertex="1">
                     <mxGeometry x="85" y="400" width="245" height="180" as="geometry"/>
                 </mxCell>
-                <mxCell id="0DWIBbG_RWGKzucQFfgm-27" value="React.js UI&lt;br style=&quot;font-size: 14px;&quot;&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;fillColor=none;labelPosition=center;verticalLabelPosition=top;align=left;verticalAlign=bottom;fontSize=14;strokeColor=#000000;" parent="1" vertex="1">
+                <mxCell id="0DWIBbG_RWGKzucQFfgm-27" value="React.js Frontend" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;fillColor=none;labelPosition=center;verticalLabelPosition=top;align=left;verticalAlign=bottom;fontSize=14;strokeColor=#000000;" parent="1" vertex="1">
                     <mxGeometry x="305" y="190" width="245" height="180" as="geometry"/>
                 </mxCell>
                 <mxCell id="0DWIBbG_RWGKzucQFfgm-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="0DWIBbG_RWGKzucQFfgm-10" target="0DWIBbG_RWGKzucQFfgm-13" edge="1">
@@ -62,13 +62,13 @@
                 <mxCell id="0DWIBbG_RWGKzucQFfgm-20" value="&lt;div style=&quot;font-size: 14px;&quot;&gt;Deployment&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;labelPosition=center;verticalLabelPosition=top;align=left;verticalAlign=bottom;spacing=2;fontSize=14;fillColor=#FFFFFF;fontColor=#000000;strokeColor=#000000;" parent="1" vertex="1">
                     <mxGeometry x="95" y="500" width="225" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="0DWIBbG_RWGKzucQFfgm-21" value="Pod" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#68A063;strokeColor=#82b366;fontColor=#FFFFFF;fontSize=14;" parent="1" vertex="1">
+                <mxCell id="0DWIBbG_RWGKzucQFfgm-21" value="Pod" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#69D7E2;strokeColor=#82b366;fontColor=#000000;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="112" y="510" width="50" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="0DWIBbG_RWGKzucQFfgm-22" value="Pod" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#68A063;strokeColor=#82b366;fontColor=#FFFFFF;fontSize=14;" parent="1" vertex="1">
+                <mxCell id="0DWIBbG_RWGKzucQFfgm-22" value="Pod" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#69D7E2;strokeColor=#82b366;fontColor=#000000;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="182.5" y="510" width="50" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="0DWIBbG_RWGKzucQFfgm-23" value="Pod" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#68A063;strokeColor=#82b366;fontColor=#FFFFFF;fontSize=14;" parent="1" vertex="1">
+                <mxCell id="0DWIBbG_RWGKzucQFfgm-23" value="Pod" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#69D7E2;strokeColor=#82b366;fontColor=#000000;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="257" y="510" width="50" height="50" as="geometry"/>
                 </mxCell>
                 <mxCell id="0DWIBbG_RWGKzucQFfgm-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#000000;" parent="1" source="0DWIBbG_RWGKzucQFfgm-19" edge="1">
