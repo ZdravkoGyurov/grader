@@ -1,0 +1,170 @@
+<mxfile host="65bd71144e">
+    <diagram id="9IUqhpgOrVJgMA2qJIMW" name="Page-1">
+        <mxGraphModel dx="1074" dy="782" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="&lt;font color=&quot;#000000&quot; style=&quot;font-size: 20px&quot;&gt;Процес на удостовереяване / login flow / Oauth2 authorization code flow&lt;/font&gt;" style="whiteSpace=wrap;html=1;fillColor=#FFFFFF;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=top;" vertex="1" parent="1">
+                    <mxGeometry x="110" y="61" width="940" height="700" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="&lt;font color=&quot;#000000&quot;&gt;&lt;b&gt;Потребител&lt;/b&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="140" y="120" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="&lt;font color=&quot;#000000&quot;&gt;&lt;b&gt;GitLab уеб интерфейс&lt;/b&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="660" y="120" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="" style="endArrow=none;html=1;fontSize=20;fontColor=#000000;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.097;exitY=0.903;exitDx=0;exitDy=0;exitPerimeter=0;strokeWidth=1;strokeColor=#000000;jumpStyle=none;dashed=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="699.5" y="710.1599999999999" as="sourcePoint"/>
+                        <mxPoint x="699.66" y="200" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="8" value="" style="endArrow=classic;html=1;fontSize=20;fontColor=#000000;strokeColor=#000000;strokeWidth=1;jumpStyle=none;align=center;labelPosition=center;verticalLabelPosition=middle;verticalAlign=middle;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="180" y="250" as="sourcePoint"/>
+                        <mxPoint x="440" y="250" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="9" value="&lt;div&gt;&lt;span style=&quot;background-color: rgb(255 , 255 , 255)&quot;&gt;Натискане на &quot;Вход&quot; в уеб интерфейса&lt;/span&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=12;fontColor=#000000;" vertex="1" connectable="0" parent="8">
+                    <mxGeometry x="0.4571" relative="1" as="geometry">
+                        <mxPoint x="-74" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="13" value="&lt;font color=&quot;#000000&quot;&gt;&lt;b&gt;СУКАО API сървър&lt;/b&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="400" y="120" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="" style="endArrow=none;html=1;fontSize=20;fontColor=#000000;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.097;exitY=0.903;exitDx=0;exitDy=0;exitPerimeter=0;strokeWidth=1;strokeColor=#000000;jumpStyle=none;dashed=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="439.5" y="710.1599999999999" as="sourcePoint"/>
+                        <mxPoint x="439.65999999999985" y="200" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="15" value="" style="endArrow=classic;html=1;fontSize=20;fontColor=#000000;strokeColor=#000000;strokeWidth=1;jumpStyle=none;align=center;labelPosition=center;verticalLabelPosition=middle;verticalAlign=middle;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="440" y="280" as="sourcePoint"/>
+                        <mxPoint x="960" y="280" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="16" value="&lt;div&gt;&lt;span style=&quot;background-color: rgb(255 , 255 , 255)&quot;&gt;Заявка към /oauth/authorize&lt;/span&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=12;fontColor=#000000;" vertex="1" connectable="0" parent="15">
+                    <mxGeometry x="0.4571" relative="1" as="geometry">
+                        <mxPoint x="-299" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="17" value="" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontSize=12;fontColor=#000000;strokeColor=#000000;strokeWidth=1;jumpStyle=none;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="960" y="320" as="sourcePoint"/>
+                        <mxPoint x="180" y="320" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="19" value="&lt;span style=&quot;background-color: rgb(255 , 255 , 255)&quot;&gt;Пренасочване към страница за удостоверяване&amp;nbsp;&lt;br&gt;&lt;/span&gt;" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=12;fontColor=#000000;labelPosition=center;verticalLabelPosition=top;" vertex="1" connectable="0" parent="17">
+                    <mxGeometry x="-0.35" y="-1" relative="1" as="geometry">
+                        <mxPoint x="115" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="22" value="" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontSize=12;fontColor=#000000;strokeColor=#000000;strokeWidth=1;jumpStyle=none;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="180" y="360" as="sourcePoint"/>
+                        <mxPoint x="700" y="360" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="23" value="&lt;span style=&quot;background-color: rgb(255 , 255 , 255)&quot;&gt;Въвеждане на нужната информация за влизане в системата&lt;/span&gt;" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=12;fontColor=#000000;labelPosition=center;verticalLabelPosition=top;" vertex="1" connectable="0" parent="22">
+                    <mxGeometry x="-0.6545" relative="1" as="geometry">
+                        <mxPoint x="90" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="24" value="" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontSize=12;fontColor=#000000;strokeColor=#000000;strokeWidth=1;jumpStyle=none;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="960" y="437" as="sourcePoint"/>
+                        <mxPoint x="440" y="437" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="25" value="&lt;span style=&quot;background-color: rgb(255 , 255 , 255)&quot;&gt;Връщане на код за оторизация&lt;/span&gt;" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=12;fontColor=#000000;labelPosition=center;verticalLabelPosition=top;" vertex="1" connectable="0" parent="24">
+                    <mxGeometry x="-0.4615" y="2" relative="1" as="geometry">
+                        <mxPoint x="46" y="-3" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="26" value="&lt;font color=&quot;#000000&quot;&gt;&lt;b&gt;GitLab API сървър&lt;/b&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="920" y="120" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="" style="endArrow=none;html=1;fontSize=20;fontColor=#000000;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.097;exitY=0.903;exitDx=0;exitDy=0;exitPerimeter=0;strokeWidth=1;strokeColor=#000000;jumpStyle=none;dashed=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="959.5" y="710.1599999999999" as="sourcePoint"/>
+                        <mxPoint x="959.6599999999999" y="200" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="28" value="" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontSize=12;fontColor=#000000;strokeColor=#000000;strokeWidth=1;jumpStyle=none;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="700" y="397" as="sourcePoint"/>
+                        <mxPoint x="960" y="397" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="29" value="&lt;span style=&quot;background-color: rgb(255 , 255 , 255)&quot;&gt;Изпращане на данните&lt;/span&gt;" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=12;fontColor=#000000;labelPosition=center;verticalLabelPosition=top;" vertex="1" connectable="0" parent="28">
+                    <mxGeometry x="-0.4231" y="-1" relative="1" as="geometry">
+                        <mxPoint x="-2" y="-3" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="30" value="" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontSize=12;fontColor=#000000;strokeColor=#000000;strokeWidth=1;jumpStyle=none;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="440" y="478" as="sourcePoint"/>
+                        <mxPoint x="960" y="478" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="31" value="&lt;span style=&quot;background-color: rgb(255 , 255 , 255)&quot;&gt;Изпращане на код за оторизация + Client ID + Client Secret към /oauth/token&lt;/span&gt;" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=12;fontColor=#000000;labelPosition=center;verticalLabelPosition=top;" vertex="1" connectable="0" parent="30">
+                    <mxGeometry x="-0.5538" y="-1" relative="1" as="geometry">
+                        <mxPoint x="99" y="-2" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="32" value="" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontSize=12;fontColor=#000000;strokeColor=#000000;strokeWidth=1;jumpStyle=none;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="960" y="520" as="sourcePoint"/>
+                        <mxPoint x="440" y="520" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="33" value="&lt;span style=&quot;background-color: rgb(255 , 255 , 255)&quot;&gt;Отговор с токен за достъп&lt;/span&gt;" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=12;fontColor=#000000;labelPosition=center;verticalLabelPosition=top;" vertex="1" connectable="0" parent="32">
+                    <mxGeometry x="-0.4423" y="-2" relative="1" as="geometry">
+                        <mxPoint x="65" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="34" value="" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontSize=12;fontColor=#000000;strokeColor=#000000;strokeWidth=1;jumpStyle=none;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="440" y="563" as="sourcePoint"/>
+                        <mxPoint x="960" y="563" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="35" value="&lt;span style=&quot;background-color: rgb(255 , 255 , 255)&quot;&gt;Заявка за данни на потребителя към /api/v4/user, използвайки токена за достъп&lt;/span&gt;" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=12;fontColor=#000000;labelPosition=center;verticalLabelPosition=top;" vertex="1" connectable="0" parent="34">
+                    <mxGeometry x="-0.5769" relative="1" as="geometry">
+                        <mxPoint x="117" y="-2" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="36" value="" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontSize=12;fontColor=#000000;strokeColor=#000000;strokeWidth=1;jumpStyle=none;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="960" y="600" as="sourcePoint"/>
+                        <mxPoint x="440" y="600" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="37" value="&lt;span style=&quot;background-color: rgb(255 , 255 , 255)&quot;&gt;Отговор с потребителския имейл, име и снимка&lt;/span&gt;" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=12;fontColor=#000000;labelPosition=center;verticalLabelPosition=top;" vertex="1" connectable="0" parent="36">
+                    <mxGeometry x="-0.4885" y="3" relative="1" as="geometry">
+                        <mxPoint x="-6" y="-5" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="38" value="" style="endArrow=classic;html=1;labelBackgroundColor=#FFFFFF;fontSize=12;fontColor=#000000;strokeColor=#000000;strokeWidth=1;jumpStyle=none;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="440" y="640" as="sourcePoint"/>
+                        <mxPoint x="180" y="640" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="40" value="&lt;span style=&quot;background-color: rgb(255 , 255 , 255)&quot;&gt;Пренасочване към СУКАО уеб интерфейса&lt;/span&gt;" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=12;fontColor=#000000;labelPosition=center;verticalLabelPosition=top;" vertex="1" connectable="0" parent="38">
+                    <mxGeometry x="-0.3154" y="-1" relative="1" as="geometry">
+                        <mxPoint x="-38" y="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="39" value="" style="endArrow=none;html=1;fontSize=20;fontColor=#000000;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.097;exitY=0.903;exitDx=0;exitDy=0;exitPerimeter=0;strokeWidth=1;strokeColor=#000000;jumpStyle=none;dashed=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="179.5" y="710.1599999999999" as="sourcePoint"/>
+                        <mxPoint x="179.65999999999985" y="200" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
