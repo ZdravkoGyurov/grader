@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users (
     gitlab_id TEXT NOT NULL,
     refresh_token TEXT,
     role role NOT NULL,
-    PRIMARY KEY(email),
+    PRIMARY KEY(email)
 );
 
 CREATE TABLE IF NOT EXISTS course (
@@ -60,5 +60,5 @@ CREATE TABLE IF NOT EXISTS user_course (
     course_role course_role NOT NULL,
     PRIMARY KEY(user_email, course_id),
     CONSTRAINT fk_user_email FOREIGN KEY(user_email) REFERENCES users(email),
-    CONSTRAINT fk_course_id FOREIGN KEY(course_id) REFERENCES course(id),
+    CONSTRAINT fk_course_id FOREIGN KEY(course_id) REFERENCES course(id)
 );

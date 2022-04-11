@@ -40,16 +40,10 @@ const App = () => {
         backgroundColor={themeStyles.bg}
         h="100vh"
       >
-        {user ? (
-          <>
-            <Flex w="100%" flexDir="column">
-              <Header />
-              <Main />
-            </Flex>
-          </>
-        ) : (
-          <Home></Home>
-        )}
+        <Flex w="100%" flexDir="column">
+          <Header />
+          { user ? <Main /> : <Home /> }
+        </Flex>
       </Flex>
     </UserContext.Provider>
   );

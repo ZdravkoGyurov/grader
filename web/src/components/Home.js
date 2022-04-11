@@ -23,6 +23,7 @@ const Home = () => {
       alignItems="center"
       justifyContent="center"
       w="100%"
+      h="100%"
     >
       <Button
         colorScheme="teal"

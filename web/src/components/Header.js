@@ -8,7 +8,7 @@ import UserContext from "../contexts/UserContext";
 import themeStyles from "../theme";
 
 const Header = () => {
-  const { setUser } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   let navigate = useNavigate();
 
@@ -30,21 +30,23 @@ const Header = () => {
       alignItems="center"
       p=".5rem 1rem"
     >
-      <Text fontSize="3xl">{window.location.host}</Text>
-      <Flex alignItems="center">
-        <Button
-          marginLeft="1rem"
-          colorScheme="-"
-          _focus={{ boxShadow: "none" }}
-          leftIcon={<FiLogOut />}
-          variant="ghost"
-          onClick={() => {
-            handleLogout();
-          }}
-        >
-          Logout
-        </Button>
-      </Flex>
+      <Text fontSize="3xl">sukao</Text>
+      { user ? (
+        <Flex alignItems="center">
+          <Button
+            marginLeft="1rem"
+            colorScheme="-"
+            _focus={{ boxShadow: "none" }}
+            leftIcon={<FiLogOut />}
+            variant="ghost"
+            onClick={() => {
+              handleLogout();
+            }}
+          >
+            Logout
+          </Button>
+        </Flex>
+      ) : null }
     </Flex>
   );
 };

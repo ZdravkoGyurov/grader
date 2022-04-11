@@ -74,6 +74,7 @@ const Sidebar = () => {
           }
           location={location.pathname}
         ></NavItem>
+        { user.roleName === "Admin" ? (
         <NavItem
           navSize={navSize}
           icon={FiUsers}
@@ -85,6 +86,7 @@ const Sidebar = () => {
           }
           location={location.pathname}
         ></NavItem>
+        ) : null }
       </Flex>
       <Flex
         paddingLeft="1rem"
