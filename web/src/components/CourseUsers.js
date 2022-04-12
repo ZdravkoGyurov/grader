@@ -112,12 +112,17 @@ export default function CourseUsers() {
           <Flex alignItems="center" marginBottom="1rem" fontSize="2xl">
             <Breadcrumb separator="→">
               <BreadcrumbItem>
-                <BreadcrumbLink onClick={() => navigate(`/users`)}>
-                  Users
+                <BreadcrumbLink onClick={() => navigate(`/courses`)}>
+                  Courses
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbItem>
+                <BreadcrumbLink onClick={() => navigate(`/courses/${courseState.course.id}`)}>
+                  {courseState.course.name}
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbItem isCurrentPage>
-                <BreadcrumbLink>{courseState.course.name}</BreadcrumbLink>
+                <BreadcrumbLink>Users</BreadcrumbLink>
               </BreadcrumbItem>
             </Breadcrumb>
           </Flex>

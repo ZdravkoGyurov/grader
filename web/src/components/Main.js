@@ -23,13 +23,13 @@ const Main = () => {
             path="/courses/:courseId/assignments/:assignmentId"
             element={<Assignment />}
           />
-          <Route exact strict path="/users" element={<Users />} />
           <Route
             exact
             strict
-            path="/users/:courseId"
+            path="/courses/:courseId/users"
             element={<CourseUsers />}
           />
+          <Route exact strict path="/users" element={<Users />} />
           <Route exact strict path="/" element={<Home />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -36,7 +36,7 @@ export default function CourseTableRow({ course, coursesStateDispatch }) {
             _focus={{ boxShadow: "none" }}
             icon={<FiUsers />}
             onClick={() =>
-              navigate(`/users/${course.id}`, {
+              navigate(`/courses/${course.id}/users`, {
                 state: { course: course },
               })
             }
