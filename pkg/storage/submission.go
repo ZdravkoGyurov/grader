@@ -15,7 +15,7 @@ var (
 	course_id=(SELECT course_id FROM %s WHERE id=$2)`, userCourseTable, assignmentTable)
 
 	insertSubmissionQuery = fmt.Sprintf(`INSERT INTO %s 
-	(id, result, points, submission_status_name, submitter_email, submitted_on, assignment_id)
+	(id, result, points, submission_status, submitter_email, submitted_on, assignment_id)
 	VALUES ($1, $2, $3, $4, $5, $6, $7)
 	RETURNING *`, submissionTable)
 
